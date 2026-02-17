@@ -37,13 +37,26 @@
     <style type="text/css">
         .nav-transition { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .dropdown-shadow { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; transition: font-size 0.2s ease; }
         
         @media (min-width: 1024px) {
-            .group:hover > .dropdown-menu {
-                display: block !important;
-            }
+            .group:hover > .dropdown-menu { display: block !important; }
+            .group\/flyout:hover > .dropdown-menu { display: block !important; }
         }
+
+        /* Accessibility Modes */
+        .a11y-contrast { 
+            filter: contrast(150%) brightness(110%);
+            background-color: #fff !important;
+            color: #000 !important;
+        }
+        .a11y-grayscale { filter: grayscale(100%); }
+        .a11y-underline-links a { text-decoration: underline !important; font-weight: bold; }
+
+        /* Accessibility Panel UI */
+        .bg-active { background-color: #006837 !important; }
+        .bg-active .dot { transform: translateX(24px); }
+        #accessibility-panel.open { transform: translateX(0); }
     </style>
     
     {% block extra_css %}{% endblock %}
@@ -52,16 +65,19 @@
 
     <!-- Top Accessibility Bar -->
     <div class="hidden md:flex bg-primary-green px-[5%] lg:px-[10%] py-3 justify-end items-center border-b border-white/10 gap-6">
-        <div class="relative flex items-center group">
+        <form action="{{ url_for('main.search') }}" method="GET" class="relative flex items-center group">
             <input type="text" 
+                   name="q"
                    placeholder="Search resources..." 
                    class="pl-4 pr-10 py-2 bg-white/10 border border-white/20 rounded-full text-sm text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/40 focus:bg-white/20 w-64 nav-transition">
-            <i class="fas fa-search absolute right-4 text-white/60 text-xs group-focus-within:text-white group-focus-within:scale-110 transition-all"></i>
-        </div>
+            <button type="submit" class="absolute right-4 text-white/60 text-xs group-focus-within:text-white group-focus-within:scale-110 transition-all">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
 
         <div class="flex gap-4 text-white/80 border-l pl-6 border-white/20">
-            <i class="fas fa-universal-access cursor-pointer hover:text-white nav-transition" title="Accessibility"></i>
-            <i class="fas fa-font cursor-pointer hover:text-white nav-transition" title="Text Size"></i>
+            <i id="accessibility-toggle" class="fas fa-universal-access cursor-pointer hover:text-white nav-transition" title="Toggle High Contrast"></i>
+            <i id="font-size-toggle" class="fas fa-font cursor-pointer hover:text-white nav-transition" title="Change Text Size"></i>
         </div>
     </div>
 
@@ -93,6 +109,15 @@
             </div>
 
             <ul id="nav-menu" class="hidden lg:flex flex-col lg:flex-row list-none pb-6 lg:pb-0 divide-y divide-white/5 lg:divide-y-0">
+                <li class="lg:hidden px-6 py-4">
+                    <form action="{{ url_for('main.search') }}" method="GET" class="relative flex items-center">
+                        <input type="text" name="q" placeholder="Search resources..." class="w-full pl-4 pr-10 py-2 bg-white/10 border border-white/20 rounded-full text-sm text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/40">
+                        <button type="submit" class="absolute right-4 text-white/60 text-xs">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </li>
+                
                 <!-- MODIFIED: main.index -->
                 <li><a href="{{ url_for('main.index') }}" class="block py-4 lg:py-5 px-6 text-white text-[0.95rem] font-semibold hover:bg-primary-hover nav-transition">Home</a></li>
                 
@@ -120,7 +145,7 @@
                             <button class="w-full flex justify-between items-center px-10 lg:px-6 py-4 text-text-dark text-sm hover:bg-green-50 hover:text-primary-green border-b border-gray-50 dropdown-toggle-sub">
                                 Policies <i class="fas fa-chevron-down lg:-rotate-90 text-[10px]"></i>
                             </button>
-                            <ul class="dropdown-menu lg:absolute lg:left-full lg:top-0 w-full lg:w-52 bg-gray-50 lg:bg-white lg:dropdown-shadow lg:border-l-4 border-primary-green hidden">
+                                <ul class="dropdown-menu lg:absolute lg:left-full lg:top-0 w-full lg:w-52 bg-gray-50 lg:bg-white lg:dropdown-shadow lg:border-l-4 border-primary-green hidden group-hover/flyout:block">
                                 <li><a href="{{ url_for('policies.policies_hub', category='circulars') }}" class="block px-14 lg:px-6 py-4 text-sm hover:bg-green-100">Circulars</a></li>
                                 <li><a href="{{ url_for('policies.policies_hub', category='resolutions') }}" class="block px-14 lg:px-6 py-4 text-sm hover:bg-green-100">Resolutions</a></li>
                                 <li><a href="{{ url_for('policies.policies_hub', category='memoranda') }}" class="block px-14 lg:px-6 py-4 text-sm hover:bg-green-100">Memoranda</a></li>
@@ -155,8 +180,8 @@
         <div class="px-[5%] lg:px-[10%] pt-16 pb-12">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
                 <div class="lg:col-span-5 space-y-6">
-                    <h2 class="text-white text-2xl font-bold">GAD<span class="text-primary-green">.</span> MONTALBAN</h2>
-                    <p class="text-sm border-l-2 border-primary-green/30 pl-4">The official digital hub for Gender and Development initiatives of the Municipality of Montalban, Rizal. Dedicated to promoting equality, inclusivity, and empowerment for every citizen.</p>
+                    <h2 class="text-white text-2xl font-bold">GAD<span class="text-primary-green">.</span> RODRIGUEZ</h2>
+                    <p class="text-sm border-l-2 border-primary-green/30 pl-4">The official digital hub for Gender and Development initiatives of the Municipality of Rodriguez, Rizal. Dedicated to promoting equality, inclusivity, and empowerment for every citizen.</p>
                 </div>
 
                 <div class="lg:col-span-2 lg:col-start-7">
@@ -192,7 +217,33 @@
         </div>
     </footer>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <!-- Accessibility Panel -->
+    <div id="accessibility-panel" class="fixed inset-y-0 right-0 w-72 bg-white shadow-2xl z-[2000] transform translate-x-full transition-transform duration-300 border-l border-gray-200">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="font-bold text-lg text-primary-green">Accessibility Tools</h3>
+                <button id="close-a11y" class="text-gray-400 hover:text-black"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-6">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-medium">High Contrast</span>
+                    <button id="btn-contrast" class="w-12 h-6 bg-gray-200 rounded-full relative transition-colors"><div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform"></div></button>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-medium">Grayscale Mode</span>
+                    <button id="btn-grayscale" class="w-12 h-6 bg-gray-200 rounded-full relative transition-colors"><div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform"></div></button>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-medium">Underline Links</span>
+                    <button id="btn-links" class="w-12 h-6 bg-gray-200 rounded-full relative transition-colors"><div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform"></div></button>
+                </div>
+                <hr>
+                <button id="reset-a11y" class="w-full py-2 text-xs font-bold uppercase tracking-widest text-red-600 hover:bg-red-50 rounded">Reset All Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
