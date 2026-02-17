@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Projects Center - GAD Corner{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-[10%] py-12">
+    <!-- Breadcrumbs -->
+    <nav class="flex text-sm text-gray-500 mb-8 items-center gap-2">
+        <a href="{{ url_for('index') }}" class="text-primary-green hover:underline">Home</a>
+        <i class="fas fa-chevron-right text-[10px]"></i>
+        <span class="font-semibold text-gray-700">Projects</span>
+    </nav>
+
+    <div class="mb-10">
+        <h2 class="text-3xl font-bold text-gray-800 border-l-8 border-primary-green pl-4 uppercase">
+            Project <span class="text-primary-green">Center</span>
+        </h2>
+        <p class="text-gray-500 mt-2 ml-6 text-sm">Explore our gender-responsive initiatives and community programs.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Latest Projects Card -->
+        <a href="{{ url_for('project_year', year='2025') }}" class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all">
+            <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all">
+                <i class="fas fa-rocket text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 group-hover:text-primary-green">Latest Projects</h3>
+            <p class="text-gray-500 text-sm mt-2">View current and upcoming GAD initiatives for the year 2025.</p>
+        </a>
+
+        <!-- Archive Card -->
+        <a href="{{ url_for('projects_archive') }}" class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all">
+            <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all">
+                <i class="fas fa-folder-open text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 group-hover:text-primary-green">Project Archives</h3>
+            <p class="text-gray-500 text-sm mt-2">Browse historical data and completed projects from previous years.</p>
+        </a>
+
+    </div>
+</div>
+{% endblock %}

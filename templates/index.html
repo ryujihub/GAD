@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <!-- Hero Carousel -->
+    <section class="px-[10%] py-12">
+        <div class="h-[450px] rounded-[2rem] flex items-center justify-center text-center text-white relative overflow-hidden bg-cover bg-center shadow-2xl" 
+             style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80');">
+            <div class="max-w-2xl px-6">
+                <span class="uppercase tracking-[0.3em] text-sm font-bold text-green-400 mb-4 block">Welcome to GAD Corner</span>
+                <h1 class="text-5xl font-extrabold mb-6 leading-tight">Empowering Every Gender in Montalban</h1>
+                <p class="text-lg opacity-90 font-light mb-8">Discover our latest initiatives, programs, and resources dedicated to gender equality and social inclusion.</p>
+                <a href="{{ url_for('about') }}" class="bg-primary-green hover:bg-primary-hover px-8 py-4 rounded-full font-bold text-sm uppercase tracking-widest nav-transition shadow-lg">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Area -->
+    <div class="max-w-[1400px] w-[80%] mx-auto mb-24 grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-16">
+        
+        <!-- Sidebar -->
+        <aside class="flex flex-col gap-6">
+            <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 px-2">Quick Resources</h3>
+            
+            <a href="{{ url_for('reports') }}" class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-xl hover:-translate-y-1 nav-transition block">
+                <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary-green nav-transition">
+                    <i class="fas fa-file-signature text-2xl text-primary-green group-hover:text-white nav-transition"></i>
+                </div>
+                <p class="font-bold text-gray-800 text-lg leading-snug">Plan, Budget & Reports</p>
+                <p class="text-xs text-gray-400 mt-2">View our financial transparency and accomplishment documents.</p>
+            </a>
+            
+            <a href="{{ url_for('projects_hub') }}" class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-xl hover:-translate-y-1 nav-transition block">
+                <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary-green nav-transition">
+                    <i class="fas fa-project-diagram text-2xl text-primary-green group-hover:text-white nav-transition"></i>
+                </div>
+                <p class="font-bold text-gray-800 text-lg leading-snug">GAD Projects</p>
+                <p class="text-xs text-gray-400 mt-2">Explore active and archived community programs.</p>
+            </a>
+
+            <a href="{{ url_for('policies', category='policies') }}" class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-xl hover:-translate-y-1 nav-transition block">
+                <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary-green nav-transition">
+                    <i class="fas fa-database text-2xl text-primary-green group-hover:text-white nav-transition"></i>
+                </div>
+                <p class="font-bold text-gray-800 text-lg leading-snug">Knowledgebase</p>
+                <p class="text-xs text-gray-400 mt-2">Legal mandates, circulars, and educational materials.</p>
+            </a>
+        </aside>
+
+        <!-- News Section -->
+        <main>
+            <div class="flex justify-between items-end mb-10 pb-4 border-b border-gray-200">
+                <div>
+                    <h2 class="text-3xl font-black text-gray-800 leading-none">LATEST NEWS</h2>
+                    <p class="text-gray-400 text-sm mt-2 font-medium">Updates from the GAD Office</p>
+                </div>
+                <a href="{{ url_for('news_hub') }}" class="text-xs font-bold text-primary-green hover:text-primary-hover uppercase tracking-widest flex items-center gap-2 group">
+                    View All <i class="fas fa-arrow-right group-hover:translate-x-1 nav-transition"></i>
+                </a>
+            </div>
+            
+            <!-- News Item -->
+            <div class="group bg-white flex flex-col md:flex-row rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl border border-gray-50 nav-transition">
+                <div class="flex-none w-full md:w-64 h-64 bg-gray-100 flex items-center justify-center relative overflow-hidden">
+                    <i class="fas fa-newspaper text-6xl text-gray-200 group-hover:scale-110 nav-transition"></i>
+                    <div class="absolute inset-0 bg-primary-green/5 opacity-0 group-hover:opacity-100 nav-transition"></div>
+                </div>
+                <div class="p-10 flex flex-col justify-center">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="bg-green-100 text-primary-green text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter">Event</span>
+                        <span class="text-[0.75rem] text-gray-400 font-semibold uppercase tracking-widest">January 24, 2024</span>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-gray-800 mb-3 group-hover:text-primary-green nav-transition leading-tight">GAD Annual Planning Session 2024</h3>
+                    <p class="text-gray-500 mb-8 leading-relaxed line-clamp-2">The GAD Office recently conducted its annual planning session to improve gender mainstreaming initiatives across all departments, focusing on sustainable development goals.</p>
+                    <a href="{{ url_for('news_detail') }}" class="inline-flex items-center font-bold text-sm text-primary-green group-hover:gap-4 gap-2 nav-transition">
+                        Read Full Article <i class="fas fa-long-arrow-alt-right"></i>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}

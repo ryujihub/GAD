@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Organizational Structure - GAD Corner{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-[10%] py-16">
+    
+    <!-- Breadcrumbs -->
+    <nav class="flex text-sm text-gray-400 mb-12 items-center gap-2">
+        <a href="{{ url_for('index') }}" class="hover:text-primary-green nav-transition">Home</a>
+        <i class="fas fa-chevron-right text-[8px]"></i>
+        <a href="{{ url_for('about') }}" class="hover:text-primary-green nav-transition">About Us</a>
+        <i class="fas fa-chevron-right text-[8px]"></i>
+        <span class="font-bold text-gray-800">Organizational Structure</span>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div>
+            <h2 class="text-4xl font-black text-gray-800 tracking-tight leading-none uppercase">
+                THE <span class="text-primary-green">GFPS</span> STRUCTURE
+            </h2>
+            <p class="text-gray-500 mt-4 leading-relaxed italic">The GAD Focal Point System (GFPS) hierarchy of the Municipality of Montalban.</p>
+        </div>
+        
+        <a href="#" class="inline-flex items-center px-6 py-3 bg-white text-primary-green border-2 border-primary-green rounded-xl font-bold text-sm hover:bg-primary-green hover:text-white nav-transition shadow-sm">
+            <i class="fas fa-download mr-3"></i> Download High-Res PDF
+        </a>
+    </div>
+    
+    <!-- Chart Container -->
+    <div class="bg-white p-12 rounded-[2.5rem] shadow-xl border border-gray-50 mb-16">
+        <div class="flex items-center gap-3 mb-12 opacity-50">
+            <i class="fas fa-sitemap text-primary-green"></i>
+            <span class="text-xs font-black uppercase tracking-widest text-gray-500">Official Hierarchy Chart</span>
+        </div>
+
+        <!-- Placeholder for Chart -->
+        <div class="bg-green-50/50 border-4 border-dashed border-green-100 rounded-[2rem] py-40 flex flex-col items-center justify-center text-center px-8 group">
+            <div class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center shadow-lg mb-6 group-hover:scale-110 nav-transition">
+                <i class="fas fa-project-diagram text-4xl text-primary-green opacity-40"></i>
+            </div>
+            <p class="text-gray-800 font-extrabold text-xl mb-2">Structure Visualization</p>
+            <p class="text-gray-500 text-sm max-w-sm leading-relaxed">Please upload the official GFPS Organizational image file to this container.</p>
+        </div>
+
+        <!-- Description text -->
+        <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div class="bg-gray-50 p-10 rounded-3xl border border-gray-100 hover:border-primary-green/30 nav-transition">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 bg-primary-green text-white rounded-lg flex items-center justify-center font-bold">01</div>
+                    <h4 class="font-black text-gray-800 uppercase text-sm tracking-widest">Executive Committee</h4>
+                </div>
+                <p class="text-gray-600 text-[0.95rem] leading-relaxed">Chaired by the Local Chief Executive, this body is responsible for policy direction and high-level strategic planning of all GAD initiatives within the municipality.</p>
+            </div>
+
+            <div class="bg-gray-50 p-10 rounded-3xl border border-gray-100 hover:border-primary-green/30 nav-transition">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 bg-primary-green text-white rounded-lg flex items-center justify-center font-bold">02</div>
+                    <h4 class="font-black text-gray-800 uppercase text-sm tracking-widest">Technical Working Group</h4>
+                </div>
+                <p class="text-gray-600 text-[0.95rem] leading-relaxed">The TWG translates policies into action, assisting in the preparation of the GAD Plan and Budget, and managing day-to-day implementation.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Note Section -->
+    <div class="bg-primary-green rounded-3xl p-10 text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl shadow-primary-green/20">
+        <div class="text-center md:text-left">
+            <h3 class="text-2xl font-bold mb-2">Want to learn more about GFPS?</h3>
+            <p class="text-white/70 text-sm">Download our detailed manual on GAD Focal Point System roles and responsibilities.</p>
+        </div>
+        <a href="#" class="bg-white text-primary-green px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-gray-100 nav-transition">Download Manual</a>
+    </div>
+</div>
+{% endblock %}

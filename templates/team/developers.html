@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Developers Team - GAD Corner{% endblock %}
+
+{% block content %}
+<section class="py-20 px-[5%] lg:px-[10%] bg-gray-50 min-h-screen">
+    <div class="max-w-7xl mx-auto">
+        
+        <!-- Header Section -->
+        <div class="mb-20 text-center md:text-left">
+            <h1 class="text-5xl font-black text-gray-900 tracking-tighter uppercase italic">
+                The <span class="text-primary-green">Core</span> Team
+            </h1>
+            <div class="w-20 h-2 bg-primary-green mt-2 mb-6 rounded-full"></div>
+            <p class="text-gray-500 max-w-2xl text-lg font-medium leading-relaxed">
+                Meet the architects behind the GAD Corner digital ecosystem. A collaborative effort of the IT Division to promote gender-inclusive governance through modern technology.
+            </p>
+        </div>
+
+        <!-- THE DEVELOPERS GRID -->
+        <!-- Each developer has their own file in the 'includes' folder -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-32">
+            
+            <!-- Your Card (Leoncio) -->
+            {% include 'team/includes/dev-leoncio.html' %}
+
+            <!-- Add more team members here -->
+            {% include 'team/includes/dev-placeholder.html' %}
+
+        </div>
+
+        <!-- COMPREHENSIVE TECH STACK SECTION -->
+        <div class="bg-white rounded-[3rem] p-12 shadow-sm border border-gray-100">
+            <div class="text-center mb-16">
+                <h3 class="text-xs font-black text-gray-400 uppercase tracking-[0.5em] mb-4">Development Environment</h3>
+                <h2 class="text-3xl font-bold text-gray-800">Technology Stack</h2>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-12">
+                <!-- Frontend -->
+                <div class="space-y-6">
+                    <h4 class="text-primary-green font-black text-sm uppercase tracking-widest border-b border-green-100 pb-2">Frontend</h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-3 text-gray-600 font-medium"><i class="fab fa-html5 text-orange-500 text-xl"></i> HTML5 Semantic</li>
+                        <li class="flex items-center gap-3 text-gray-600 font-medium"><i class="fab fa-css3-alt text-blue-500 text-xl"></i> Tailwind CSS 3.0</li>
+                        <li class="flex items-center gap-3 text-gray-600 font-medium"><i class="fab fa-js text-yellow-400 text-xl"></i> JavaScript ES6+</li>
+                    </ul>
+                </div>
+
+                <!-- Backend -->
+                <div class="space-y-6">
+                    <h4 class="text-primary-green font-black text-sm uppercase tracking-widest border-b border-green-100 pb-2">Backend</h4>
+                    <ul class="space-y-4">
+    
+                    </ul>
+                </div>
+
+                <!-- Database & Tools -->
+                <div class="space-y-6">
+                    <h4 class="text-primary-green font-black text-sm uppercase tracking-widest border-b border-green-100 pb-2">Infrastructure</h4>
+                    <ul class="space-y-4">
+    
+                    </ul>
+                </div>
+
+                <!-- Design -->
+                <div class="space-y-6">
+                    <h4 class="text-primary-green font-black text-sm uppercase tracking-widest border-b border-green-100 pb-2">Design Tools</h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-3 text-gray-600 font-medium"><i class="fab fa-figma text-purple-500 text-xl"></i> Figma (UI/UX)</li>
+                        <li class="flex items-center gap-3 text-gray-600 font-medium"><i class="fas fa-font text-gray-800 text-xl"></i> Google Fonts</li>
+                        <li class="flex items-center gap-3 text-gray-600 font-medium"><i class="fas fa-icons text-blue-400 text-xl"></i> FontAwesome 6</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Status Banner -->
+        <div class="mt-12 bg-gray-900 rounded-3xl p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-6">
+                <div class="w-12 h-12 bg-primary-green rounded-full flex items-center justify-center text-white animate-pulse">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <div>
+                    <p class="text-white font-bold">System Status: <span class="text-green-400">Stable v2.0</span></p>
+                    <p class="text-gray-400 text-sm italic">Last deployment: Today</p>
+                </div>
+            </div>
+            <a href="mailto:gad@montalban.gov.ph" class="px-8 py-3 bg-primary-green text-white font-black text-xs uppercase tracking-widest rounded-xl hover:bg-green-700 transition-all">
+                Report a Bug
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
