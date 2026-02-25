@@ -70,7 +70,7 @@ def search():
     if query:
         # Search through our content list (Case-insensitive)
         results = [item for item in searchable_content if query.lower() in item['title'].lower()]
-    return render_template('search-results.html', query=query, results=results)
+    return render_template('search_results.html', query=query, results=results)
 
 @main_bp.route('/api/suggestions')
 def get_suggestions():
