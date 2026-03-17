@@ -17,6 +17,14 @@ def load_news():
     except (FileNotFoundError, json.JSONDecodeError):
         return []
 
+def load_carousel():
+    """Load all image URLs from data/carousel.json."""
+    carousel_file = os.path.join(current_app.root_path, 'data', 'carousel.json')
+    try:
+        with open(carousel_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
 
 # --- Mock Database of Searchable Content ---
 # This list is used by both the search results page and the live suggestion API.
@@ -45,7 +53,8 @@ searchable_content = [
 def index():
     news_items = load_news()
     latest_news = news_items[:3]  # Show 3 most recent on homepage
-    return render_template('index.html', latest_news=latest_news)
+    carousel_images = load_carousel()
+    return render_template('index.html', latest_news=latest_news, carousel_images=carousel_images)
 
 # --- About Section Routes ---
 
