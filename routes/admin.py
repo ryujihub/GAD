@@ -119,8 +119,34 @@ def features():
                 schedule_config = json.load(f)
     except Exception:
         pass
+        
+    carousel_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'carousel.json')
+    carousel_images = []
+    try:
+        if os.path.exists(carousel_file):
+            with open(carousel_file, 'r') as f:
+                carousel_images = json.load(f)
+    except Exception:
+        pass
     
-    return render_template('admin/features.html', schedule=schedule_config)
+    return render_template('admin/features.html', schedule=schedule_config, carousel_images=carousel_images)
+
+@admin_bp.route('/save_carousel', methods=['POST'])
+@login_required
+def save_carousel():
+    urls = request.form.getlist('urls[]')
+    # filter blanks
+    urls = [u.strip() for u in urls if u.strip()]
+    
+    carousel_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'carousel.json')
+    try:
+        with open(carousel_file, 'w') as f:
+            json.dump(urls, f, indent=4)
+        flash('Carousel images updated successfully.', 'success')
+    except Exception as e:
+        flash(f'Failed to update carousel: {e}', 'error')
+        
+    return redirect(url_for('admin.features'))
 
 @admin_bp.route('/configure_scraper', methods=['POST'])
 @login_required

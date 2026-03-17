@@ -2,7 +2,7 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="px-[5%] lg:px-[10%] py-6 md:py-12">
+<section id="heroSection" class="px-[5%] lg:px-[10%] py-6 md:py-12 relative z-20 bg-gray-50">
     <div
         class="h-[300px] md:h-[450px] rounded-[1.5rem] md:rounded-[2rem] flex items-center justify-center text-center text-white relative overflow-hidden shadow-2xl">
         <!-- Parallax Background Layer -->
@@ -27,6 +27,90 @@
         </div>
     </div>
 </section>
+
+<!-- Scroll-Triggered Carousel -->
+<div class="px-[5%] lg:px-[10%] relative z-10">
+    <div id="scrollCarouselWrapper" class="overflow-hidden opacity-0 h-0 transition-all duration-[800ms] ease-in-out">
+        <div class="w-full relative group py-2 mt-4 pb-8 rounded-[1.5rem] md:rounded-[2rem]">
+            <!-- Optional fading edges -->
+            <div
+                class="absolute left-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none">
+            </div>
+            <div
+                class="absolute right-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none">
+            </div>
+
+            <div
+                class="flex gap-4 md:gap-6 w-max animate-[scroll_40s_linear_infinite] group-hover:[animation-play-state:paused] px-4">
+
+                {% if carousel_images %}
+                <!-- Original set -->
+                {% for img_url in carousel_images %}
+                <div
+                    class="w-48 md:w-64 h-32 md:h-48 bg-gradient-to-br from-green-100 to-blue-50 rounded-2xl flex-shrink-0 relative overflow-hidden shadow-md">
+                    <img src="{{ img_url }}" alt="Carousel Image"
+                        class="w-full h-full object-cover opacity-90 transition-transform duration-500 hover:scale-105">
+                </div>
+                {% endfor %}
+                <!-- Duplicate for infinite scroll effect (using absolute minimum necessary duplicates, Playwright usually requires at least 2 identical sets to seamlessly loop, but we will add a 3rd set if the list is short to ensure the row is filled without snapping) -->
+                {% for img_url in carousel_images %}
+                <div
+                    class="w-48 md:w-64 h-32 md:h-48 bg-gradient-to-br from-green-100 to-blue-50 rounded-2xl flex-shrink-0 relative overflow-hidden shadow-md">
+                    <img src="{{ img_url }}" alt="Carousel Image"
+                        class="w-full h-full object-cover opacity-90 transition-transform duration-500 hover:scale-105">
+                </div>
+                {% endfor %}
+                {% if carousel_images|length < 5 %} {% for img_url in carousel_images %} <div
+                    class="w-48 md:w-64 h-32 md:h-48 bg-gradient-to-br from-green-100 to-blue-50 rounded-2xl flex-shrink-0 relative overflow-hidden shadow-md">
+                    <img src="{{ img_url }}" alt="Carousel Image"
+                        class="w-full h-full object-cover opacity-90 transition-transform duration-500 hover:scale-105">
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% else %}
+            <div class="p-4 text-gray-400 text-sm">No carousel images configured.</div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes scroll {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const heroSection = document.getElementById("heroSection");
+        const carouselWrapper = document.getElementById("scrollCarouselWrapper");
+
+        if (heroSection && carouselWrapper) {
+            window.addEventListener('scroll', () => {
+                const heroRect = heroSection.getBoundingClientRect();
+                // Trigger when hero bottom is moving up the screen
+                if (heroRect.bottom < (window.innerHeight * 0.70)) {
+                    // Determine height needed. A 48 top margin + 48 image height = roughly ~15rem or h-64 padding. 
+                    // We'll use a specific max-height to animate perfectly.
+                    carouselWrapper.classList.remove("opacity-0", "h-0");
+                    carouselWrapper.classList.add("opacity-100", "h-[220px]", "md:h-[280px]");
+                } else {
+                    carouselWrapper.classList.add("opacity-0", "h-0");
+                    carouselWrapper.classList.remove("opacity-100", "h-[220px]", "md:h-[280px]");
+                }
+            });
+            // Run once on load to check initial position
+            window.dispatchEvent(new Event('scroll'));
+        }
+    });
+</script>
 
 <!-- Responsive Content Grid -->
 <div class="max-w-[1400px] w-full px-[5%] lg:px-[6%] mx-auto mb-24 grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10">

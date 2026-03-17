@@ -4,12 +4,6 @@
 
 {% block content %}
 
-<!-- Header Section -->
-<div class="mb-8 border-b border-gray-100 pb-5">
-    <h2 class="text-2xl font-black text-gray-800 tracking-tight">System Features</h2>
-    <p class="text-gray-500 text-sm mt-1">Manage and trigger optional system features and background processes.</p>
-</div>
-
 <!-- System Features Grid -->
 <div class="grid grid-cols-1 gap-6">
 
@@ -113,6 +107,201 @@
 
         </div>
     </div>
+
+    <!-- Homepage Carousel Setup -->
+    <div
+        class="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden flex flex-col hover:shadow-lg transition-shadow duration-300">
+        <div class="p-8 flex flex-col lg:flex-row gap-8 lg:gap-12 w-full">
+
+            <!-- Left Side: Info -->
+            <div class="flex-1 flex flex-col gap-6">
+                <div class="flex items-start gap-5">
+                    <div
+                        class="w-14 h-14 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center shrink-0">
+                        <i class="fas fa-images text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-gray-800 text-lg mb-1">Homepage Carousel</h3>
+                        <p class="text-sm text-gray-500 leading-relaxed max-w-lg">
+                            Manage the images that appear continuously across the rolling carousel underneath the hero
+                            section on the main landing page.
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-purple-50 rounded-xl p-4 border border-purple-100 flex gap-3 text-purple-800 mt-auto w-full max-w-lg">
+                    <i class="fas fa-info-circle mt-1 shrink-0 opacity-70"></i>
+                    <div class="text-xs space-y-1">
+                        <p class="font-bold">Image Recommendations</p>
+                        <p class="opacity-90">Avoid linking extremely large, unoptimized image files as this will slow
+                            down the homepage load speed.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Config Form -->
+            <div
+                class="w-full lg:w-[450px] flex flex-col pt-6 lg:pt-0 border-t lg:border-t-0 lg:border-l border-gray-100 lg:pl-12">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-10 h-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center shrink-0">
+                            <i class="fas fa-magic"></i>
+                        </div>
+                        <h4 class="font-bold text-gray-800 text-base">Image Gallery</h4>
+                    </div>
+                    <span id="activeCount"
+                        class="text-[10px] font-black uppercase text-purple-600 bg-purple-100 px-3 py-1.5 rounded-lg">{{
+                        carousel_images|length }} Active</span>
+                </div>
+
+                <form action="{{ url_for('admin.save_carousel') }}" method="POST" class="flex-1 flex flex-col">
+                    <div id="carouselCardsContainer"
+                        class="grid grid-cols-2 gap-4 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar pb-4">
+                        {% for img in carousel_images %}
+                        <div
+                            class="carousel-card group relative bg-gray-50 rounded-2xl border-2 border-transparent hover:border-purple-200 transition-all p-2 flex flex-col">
+                            <div
+                                class="aspect-[16/10] rounded-xl bg-gray-200 overflow-hidden relative mb-2 shadow-sm border border-gray-100">
+                                <img src="{{ img }}"
+                                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    onerror="this.src='https://placehold.co/400x250?text=Invalid+Image'">
+                                <div
+                                    class="absolute inset-0 bg-white/10 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-2">
+                                    <button type="button" onclick="toggleCard(this)"
+                                        class="w-9 h-9 rounded-xl bg-white text-purple-600 hover:bg-purple-600 hover:text-white transition-all flex items-center justify-center shadow-xl transform translate-y-2 group-hover:translate-y-0">
+                                        <i class="fas fa-pencil-alt text-sm"></i>
+                                    </button>
+                                    <button type="button" onclick="removeCard(this)"
+                                        class="w-9 h-9 rounded-xl bg-white text-red-500 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center shadow-xl transform translate-y-2 group-hover:translate-y-0 delay-75">
+                                        <i class="fas fa-trash-alt text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-details hidden animate-in fade-in slide-in-from-top-2 duration-300">
+                                <input type="url" name="urls[]" value="{{ img }}"
+                                    class="w-full text-[10px] bg-white border border-gray-200 rounded-lg px-2 py-2 focus:border-purple-500 outline-none shadow-inner"
+                                    placeholder="Image URL..." required oninput="debouncedUpdatePreview(this)">
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        <!-- Add Placeholder -->
+                        <button type="button" onclick="addCarouselCard()"
+                            class="aspect-[16/10] rounded-2xl border-2 border-dashed border-gray-200 hover:border-purple-400 hover:bg-purple-50 transition-all flex flex-col items-center justify-center gap-2 group p-2">
+                            <div
+                                class="w-10 h-10 rounded-full bg-gray-50 text-gray-400 group-hover:bg-purple-100 group-hover:text-purple-500 transition-all flex items-center justify-center">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <span
+                                class="text-[10px] font-bold text-gray-400 group-hover:text-purple-500 uppercase tracking-widest">Add
+                                New</span>
+                        </button>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full mt-6 bg-purple-600 hover:bg-purple-700 active:scale-[0.98] text-white font-black text-sm uppercase tracking-wider py-4 px-6 rounded-xl transition-all shadow-md flex items-center justify-center gap-3">
+                        <i class="fas fa-save"></i> Apply Changes
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
 </div>
+
+<script>
+    function toggleCard(btn) {
+        const card = btn.closest('.carousel-card');
+        const details = card.querySelector('.card-details');
+        const allDetails = document.querySelectorAll('.card-details');
+        const allCards = document.querySelectorAll('.carousel-card');
+
+        // Close others
+        allDetails.forEach((d, i) => {
+            if (d !== details) {
+                d.classList.add('hidden');
+                allCards[i].classList.remove('ring-2', 'ring-purple-400', 'bg-white');
+                allCards[i].classList.add('bg-gray-50');
+            }
+        });
+
+        const isHidden = details.classList.contains('hidden');
+        if (isHidden) {
+            details.classList.remove('hidden');
+            card.classList.add('ring-2', 'ring-purple-400', 'bg-white');
+            card.classList.remove('bg-gray-50');
+            details.querySelector('input').focus();
+        } else {
+            details.classList.add('hidden');
+            card.classList.remove('ring-2', 'ring-purple-400', 'bg-white');
+            card.classList.add('bg-gray-50');
+        }
+    }
+
+    function removeCard(btn) {
+        if (confirm('Remove this image from carousel?')) {
+            const card = btn.closest('.carousel-card');
+            card.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                card.remove();
+                updateActiveCount();
+            }, 300);
+        }
+    }
+
+    function addCarouselCard() {
+        const container = document.getElementById('carouselCardsContainer');
+        const addBtn = container.querySelector('button[onclick="addCarouselCard()"]');
+
+        const newCard = document.createElement('div');
+        newCard.className = 'carousel-card group relative bg-white ring-2 ring-purple-400 rounded-2xl border-2 border-transparent transition-all p-2 flex flex-col';
+        newCard.innerHTML = `
+        <div class="aspect-[16/10] rounded-xl bg-gray-200 overflow-hidden relative mb-2 shadow-sm border border-gray-100">
+            <img src="https://placehold.co/400x250?text=New+Image" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" onerror="this.src='https://placehold.co/400x250?text=Invalid+Image'">
+            <div class="absolute inset-0 bg-white/10 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-2">
+                <button type="button" onclick="toggleCard(this)" class="w-9 h-9 rounded-xl bg-white text-purple-600 hover:bg-purple-600 hover:text-white transition-all flex items-center justify-center shadow-xl">
+                    <i class="fas fa-pencil-alt text-sm"></i>
+                </button>
+                <button type="button" onclick="removeCard(this)" class="w-9 h-9 rounded-xl bg-white text-red-500 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center shadow-xl">
+                    <i class="fas fa-trash-alt text-sm"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-details px-1 pb-1 animate-in fade-in slide-in-from-top-2 duration-300">
+            <input type="url" name="urls[]" value="" 
+                class="w-full text-[10px] bg-white border border-gray-200 rounded-lg px-2 py-2 focus:border-purple-500 outline-none shadow-inner" 
+                placeholder="Paste URL here..." required oninput="debouncedUpdatePreview(this)">
+        </div>
+    `;
+
+        container.insertBefore(newCard, addBtn);
+        newCard.querySelector('input').focus();
+        updateActiveCount();
+
+        // Smooth scroll to new card
+        newCard.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+
+    function updateActiveCount() {
+        const count = document.querySelectorAll('.carousel-card').length;
+        document.getElementById('activeCount').innerText = `${count} Active`;
+    }
+
+    let timeout = null;
+    function debouncedUpdatePreview(input) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            const card = input.closest('.carousel-card');
+            const img = card.querySelector('img');
+            if (input.value.trim()) {
+                img.src = input.value.trim();
+            } else {
+                img.src = 'https://placehold.co/400x250?text=Paste+URL';
+            }
+        }, 500);
+    }
+</script>
 
 {% endblock %}
