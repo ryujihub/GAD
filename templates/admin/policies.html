@@ -7,10 +7,13 @@
     .pill {
         font-size: 0.65rem;
         font-weight: 700;
-        padding: 2px 10px;
+        padding: 2px 8px;
         border-radius: 9999px;
         text-transform: uppercase;
         letter-spacing: 0.05em;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
     }
 
     .pill-new {
@@ -37,11 +40,32 @@
         background: #f3f4f6;
         color: #374151;
     }
+
+    /* Category pill variants */
+    .pill-cat-circulars {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .pill-cat-resolutions {
+        background: #e0f2fe;
+        color: #0c4a6e;
+    }
+
+    .pill-cat-memoranda {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .pill-cat-orders {
+        background: #d1fae5;
+        color: #065f46;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto">
+<div class="w-full px-4 sm:px-6 lg:px-8">
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
         <div class="flex items-start justify-between gap-6">
             <div>
@@ -84,7 +108,16 @@
 
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
+                    <table class="w-full text-sm table-fixed">
+                        <colgroup>
+                            <col style="width: 12%;" />
+                            <col style="width: 8%;" />
+                            <col style="width: 38%;" />
+                            <col style="width: 10%;" />
+                            <col style="width: 12%;" />
+                            <col style="width: 12%;" />
+                            <col style="width: 8%;" />
+                        </colgroup>
                         <thead>
                             <tr class="border-b border-gray-100 bg-gray-50">
                                 <th class="px-4 py-3 text-left text-[10px] font-black uppercase tracking-widest text-gray-400">Category</th>
@@ -104,10 +137,10 @@
                                     data-category="{{ category }}"
                                     data-search="{{ category_labels[category] }} {{ entry.year }} {{ entry.title }} {{ entry.date }} {{ entry.status }} {{ entry.file }}">
                                     <td class="px-4 py-4">
-                                        <span class="pill pill-default">{{ category_labels[category] }}</span>
+                                        <span class="pill pill-cat-{{ category }}">{{ category_labels[category] }}</span>
                                     </td>
                                     <td class="px-4 py-4 font-medium text-gray-700 whitespace-nowrap">{{ entry.year }}</td>
-                                    <td class="px-4 py-4 text-gray-700">{{ entry.title }}</td>
+                                    <td class="px-4 py-4 text-gray-700 truncate max-w-full">{{ entry.title }}</td>
                                     <td class="px-4 py-4 text-gray-500 whitespace-nowrap">{{ entry.date }}</td>
                                     <td class="px-4 py-4">
                                         {% set status_key = entry.status | lower | replace(' ', '-') %}
