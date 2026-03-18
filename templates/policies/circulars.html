@@ -23,11 +23,11 @@
         <div class="flex gap-4 ml-6 md:ml-0">
             <div class="bg-green-50 px-4 py-2 rounded-lg border border-green-100">
                 <span class="block text-xs text-gray-500 uppercase font-bold">Total Files</span>
-                <span class="text-xl font-bold text-primary-green">12</span>
+                <span class="text-xl font-bold text-primary-green">{{ stats.total }}</span>
             </div>
             <div class="bg-blue-50 px-4 py-2 rounded-lg border border-blue-100">
                 <span class="block text-xs text-gray-500 uppercase font-bold">Updated</span>
-                <span class="text-xl font-bold text-blue-600">Jan 2024</span>
+                <span class="text-xl font-bold text-blue-600">{{ stats.updated or '—' }}</span>
             </div>
         </div>
     </div>
@@ -36,8 +36,8 @@
         search_id="policySearch", 
         filter_id="yearFilter", 
         placeholder="Search by subject, keyword, or Ref No...",
-        start_year=2002,
-        current_year=now.year
+        start_year=site_config.get('policies', {}).get('start_year', 2002),
+        current_year=site_config.get('policies', {}).get('current_year', now.year)
     ) }}
 
     <!-- Main Table Container -->
@@ -53,79 +53,51 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    <!-- Row 1 -->
-                    <tr class="policy-row hover:bg-green-50/40 transition-colors group" data-year="2024" data-title="PCW Memorandum Circular No. 2024-01 Guidelines for the 2024 GAD Plan and Budget preparation">
-                        <td class="px-6 py-5">
-                            <div class="flex items-start">
-                                <div class="mt-1 mr-4 text-primary-green bg-green-50 p-2 rounded-lg group-hover:bg-white transition-colors">
-                                    <i class="fas fa-file-pdf text-xl"></i>
-                                </div>
-                                <div>
-                                    <div class="font-bold text-gray-800 group-hover:text-primary-green transition-colors leading-tight">
-                                        PCW Memorandum Circular No. 2024-01
+                    {% if policies %}
+                        {% for item in policies %}
+                        <tr class="policy-row hover:bg-green-50/40 transition-colors group" data-year="{{ item.year }}" data-title="{{ item.title }}">
+                            <td class="px-6 py-5">
+                                <div class="flex items-start">
+                                    <div class="mt-1 mr-4 text-primary-green bg-green-50 p-2 rounded-lg group-hover:bg-white transition-colors">
+                                        <i class="fas fa-file-pdf text-xl"></i>
                                     </div>
-                                    <div class="text-xs text-gray-500 mt-1">
-                                        Guidelines for the 2024 GAD Plan and Budget preparation.
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-5 text-sm">
-                            <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 border border-green-200">
-                                New
-                            </span>
-                        </td>
-                        <td class="px-6 py-5 text-gray-500 text-sm whitespace-nowrap">
-                            <i class="far fa-calendar-alt mr-1"></i> Jan 15, 2024
-                        </td>
-                        <td class="px-6 py-5">
-                            <div class="flex items-center justify-center gap-2">
-                                <a href="{{ url_for('static', filename='uploads/policies/circular-2024-01.pdf') }}" target="_blank" class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="View Online">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="{{ url_for('static', filename='uploads/policies/circular-2024-01.pdf') }}" download="PCW-MC-2024-01.pdf" class="inline-flex items-center px-4 py-2 bg-primary-green hover:bg-green-700 text-white text-xs font-bold rounded-lg transition-all shadow-sm">
-                                    <i class="fas fa-download mr-2"></i> DOWNLOAD
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 2 -->
-                    <tr class="policy-row hover:bg-green-50/40 transition-colors group" data-year="2023" data-title="PCW Memorandum Circular No. 2023-04 Mainstreaming GAD in Local Governance Frameworks.">
-                        <td class="px-6 py-5">
-                            <div class="flex items-start">
-                                <div class="mt-1 mr-4 text-primary-green bg-green-50 p-2 rounded-lg group-hover:bg-white transition-colors">
-                                    <i class="fas fa-file-pdf text-xl"></i>
-                                </div>
-                                <div>
-                                    <div class="font-bold text-gray-800 group-hover:text-primary-green transition-colors leading-tight">
-                                        PCW Memorandum Circular No. 2023-04
-                                    </div>
-                                    <div class="text-xs text-gray-500 mt-1">
-                                        Mainstreaming GAD in Local Governance Frameworks.
+                                    <div>
+                                        <div class="font-bold text-gray-800 group-hover:text-primary-green transition-colors leading-tight">
+                                            {{ item.title }}
+                                        </div>
+                                        <div class="text-xs text-gray-500 mt-1">
+                                            {{ item.description }}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-5 text-sm">
-                            <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">
-                                Active
-                            </span>
-                        </td>
-                        <td class="px-6 py-5 text-gray-500 text-sm whitespace-nowrap">
-                            <i class="far fa-calendar-alt mr-1"></i> Nov 10, 2023
-                        </td>
-                        <td class="px-6 py-5 text-center">
-                            <div class="flex items-center justify-center gap-2">
-                                <a href="{{ url_for('static', filename='uploads/policies/circular-2024-01.pdf') }}" target="_blank" class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="View Online">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="{{ url_for('static', filename='uploads/policies/circular-2024-01.pdf') }}" download="PCW-MC-2024-01.pdf" class="inline-flex items-center px-4 py-2 bg-primary-green hover:bg-green-700 text-white text-xs font-bold rounded-lg transition-all shadow-sm">
-                                    <i class="fas fa-download mr-2"></i> DOWNLOAD
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+                            <td class="px-6 py-5 text-sm">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">
+                                    {{ item.status }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-5 text-gray-500 text-sm whitespace-nowrap">
+                                <i class="far fa-calendar-alt mr-1"></i> {{ item.date }}
+                            </td>
+                            <td class="px-6 py-5">
+                                <div class="flex items-center justify-center gap-2">
+                                    <a href="{{ url_for('static', filename=item.file) }}" target="_blank" class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="View Online">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ url_for('static', filename=item.file) }}" download class="inline-flex items-center px-4 py-2 bg-primary-green hover:bg-green-700 text-white text-xs font-bold rounded-lg transition-all shadow-sm">
+                                        <i class="fas fa-download mr-2"></i> DOWNLOAD
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="px-6 py-10 text-center text-sm text-gray-500">
+                                No circulars found. Please add them via the admin panel.
+                            </td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>

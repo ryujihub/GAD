@@ -1,0 +1,9 @@
+{
+  "policies": {
+    "start_year": 2002,
+    "current_year": 2024
+  },
+  "reports": {
+    "years": ["2024", "2023", "2022", "2021", "2020"]
+  }
+}

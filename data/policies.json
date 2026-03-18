@@ -1,0 +1,64 @@
+{
+  "circulars": [
+    {
+      "id": "c1",
+      "year": 2024,
+      "title": "PCW Memorandum Circular No. 2024-01",
+      "description": "Guidelines for the 2024 GAD Plan and Budget preparation.",
+      "date": "2024-01-15",
+      "status": "New",
+      "file": "uploads/policies/circular-2024-01.pdf"
+    },
+    {
+      "id": "c2",
+      "year": 2023,
+      "title": "PCW Memorandum Circular No. 2023-04",
+      "description": "Mainstreaming GAD in Local Governance Frameworks.",
+      "date": "2023-11-10",
+      "status": "Active",
+      "file": "uploads/policies/circular-2023-04.pdf"
+    }
+  ],
+  "memoranda": [
+    {
+      "id": "m1",
+      "year": 2024,
+      "title": "Memorandum on Mandatory GAD Training for All Dept Heads",
+      "description": "Re-constitution of the technical working group.",
+      "date": "2024-02-14",
+      "status": "Urgent",
+      "file": "uploads/policies/memo-2024-005.pdf"
+    },
+    {
+      "id": "m2",
+      "year": 2024,
+      "title": "Submission of Gender Disaggregated Data (GDD)",
+      "description": "Quarterly reporting requirements for all units.",
+      "date": "2024-01-30",
+      "status": "Info",
+      "file": "uploads/policies/memo-2024-002.pdf"
+    }
+  ],
+  "resolutions": [
+    {
+      "id": "r1",
+      "year": 2023,
+      "title": "Reso No. 2023-45 Adoption of the 2024 GAD Plan and Budget",
+      "description": "Adoption of the annual plan and budget.",
+      "date": "2023-10-12",
+      "status": "Passed",
+      "file": "uploads/policies/reso-2023-45.pdf"
+    }
+  ],
+  "orders": [
+    {
+      "id": "o1",
+      "year": 2024,
+      "title": "Order 2024-02: Designation of GAD Focal Point System (GFPS) Members",
+      "description": "Re-constitution of the technical working group.",
+      "date": "2024-01-10",
+      "status": "Active",
+      "file": "uploads/policies/order-2024-02.pdf"
+    }
+  ]
+}
