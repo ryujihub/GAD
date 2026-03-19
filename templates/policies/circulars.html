@@ -4,21 +4,23 @@
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-6 py-12">
-    
+
 
 
 
     <!-- Header & Description -->
     <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-            <h2 class="text-3xl font-extrabold text-gray-800 border-l-8 border-primary-green pl-4 uppercase tracking-tight">
+            <h2
+                class="text-3xl font-extrabold text-gray-800 border-l-8 border-primary-green pl-4 uppercase tracking-tight">
                 GAD Policies: <span class="text-primary-green">Circulars</span>
             </h2>
             <p class="mt-2 text-gray-600 max-w-2xl ml-6">
-                Access official memorandum circulars, guidelines, and directives issued by the Philippine Commission on Women (PCW) and related oversight agencies.
+                Access official memorandum circulars, guidelines, and directives issued by the Philippine Commission on
+                Women (PCW) and related oversight agencies.
             </p>
         </div>
-        
+
         <!-- Stats Summary -->
         <div class="flex gap-4 ml-6 md:ml-0">
             <div class="bg-green-50 px-4 py-2 rounded-lg border border-green-100">
@@ -33,11 +35,11 @@
     </div>
 
     {{ render_controls(
-        search_id="policySearch", 
-        filter_id="yearFilter", 
-        placeholder="Search by subject, keyword, or Ref No...",
-        start_year=site_config.get('policies', {}).get('start_year', 2002),
-        current_year=site_config.get('policies', {}).get('current_year', now.year)
+    search_id="policySearch",
+    filter_id="yearFilter",
+    placeholder="Search by subject, keyword, or Ref No...",
+    start_year=site_config.get('policies', {}).get('start_year', 2002),
+    current_year=site_config.get('policies', {}).get('current_year', now.year)
     ) }}
 
     <!-- Main Table Container -->
@@ -54,75 +56,105 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     {% if policies %}
-                        {% for item in policies %}
-                        <tr class="policy-row hover:bg-green-50/40 transition-colors group" data-year="{{ item.year }}" data-title="{{ item.title }}">
-                            <td class="px-6 py-5">
-                                <div class="flex items-start">
-                                    <div class="mt-1 mr-4 text-primary-green bg-green-50 p-2 rounded-lg group-hover:bg-white transition-colors">
-                                        <i class="fas fa-file-pdf text-xl"></i>
+                    {% for item in policies %}
+                    <tr class="policy-row hover:bg-green-50/40 transition-colors group" data-year="{{ item.year }}"
+                        data-title="{{ item.title }}">
+                        <td class="px-6 py-5">
+                            <div class="flex items-start">
+                                <div
+                                    class="mt-1 mr-4 text-primary-green bg-green-50 p-2 rounded-lg group-hover:bg-white transition-colors">
+                                    <i class="fas fa-file-pdf text-xl"></i>
+                                </div>
+                                <div>
+                                    {% if item.url %}
+                                    <div class="font-bold text-gray-800 group-hover:text-primary-green transition-colors leading-tight cursor-pointer"
+                                        onclick="window.open('{{ item.url }}', '_blank')">
+                                        {{ item.title }} <i
+                                            class="fas fa-external-link-alt text-[10px] ml-1 opacity-50"></i>
                                     </div>
-                                    <div>
-                                        <div class="font-bold text-gray-800 group-hover:text-primary-green transition-colors leading-tight">
-                                            {{ item.title }}
-                                        </div>
-                                        <div class="text-xs text-gray-500 mt-1">
-                                            {{ item.description }}
-                                        </div>
+                                    {% else %}
+                                    <div
+                                        class="font-bold text-gray-800 group-hover:text-primary-green transition-colors leading-tight">
+                                        {{ item.title }}
+                                    </div>
+                                    {% endif %}
+                                    <div class="text-xs text-gray-500 mt-1">
+                                        {{ item.description }}
                                     </div>
                                 </div>
-                            </td>
-                            <td class="px-6 py-5 text-sm">
-                                <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">
-                                    {{ item.status }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-5 text-gray-500 text-sm whitespace-nowrap">
-                                <i class="far fa-calendar-alt mr-1"></i> {{ item.date }}
-                            </td>
-                            <td class="px-6 py-5">
-                                <div class="flex items-center justify-center gap-2">
-                                    <a href="{{ url_for('static', filename=item.file) }}" target="_blank" class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="View Online">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ url_for('static', filename=item.file) }}" download class="inline-flex items-center px-4 py-2 bg-primary-green hover:bg-green-700 text-white text-xs font-bold rounded-lg transition-all shadow-sm">
-                                        <i class="fas fa-download mr-2"></i> DOWNLOAD
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
+                            </div>
+                        </td>
+                        <td class="px-6 py-5 text-sm">
+                            <span
+                                class="px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">
+                                {{ item.status }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-5 text-gray-500 text-sm whitespace-nowrap">
+                            <i class="far fa-calendar-alt mr-1"></i> {{ item.date }}
+                        </td>
+                        <td class="px-6 py-5">
+                            <div class="flex items-center justify-center gap-2">
+                                {% if item.url %}
+                                <a href="{{ item.url }}" target="_blank"
+                                    class="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                                    title="Visit PCW Website">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <a href="{{ item.url }}" target="_blank"
+                                    class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition-all shadow-sm whitespace-nowrap">
+                                    <i class="fas fa-external-link-alt mr-2"></i> VISIT PCW
+                                </a>
+                                {% else %}
+                                <a href="{{ url_for('static', filename=item.file) }}" target="_blank"
+                                    class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="View Online">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ url_for('static', filename=item.file) }}" download
+                                    class="inline-flex items-center px-4 py-2 bg-primary-green hover:bg-green-700 text-white text-xs font-bold rounded-lg transition-all shadow-sm whitespace-nowrap">
+                                    <i class="fas fa-download mr-2"></i> DOWNLOAD
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
                     {% else %}
-                        <tr>
-                            <td colspan="4" class="px-6 py-10 text-center text-sm text-gray-500">
-                                No circulars found. Please add them via the admin panel.
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="4" class="px-6 py-10 text-center text-sm text-gray-500">
+                            No circulars found. Please add them via the admin panel.
+                        </td>
+                    </tr>
                     {% endif %}
                 </tbody>
             </table>
         </div>
-        
+
         <!-- Pagination Placeholder -->
         <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex items-center justify-between">
             <div class="text-sm text-gray-500">
-                Showing <span id="showingStart" class="font-medium text-gray-700">0</span> to <span id="showingEnd" class="font-medium text-gray-700">0</span> of <span id="totalItems" class="font-medium text-gray-700">0</span> results
+                Showing <span id="showingStart" class="font-medium text-gray-700">0</span> to <span id="showingEnd"
+                    class="font-medium text-gray-700">0</span> of <span id="totalItems"
+                    class="font-medium text-gray-700">0</span> results
             </div>
             <div class="flex gap-1" id="paginationControls">
-            <!-- Buttons will be handled by JS -->
+                <!-- Buttons will be handled by JS -->
             </div>
         </div>
 
-    <!-- Help Box -->
-    <div class="mt-8 bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-center gap-4">
-        <div class="text-blue-500 text-2xl">
-            <i class="fas fa-info-circle"></i>
-        </div>
-        <div>
-            <h4 class="text-sm font-bold text-blue-800">Need help finding a policy?</h4>
-            <p class="text-xs text-blue-700">If you cannot find a specific circular, please contact the GAD Secretariat office or email us at <a href="mailto:gad@montalban.gov.ph" class="underline">gad@montalban.gov.ph</a></p>
+        <!-- Help Box -->
+        <div class="mt-8 bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-center gap-4">
+            <div class="text-blue-500 text-2xl">
+                <i class="fas fa-info-circle"></i>
+            </div>
+            <div>
+                <h4 class="text-sm font-bold text-blue-800">Need help finding a policy?</h4>
+                <p class="text-xs text-blue-700">If you cannot find a specific circular, please contact the GAD
+                    Secretariat office or email us at <a href="mailto:gad@montalban.gov.ph"
+                        class="underline">gad@montalban.gov.ph</a></p>
+            </div>
         </div>
     </div>
-</div>
 
-<script src="{{ url_for('static', filename='js/table-logic.js') }}"></script>
-{% endblock %}
+    <script src="{{ url_for('static', filename='js/table-logic.js') }}"></script>
+    {% endblock %}

@@ -70,11 +70,14 @@
         <div class="flex items-start justify-between gap-6">
             <div>
                 <h2 class="text-xl font-extrabold text-gray-800">Policies Data Editor</h2>
-                <p class="text-sm text-gray-500 mt-1">View and edit the live policy entries that are displayed on the public site.</p>
+                <p class="text-sm text-gray-500 mt-1">View and edit the live policy entries that are displayed on the
+                    public site.</p>
             </div>
             <div class="flex items-center gap-3">
-                <span class="inline-flex items-center px-3 py-2 rounded-full bg-green-50 text-green-700 text-xs font-semibold">
-                    <i class="fas fa-info-circle mr-2"></i> Stored in <code class="bg-white/50 px-2 py-1 rounded">data/policies.json</code>
+                <span
+                    class="inline-flex items-center px-3 py-2 rounded-full bg-green-50 text-green-700 text-xs font-semibold">
+                    <i class="fas fa-info-circle mr-2"></i> Stored in <code
+                        class="bg-white/50 px-2 py-1 rounded">data/policies.json</code>
                 </span>
                 <button onclick="openAddPolicyModal()"
                     class="flex items-center justify-center gap-2 bg-primary-green hover:bg-primary-hover text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-colors shadow-sm whitespace-nowrap">
@@ -120,51 +123,76 @@
                         </colgroup>
                         <thead>
                             <tr class="border-b border-gray-100 bg-gray-50">
-                                <th class="px-4 py-3 text-left text-[10px] font-black uppercase tracking-widest text-gray-400">Category</th>
-                                <th class="px-4 py-3 text-left text-[10px] font-black uppercase tracking-widest text-gray-400">Year</th>
-                                <th class="px-4 py-3 text-left text-[10px] font-black uppercase tracking-widest text-gray-400">Title</th>
-                                <th class="px-4 py-3 text-left text-[10px] font-black uppercase tracking-widest text-gray-400">Date</th>
-                                <th class="px-4 py-3 text-left text-[10px] font-black uppercase tracking-widest text-gray-400">Status</th>
-                                <th class="px-4 py-3 text-left text-[10px] font-black uppercase tracking-widest text-gray-400">File</th>
-                                <th class="px-4 py-3 text-right text-[10px] font-black uppercase tracking-widest text-gray-400">Actions</th>
+                                <th
+                                    class="px-4 py-3 text-left text-[10px] font-black uppercase tracking-widest text-gray-400">
+                                    Category</th>
+                                <th
+                                    class="px-4 py-3 text-left text-[10px] font-black uppercase tracking-widest text-gray-400">
+                                    Year</th>
+                                <th
+                                    class="px-4 py-3 text-left text-[10px] font-black uppercase tracking-widest text-gray-400">
+                                    Title</th>
+                                <th
+                                    class="px-4 py-3 text-left text-[10px] font-black uppercase tracking-widest text-gray-400">
+                                    Date</th>
+                                <th
+                                    class="px-4 py-3 text-left text-[10px] font-black uppercase tracking-widest text-gray-400">
+                                    Status</th>
+                                <th
+                                    class="px-4 py-3 text-left text-[10px] font-black uppercase tracking-widest text-gray-400">
+                                    Source (File/URL)</th>
+                                <th
+                                    class="px-4 py-3 text-right text-[10px] font-black uppercase tracking-widest text-gray-400">
+                                    Actions</th>
                             </tr>
                         </thead>
                         <tbody id="policiesTableBody" class="divide-y divide-gray-100 bg-white">
-                            {% set category_labels = {'circulars':'Circulars', 'resolutions':'Resolutions', 'memoranda':'Memoranda', 'orders':'Office Orders'} %}
+                            {% set category_labels = {'circulars':'Circulars', 'resolutions':'Resolutions',
+                            'memoranda':'Memoranda', 'orders':'Office Orders'} %}
                             {% for category in ['circulars', 'resolutions', 'memoranda', 'orders'] %}
-                                {% for entry in policies.get(category, []) %}
-                                <tr class="policy-row hover:bg-gray-50 transition-colors"
-                                    data-category="{{ category }}"
-                                    data-search="{{ category_labels[category] }} {{ entry.year }} {{ entry.title }} {{ entry.date }} {{ entry.status }} {{ entry.file }}">
-                                    <td class="px-4 py-4">
-                                        <span class="pill pill-cat-{{ category }}">{{ category_labels[category] }}</span>
-                                    </td>
-                                    <td class="px-4 py-4 font-medium text-gray-700 whitespace-nowrap">{{ entry.year }}</td>
-                                    <td class="px-4 py-4 text-gray-700 truncate max-w-full">{{ entry.title }}</td>
-                                    <td class="px-4 py-4 text-gray-500 whitespace-nowrap">{{ entry.date }}</td>
-                                    <td class="px-4 py-4">
-                                        {% set status_key = entry.status | lower | replace(' ', '-') %}
-                                        <span class="pill {% if status_key in ['new', 'active', 'urgent', 'passed'] %}pill-{{ status_key }}{% else %}pill-default{% endif %}">
-                                            {{ entry.status }}
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-4 text-gray-500">
-                                        <code class="block text-xs text-gray-600 break-all">{{ entry.file }}</code>
-                                    </td>
-                                    <td class="px-4 py-4 text-right whitespace-nowrap">
-                                        <button type="button"
-                                            onclick='openEditPolicyModal({{ {"id": entry.id, "category": category, "year": entry.year, "title": entry.title, "description": entry.description, "date": entry.date, "status": entry.status, "file": entry.file} | tojson | forceescape }})'
-                                            class="text-xs font-bold text-blue-600 hover:text-blue-800 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors mr-1">
-                                            <i class="fas fa-pencil-alt mr-1"></i>Edit
+                            {% for entry in policies.get(category, []) %}
+                            <tr class="policy-row hover:bg-gray-50 transition-colors" data-category="{{ category }}"
+                                data-search="{{ category_labels[category] }} {{ entry.year }} {{ entry.title }} {{ entry.date }} {{ entry.status }} {{ entry.file }}">
+                                <td class="px-4 py-4">
+                                    <span class="pill pill-cat-{{ category }}">{{ category_labels[category] }}</span>
+                                </td>
+                                <td class="px-4 py-4 font-medium text-gray-700 whitespace-nowrap">{{ entry.year }}</td>
+                                <td class="px-4 py-4 text-gray-700 truncate max-w-full">{{ entry.title }}</td>
+                                <td class="px-4 py-4 text-gray-500 whitespace-nowrap">{{ entry.date }}</td>
+                                <td class="px-4 py-4">
+                                    {% set status_key = entry.status | lower | replace(' ', '-') %}
+                                    <span
+                                        class="pill {% if status_key in ['new', 'active', 'urgent', 'passed'] %}pill-{{ status_key }}{% else %}pill-default{% endif %}">
+                                        {{ entry.status }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-4 text-gray-500">
+                                    {% if entry.url %}
+                                    <code class="block text-xs text-blue-600 truncate"
+                                        title="{{ entry.url }}">{{ entry.url }}</code>
+                                    <span
+                                        class="text-[10px] text-blue-400 font-bold uppercase tracking-tighter">External
+                                        Link</span>
+                                    {% else %}
+                                    <code class="block text-xs text-gray-600 break-all">{{ entry.file }}</code>
+                                    {% endif %}
+                                </td>
+                                <td class="px-4 py-4 text-right whitespace-nowrap">
+                                    <button type="button"
+                                        onclick='openEditPolicyModal({{ {"id": entry.id, "category": category, "year": entry.year, "title": entry.title, "description": entry.description, "date": entry.date, "status": entry.status, "file": entry.file, "url": entry.url|default("")} | tojson | forceescape }})'
+                                        class="text-xs font-bold text-blue-600 hover:text-blue-800 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors mr-1">
+                                        <i class="fas fa-pencil-alt mr-1"></i>Edit
+                                    </button>
+                                    <form action="{{ url_for('admin.delete_policy_entry', entry_id=entry.id) }}"
+                                        method="POST" class="inline">
+                                        <button type="submit"
+                                            class="text-xs font-bold text-red-600 hover:text-red-800 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors">
+                                            <i class="fas fa-trash-alt mr-1"></i>Delete
                                         </button>
-                                        <form action="{{ url_for('admin.delete_policy_entry', entry_id=entry.id) }}" method="POST" class="inline">
-                                            <button type="submit" class="text-xs font-bold text-red-600 hover:text-red-800 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors">
-                                                <i class="fas fa-trash-alt mr-1"></i>Delete
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                {% endfor %}
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
                             {% endfor %}
                             <tr id="noPolicyResults" class="hidden">
                                 <td colspan="7" class="px-6 py-10 text-center text-sm text-gray-500">
@@ -177,7 +205,8 @@
                 </div>
 
                 <div class="border-t border-gray-100 bg-gray-50 px-6 py-3 flex items-center justify-between">
-                    <span id="policyTableSummary" class="text-xs text-gray-500 font-medium">Showing 0 to 0 of 0 entries</span>
+                    <span id="policyTableSummary" class="text-xs text-gray-500 font-medium">Showing 0 to 0 of 0
+                        entries</span>
                     <div class="flex items-center gap-1" id="policyPagination"></div>
                 </div>
             </div>
@@ -197,9 +226,11 @@
             </button>
         </div>
 
-        <form action="{{ url_for('admin.add_policy_entry') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form action="{{ url_for('admin.add_policy_entry') }}" method="POST"
+            class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Category *</label>
+                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Category
+                    *</label>
                 <select name="category" required
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green/30 focus:border-primary-green bg-white">
                     <option value="circulars">Circulars</option>
@@ -211,7 +242,8 @@
 
             <div>
                 <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Year *</label>
-                <input name="year" type="number" required value="{{ site_config.policies.current_year | default(now.year if now else 2024) }}"
+                <input name="year" type="number" required
+                    value="{{ site_config.policies.current_year | default(now.year if now else 2024) }}"
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green/30 focus:border-primary-green">
             </div>
 
@@ -222,7 +254,8 @@
             </div>
 
             <div class="md:col-span-2">
-                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Description *</label>
+                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Description
+                    *</label>
                 <input name="description" type="text" required
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green/30 focus:border-primary-green">
             </div>
@@ -239,9 +272,17 @@
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green/30 focus:border-primary-green">
             </div>
 
-            <div class="md:col-span-2">
-                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">File path *</label>
-                <input name="file" type="text" required placeholder="uploads/policies/filename.pdf"
+            <div class="md:col-span-1">
+                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">File
+                    path</label>
+                <input name="file" type="text" placeholder="uploads/policies/filename.pdf"
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green/30 focus:border-primary-green">
+            </div>
+
+            <div class="md:col-span-1">
+                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">External URL
+                    (Directs to PCW)</label>
+                <input name="url" type="url" placeholder="https://pcw.gov.ph/..."
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green/30 focus:border-primary-green">
             </div>
 
@@ -266,14 +307,16 @@
             <h3 class="text-lg font-extrabold text-gray-900 flex items-center gap-2">
                 <i class="fas fa-pencil-alt text-blue-600"></i> Edit Policy Entry
             </h3>
-            <button onclick="closeEditPolicyModal()" class="text-gray-400 hover:text-gray-700 text-xl transition-colors">
+            <button onclick="closeEditPolicyModal()"
+                class="text-gray-400 hover:text-gray-700 text-xl transition-colors">
                 <i class="fas fa-times"></i>
             </button>
         </div>
 
         <form id="edit-policy-form" method="POST" action="" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Category *</label>
+                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Category
+                    *</label>
                 <select id="edit-policy-category" name="category" required
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green/30 focus:border-primary-green bg-white">
                     <option value="circulars">Circulars</option>
@@ -296,7 +339,8 @@
             </div>
 
             <div class="md:col-span-2">
-                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Description *</label>
+                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Description
+                    *</label>
                 <input id="edit-policy-description" name="description" type="text" required
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green/30 focus:border-primary-green">
             </div>
@@ -313,9 +357,17 @@
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green/30 focus:border-primary-green">
             </div>
 
-            <div class="md:col-span-2">
-                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">File path *</label>
-                <input id="edit-policy-file" name="file" type="text" required
+            <div class="md:col-span-1">
+                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">File
+                    path</label>
+                <input id="edit-policy-file" name="file" type="text"
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green/30 focus:border-primary-green">
+            </div>
+
+            <div class="md:col-span-1">
+                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">External
+                    URL</label>
+                <input id="edit-policy-url" name="url" type="url"
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green/30 focus:border-primary-green">
             </div>
 
@@ -354,7 +406,8 @@
         document.getElementById('edit-policy-description').value = entry.description;
         document.getElementById('edit-policy-date').value = entry.date;
         document.getElementById('edit-policy-status').value = entry.status;
-        document.getElementById('edit-policy-file').value = entry.file;
+        document.getElementById('edit-policy-file').value = entry.file || '';
+        document.getElementById('edit-policy-url').value = entry.url || '';
         document.getElementById('edit-policy-modal').classList.remove('hidden');
     }
 

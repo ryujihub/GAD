@@ -204,7 +204,8 @@ def add_policy_entry():
         'description': request.form.get('description', '').strip(),
         'date': request.form.get('date', '').strip(),
         'status': request.form.get('status', '').strip() or 'Active',
-        'file': request.form.get('file', '').strip() or '#'
+        'file': request.form.get('file', '').strip() or '#',
+        'url': request.form.get('url', '').strip()
     }
     policies.setdefault(category, []).insert(0, entry)
     save_policies(policies)
@@ -247,7 +248,8 @@ def edit_policy_entry(entry_id):
         'description': request.form.get('description', old_entry.get('description', '')).strip(),
         'date': request.form.get('date', old_entry.get('date', '')).strip(),
         'status': request.form.get('status', old_entry.get('status', 'Active')).strip() or 'Active',
-        'file': request.form.get('file', old_entry.get('file', '#')).strip() or '#'
+        'file': request.form.get('file', old_entry.get('file', '#')).strip() or '#',
+        'url': request.form.get('url', old_entry.get('url', '')).strip()
     }
 
     # Remove from original category first.

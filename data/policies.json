@@ -1,22 +1,139 @@
 {
   "circulars": [
     {
-      "id": "c1",
-      "year": 2024,
-      "title": "PCW Memorandum Circular No. 2024-01",
-      "description": "Guidelines for the 2024 GAD Plan and Budget preparation.",
-      "date": "2024-01-15",
+      "id": "c_2026_02",
+      "year": 2026,
+      "title": "PCW Memorandum Circular No. 2026-02",
+      "description": "Guide for the 2026 National Women's Month Celebration",
+      "date": "2026-02-02",
       "status": "New",
-      "file": "uploads/policies/circular-2024-01.pdf"
+      "url": "https://pcw.gov.ph/pcw-memorandum-circular-no-2026-02-guide-for-the-2026-national-womens-month-celebration/"
     },
     {
-      "id": "c2",
-      "year": 2023,
-      "title": "PCW Memorandum Circular No. 2023-04",
-      "description": "Mainstreaming GAD in Local Governance Frameworks.",
-      "date": "2023-11-10",
+      "id": "c_2026_01",
+      "year": 2026,
+      "title": "PCW Memorandum Circular No. 2026-01",
+      "description": "Accomplishment and Online Submission of Fiscal Year (FY) 2025 GAD Focal Point System (GFPS) Profile Form",
+      "date": "2026-01-29",
       "status": "Active",
-      "file": "uploads/policies/circular-2023-04.pdf"
+      "url": "https://pcw.gov.ph/pcw-memorandum-circular-2026-01-accomplishment-and-online-submissionof-fiscal-year-fy2025-gad-focal-point-system-gfps-profile-form/"
+    },
+    {
+      "id": "c_2025_09",
+      "year": 2025,
+      "title": "PCW Memorandum Circular No. 2025-09",
+      "description": "Submission of FY 2025 Gender and Development (GAD) Accomplishment Report (AR)",
+      "date": "2025-12-02",
+      "status": "Active",
+      "url": "https://pcw.gov.ph/pcw-memorandum-circular-no-2025-09-submission-of-fy-2025-gender-and-development-gad-accomplishment-report-ar/"
+    },
+    {
+      "id": "c_2025_08",
+      "year": 2025,
+      "title": "PCW Memorandum Circular No. 2025-08",
+      "description": "Guide for the 2025 Observance of the 18-day Campaign to End VAW",
+      "date": "2025-09-18",
+      "status": "Active",
+      "url": "https://pcw.gov.ph/memorandum-circular-no-2025-08-guide-for-the-2025-observance-of-the-18-day-campaign-to-end-violence-against-women-vaw/"
+    },
+    {
+      "id": "c_2025_07",
+      "year": 2025,
+      "title": "PCW Memorandum Circular No. 2025-07",
+      "description": "Reaffirming Gender Mainstreaming as a Strategy for Gender Equality and Women’s Empowerment",
+      "date": "2025-08-29",
+      "status": "Active",
+      "url": "https://pcw.gov.ph/pcw-memorandum-circular-no-2025-07/"
+    },
+    {
+      "id": "c_2025_06",
+      "year": 2025,
+      "title": "PCW Memorandum Circular No. 2025-06",
+      "description": "Preparation and Online Submission of Fiscal Year (FY) 2026 Gender and Development (GAD) Plans and Budget",
+      "date": "2025-07-18",
+      "status": "Active",
+      "url": "https://pcw.gov.ph/pcw-memorandum-circular-no-2025-06-preparation-and-online-submission-of-fiscal-year-fy-2026-gender-and-development-gad-plans-and-budget/"
+    },
+    {
+      "id": "c_2025_05",
+      "year": 2025,
+      "title": "PCW Memorandum Circular No. 2025-05",
+      "description": "Guidelines on the Establishment of Gender and Development (GAD) Corner",
+      "date": "2025-06-25",
+      "status": "Active",
+      "url": "https://pcw.gov.ph/pcw-memorandum-circular-no-2025-05-guidelines-on-the-establishment-of-gender-and-development-gad-corner/"
+    },
+    {
+      "id": "c_2025_04",
+      "year": 2025,
+      "title": "PCW Memorandum Circular No. 2025-04",
+      "description": "Exclusive Proprietary Rights of the PCW Over the Use of GADtimpala Award",
+      "date": "2025-02-24",
+      "status": "Active",
+      "url": "https://pcw.gov.ph/pcw-memorandum-circular-no-2025-04-exclusive-proprietary-rights-of-the-philippine-commission-on-women-over-the-use-of-gadtimpala-award/"
+    },
+    {
+      "id": "c_2025_03",
+      "year": 2025,
+      "title": "PCW Memorandum Circular No. 2025-03",
+      "description": "GADtimpala 2023 Call for Nominations",
+      "date": "2025-02-20",
+      "status": "Active",
+      "url": "https://pcw.gov.ph/pcw-memorandum-circular-no-2025-03-gadtimpala-2023-call-for-nominations/"
+    },
+    {
+      "id": "c_2025_02",
+      "year": 2025,
+      "title": "PCW Memorandum Circular No. 2025-02",
+      "description": "Updated Guidelines on the GAD Focal Point System (GFPS) External Coaching and Technical Assistance",
+      "date": "2025-02-06",
+      "status": "Active",
+      "url": "https://pcw.gov.ph/pcw-memorandum-circular-no-2025-02-updated-guidelines-on-the-gad-focal-point-system-gfps-external-coaching-and-technical-assistance-for-national-government-agencies-and-others/"
+    },
+    {
+      "id": "c_2025_01",
+      "year": 2025,
+      "title": "PCW Memorandum Circular No. 2025-01",
+      "description": "Guide for the 2025 National Women’s Month Celebration",
+      "date": "2025-02-03",
+      "status": "Active",
+      "url": "https://pcw.gov.ph/pcw-memorandum-circular-no-2025-01-guide-for-the-2025-national-womens-month-celebration/"
+    },
+    {
+      "id": "c_2024_05",
+      "year": 2024,
+      "title": "PCW Memorandum Circular No. 2024-05",
+      "description": "Submission of FY 2024 Gender and Development (GAD) Accomplishment Report (AR)",
+      "date": "2024-12-16",
+      "status": "Active",
+      "url": "https://pcw.gov.ph/pcw-memorandum-circular-no-2024-05-submission-of-fy-2024-gender-and-development-gad-accomplishment-report-ar/"
+    },
+    {
+      "id": "c_2024_04",
+      "year": 2024,
+      "title": "PCW Memorandum Circular No. 2024-04",
+      "description": "Guide for the 2024 Observance of the 18-day Campaign to End Violence Against Women (VAW)",
+      "date": "2024-09-18",
+      "status": "Active",
+      "url": "https://pcw.gov.ph/memorandum-circular-no-2024-04-guide-for-the-2024-observance-of-the-18-day-campaign-to-end-violence-against-women-vaw/"
+    },
+    {
+      "id": "c_2024_03",
+      "year": 2024,
+      "title": "PCW Memorandum Circular No. 2024-03",
+      "description": "Preparation and Online Submission of FY 2025 Gender and Development (GAD) Plans and Budget",
+      "date": "2024-07-19",
+      "status": "Active",
+      "url": "https://pcw.gov.ph/pcw-memorandum-circular-no-2024-03-preparation-and-online-submission-of-fiscal-year-fy-2025-gender-and-development-gad-plans-and-budget/"
+    },
+    {
+      "id": "c_2024_02",
+      "year": 2024,
+      "title": "PCW Memorandum Circular No. 2024-02",
+      "description": "Guide for the 2024 National Women’s Month Celebration",
+      "date": "2024-01-31",
+      "status": "Active",
+      "url": "https://pcw.gov.ph/pcw-memorandum-circular-no-2024-02-guide-for-the-2024-national-womens-month-celebration/"
     }
   ],
   "memoranda": [
