@@ -170,6 +170,28 @@ def upload_to_imgbb(image_url: str, api_key: str, expiration: int = 604800) -> s
         return ""
 
 
+def fetch_post_og_image_via_playwright(context, url: str, timeout: int = 20000) -> str:
+    """Try to fetch the post's og:image from the Facebook post page using Playwright.
+
+    This is intended as a fallback when the post has no <img> tags (e.g., video posts).
+    """
+    try:
+        page = context.new_page()
+        page.goto(url, wait_until="domcontentloaded", timeout=timeout)
+        # Wait for the page to stabilize (may be heavy but needed for OG meta to be present)
+        page.wait_for_timeout(1500)
+        og_image = page.locator('meta[property="og:image"]').first.get_attribute("content")
+        page.close()
+        return og_image or ""
+    except Exception as e:
+        print(f"   -> [OG Image] Failed to fetch og:image for {url}: {e}")
+        try:
+            page.close()
+        except Exception:
+            pass
+        return ""
+
+
 # ---------------------------------------------------------------------------
 # Core scraper
 # ---------------------------------------------------------------------------
@@ -182,6 +204,8 @@ def scrape_facebook_page(
 ) -> List[Dict[str, Any]]:
     posts_data: List[Dict[str, Any]] = []
     seen_signatures: Set[str] = set()
+    # Allows de-duping by URL in case a post is processed multiple times.
+    url_to_index: Dict[str, int] = {}
     if existing_posts is None:
         existing_posts = {}
 
@@ -381,18 +405,39 @@ def scrape_facebook_page(
                         if caption_id and caption_id in existing_posts:
                             existing = existing_posts[caption_id]
                             print(f"   -> [CACHED] Post already exists, reusing images.")
-                            # Update URL/date if newly scraped but keep existing images
+
+                            cached_photos = existing.get("photos", []) or []
+                            # If cached entry had no images, try to fetch a thumbnail now.
+                            if not cached_photos and post_url:
+                                print("   -> [CACHED] No cached images; attempting thumbnail fallback.")
+                                og_img = fetch_post_og_image_via_playwright(context, post_url)
+                                if og_img:
+                                    clean_imgbb_url = upload_to_imgbb(og_img, imgbb_api_key)
+                                    if clean_imgbb_url:
+                                        cached_photos = [f"https://wsrv.nl/?url={clean_imgbb_url}&maxage=7d"]
+                                        print(f"   -> [CACHED] Saved fallback thumbnail: {cached_photos[0]}")
+
                             updated = {
                                 "id": caption_id,
                                 "caption": caption,
-                                "photos": existing.get("photos", []),
+                                "photos": cached_photos,
                                 "post_url": post_url or existing.get("post_url", ""),
                                 "post_date": post_date or existing.get("post_date", ""),
                                 "scraped_at": existing.get("scraped_at", datetime.now().isoformat(timespec="seconds")),
                             }
-                            if caption_id not in seen_signatures:
+                            if post_url and post_url in url_to_index:
+                                idx = url_to_index[post_url]
+                                existing_entry = posts_data[idx]
+                                # Merge photos if we got new ones
+                                if not existing_entry.get("photos") and cached_photos:
+                                    existing_entry["photos"] = cached_photos
+                                existing_entry["scraped_at"] = updated["scraped_at"]
+                                print(f"[SUCCESS] Updated cached entry for URL (deduped). Progress: {len(posts_data)}/{target_post_count}")
+                            elif caption_id not in seen_signatures:
                                 posts_data.append(updated)
                                 seen_signatures.add(caption_id)
+                                if post_url:
+                                    url_to_index[post_url] = len(posts_data) - 1
                                 print(f"[SUCCESS] Data acquired (cached). Progress: {len(posts_data)}/{target_post_count}")
                             else:
                                 print("   -> Discarded (Duplicate hash).")
@@ -419,6 +464,12 @@ def scrape_facebook_page(
 
                             raw_photos.append(src)
 
+                        if not raw_photos and post_url:
+                            print("   -> [INFO] No images found; trying to fetch og:image thumbnail via Playwright.")
+                            og_img = fetch_post_og_image_via_playwright(context, post_url)
+                            if og_img:
+                                raw_photos.append(og_img)
+
                         if raw_photos:
                             print(f"   -> [Batch] Transferring {len(raw_photos)} images to ImgBB...")
 
@@ -434,7 +485,15 @@ def scrape_facebook_page(
                         if caption or processed_photos:
                             post_id = caption_id if caption_id else generate_post_signature(caption, processed_photos)[:8]
 
-                            if post_id not in seen_signatures:
+                            if post_url and post_url in url_to_index:
+                                idx = url_to_index[post_url]
+                                existing_entry = posts_data[idx]
+                                # Merge any newly found photos
+                                if not existing_entry.get("photos") and processed_photos:
+                                    existing_entry["photos"] = processed_photos
+                                existing_entry["scraped_at"] = datetime.now().isoformat(timespec="seconds")
+                                print(f"[SUCCESS] Updated existing entry for URL (deduped). Progress: {len(posts_data)}/{target_post_count}")
+                            elif post_id not in seen_signatures:
                                 posts_data.append(
                                     {
                                         "id": post_id,
@@ -446,6 +505,8 @@ def scrape_facebook_page(
                                     }
                                 )
                                 seen_signatures.add(post_id)
+                                if post_url:
+                                    url_to_index[post_url] = len(posts_data) - 1
                                 print(f"[SUCCESS] Data acquired. Progress: {len(posts_data)}/{target_post_count}")
                             else:
                                 print("   -> Discarded (Duplicate hash).")

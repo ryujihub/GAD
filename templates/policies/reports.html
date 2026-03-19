@@ -17,7 +17,7 @@
 
     <!-- Reports Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for year in ['2024', '2023', '2022', '2021', '2020'] %}
+        {% for year in site_config.reports.years | default(['2024', '2023', '2022', '2021', '2020']) %}
         <div class="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-green transition-all duration-300 overflow-hidden">
             <div class="p-6">
                 <!-- Icon and Type Label -->
