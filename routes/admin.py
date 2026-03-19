@@ -12,8 +12,38 @@ admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 # ── Data file paths ───────────────────────────────────────────────────────────
 DATA_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'events.json')
 PROJECTS_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'projects.json')
+POLICIES_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'policies.json')
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static', 'uploads', 'projects')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+
+# ── Site Config ───────────────────────────────────────────────────────────────
+SITE_CONFIG_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'site_config.json')
+
+
+def load_site_config():
+    default = {
+        'policies': {'start_year': 2002, 'current_year': datetime.now().year},
+        'reports': {'years': ['2024', '2023', '2022', '2021', '2020']}
+    }
+    try:
+        with open(SITE_CONFIG_FILE, 'r', encoding='utf-8') as f:
+            raw = json.load(f)
+            if not isinstance(raw, dict):
+                return default
+            merged = default.copy()
+            merged.update(raw)
+            merged['policies'] = {**default['policies'], **(raw.get('policies') or {})}
+            merged['reports'] = {**default['reports'], **(raw.get('reports') or {})}
+            return merged
+    except (FileNotFoundError, json.JSONDecodeError):
+        return default
+
+
+def save_site_config(config):
+    os.makedirs(os.path.dirname(SITE_CONFIG_FILE), exist_ok=True)
+    with open(SITE_CONFIG_FILE, 'w', encoding='utf-8') as f:
+        json.dump(config, f, indent=2, ensure_ascii=False)
+
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
 def load_events():
@@ -22,6 +52,20 @@ def load_events():
             return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
         return []
+
+
+def load_policies():
+    try:
+        with open(POLICIES_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {'circulars': [], 'memoranda': [], 'resolutions': [], 'orders': []}
+
+
+def save_policies(policies):
+    os.makedirs(os.path.dirname(POLICIES_FILE), exist_ok=True)
+    with open(POLICIES_FILE, 'w', encoding='utf-8') as f:
+        json.dump(policies, f, indent=2, ensure_ascii=False)
 
 def save_events(events):
     os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
@@ -129,7 +173,115 @@ def features():
     except Exception:
         pass
     
-    return render_template('admin/features.html', schedule=schedule_config, carousel_images=carousel_images)
+    site_config = load_site_config()
+    return render_template('admin/features.html', schedule=schedule_config, carousel_images=carousel_images, site_config=site_config)
+
+@admin_bp.route('/policies')
+@login_required
+def policies_settings():
+    """Admin UI for managing policy entries and config."""
+    site_config = load_site_config()
+    policies = load_policies()
+    return render_template('admin/policies.html', site_config=site_config, policies=policies)
+
+
+@admin_bp.route('/policies/add', methods=['POST'])
+@login_required
+def add_policy_entry():
+    policies = load_policies()
+    site_config = load_site_config()
+    category = request.form.get('category', 'circulars')
+    year_default = site_config.get('policies', {}).get('current_year', datetime.now().year)
+    try:
+        year = int(request.form.get('year', year_default))
+    except ValueError:
+        year = year_default
+
+    entry = {
+        'id': 'p' + str(uuid.uuid4())[:8],
+        'year': year,
+        'title': request.form.get('title', '').strip(),
+        'description': request.form.get('description', '').strip(),
+        'date': request.form.get('date', '').strip(),
+        'status': request.form.get('status', '').strip() or 'Active',
+        'file': request.form.get('file', '').strip() or '#'
+    }
+    policies.setdefault(category, []).insert(0, entry)
+    save_policies(policies)
+    flash('Policy entry added.', 'success')
+    return redirect(url_for('admin.policies_settings'))
+
+
+@admin_bp.route('/policies/edit/<entry_id>', methods=['POST'])
+@login_required
+def edit_policy_entry(entry_id):
+    policies = load_policies()
+
+    old_category = None
+    old_index = -1
+    old_entry = None
+    for cat, entries in policies.items():
+        for idx, entry in enumerate(entries):
+            if entry.get('id') == entry_id:
+                old_category = cat
+                old_index = idx
+                old_entry = entry
+                break
+        if old_entry:
+            break
+
+    if not old_entry:
+        flash('Policy entry not found.', 'error')
+        return redirect(url_for('admin.policies_settings'))
+
+    new_category = request.form.get('category', old_category)
+    try:
+        year = int(request.form.get('year', old_entry.get('year', datetime.now().year)))
+    except ValueError:
+        year = old_entry.get('year', datetime.now().year)
+
+    updated_entry = {
+        'id': entry_id,
+        'year': year,
+        'title': request.form.get('title', old_entry.get('title', '')).strip(),
+        'description': request.form.get('description', old_entry.get('description', '')).strip(),
+        'date': request.form.get('date', old_entry.get('date', '')).strip(),
+        'status': request.form.get('status', old_entry.get('status', 'Active')).strip() or 'Active',
+        'file': request.form.get('file', old_entry.get('file', '#')).strip() or '#'
+    }
+
+    # Remove from original category first.
+    policies[old_category].pop(old_index)
+
+    # Reinsert into target category.
+    policies.setdefault(new_category, [])
+    if new_category == old_category:
+        policies[new_category].insert(old_index, updated_entry)
+    else:
+        policies[new_category].insert(0, updated_entry)
+
+    save_policies(policies)
+    flash('Policy entry updated.', 'success')
+    return redirect(url_for('admin.policies_settings'))
+
+
+@admin_bp.route('/policies/delete/<entry_id>', methods=['POST'])
+@login_required
+def delete_policy_entry(entry_id):
+    policies = load_policies()
+    changed = False
+    for cat, entries in policies.items():
+        new_entries = [e for e in entries if e.get('id') != entry_id]
+        if len(new_entries) != len(entries):
+            policies[cat] = new_entries
+            changed = True
+    if changed:
+        save_policies(policies)
+        flash('Policy entry deleted.', 'success')
+    else:
+        flash('Policy entry not found.', 'error')
+    return redirect(url_for('admin.policies_settings'))
+
 
 @admin_bp.route('/save_carousel', methods=['POST'])
 @login_required
@@ -187,6 +339,43 @@ def configure_scraper():
         flash(f'Failed to save schedule: {e}', 'error')
         
     return redirect(url_for('admin.features'))
+
+@admin_bp.route('/save_site_config', methods=['POST'], endpoint='save_site_config')
+@login_required
+def save_site_config_route():
+    """Save site configuration (policies/reports) from the admin features page."""
+    config = load_site_config()
+    policies = config.get('policies', {})
+    reports = config.get('reports', {})
+
+    # Policies settings
+    try:
+        policies['start_year'] = int(request.form.get('policies_start_year', policies.get('start_year', 2002)))
+    except ValueError:
+        policies['start_year'] = policies.get('start_year', 2002)
+
+    try:
+        policies['current_year'] = int(request.form.get('policies_current_year', policies.get('current_year', datetime.now().year)))
+    except ValueError:
+        policies['current_year'] = policies.get('current_year', datetime.now().year)
+
+    # Reports settings (comma separated list)
+    raw_years = request.form.get('reports_years', '')
+    years = [y.strip() for y in raw_years.split(',') if y.strip()]
+    if years:
+        reports['years'] = years
+
+    config['policies'] = policies
+    config['reports'] = reports
+
+    try:
+        save_site_config(config)
+        flash('Site configuration saved successfully.', 'success')
+    except Exception as e:
+        flash(f'Failed to save site settings: {e}', 'error')
+
+    return redirect(url_for('admin.policies_settings'))
+
 
 @admin_bp.route('/scrape_news', methods=['POST'])
 @login_required

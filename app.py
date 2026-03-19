@@ -1,6 +1,7 @@
 import os
 import json
 import subprocess
+from datetime import datetime
 from flask import Flask, render_template, request, abort
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -101,9 +102,42 @@ app.register_blueprint(admin_bp)
 # ---------------------------------------------------------
 # 5. GLOBAL CONTEXT PROCESSOR
 # ---------------------------------------------------------
+SITE_CONFIG_FILE = os.path.join(app.root_path, 'data', 'site_config.json')
+
+
+def load_site_config():
+    """Load site-wide configuration used by templates and admin settings."""
+    default = {
+        'policies': {'start_year': 2002, 'current_year': datetime.now().year},
+        'reports': {'years': ['2024', '2023', '2022', '2021', '2020']}
+    }
+
+    try:
+        with open(SITE_CONFIG_FILE, 'r', encoding='utf-8') as f:
+            raw = json.load(f)
+            if not isinstance(raw, dict):
+                return default
+            # Merge defaults without overwriting existing values
+            merged = default.copy()
+            merged.update(raw)
+            # Ensure nested keys exist
+            merged['policies'] = {**default['policies'], **(raw.get('policies') or {})}
+            merged['reports'] = {**default['reports'], **(raw.get('reports') or {})}
+            return merged
+    except (FileNotFoundError, json.JSONDecodeError):
+        return default
+
+
+def save_site_config(config: dict):
+    """Persist the site configuration to disk."""
+    os.makedirs(os.path.dirname(SITE_CONFIG_FILE), exist_ok=True)
+    with open(SITE_CONFIG_FILE, 'w', encoding='utf-8') as f:
+        json.dump(config, f, indent=2, ensure_ascii=False)
+
+
 @app.context_processor
 def inject_nav_years():
-    """Inject project years into every template for the navbar dropdown."""
+    """Inject project years + site config into every template."""
     import json
     projects_file = os.path.join(app.root_path, 'data', 'projects.json')
     try:
@@ -112,7 +146,14 @@ def inject_nav_years():
         years = sorted(set(p.get('year', '') for p in projects if p.get('year')), reverse=True)
     except (FileNotFoundError, json.JSONDecodeError):
         years = []
-    return dict(nav_project_years=years)
+
+    site_config = load_site_config()
+    site_config.setdefault('policies', {
+        'start_year': 2002,
+        'current_year': datetime.now().year
+    })
+
+    return dict(nav_project_years=years, site_config=site_config, now=datetime.now())
 
 
 # ---------------------------------------------------------

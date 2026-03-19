@@ -31,8 +31,8 @@
         search_id="memoSearch", 
         filter_id="memoYearFilter", 
         placeholder="Search by subject or Ref No...",
-        start_year=2002,
-        current_year=now.year
+        start_year=site_config.get('policies', {}).get('start_year', 2002),
+        current_year=site_config.get('policies', {}).get('current_year', now.year)
     ) }}
 
     <!-- Table Container -->
@@ -48,48 +48,37 @@
                     </tr>
                 </thead>
                 <tbody id="memoTableBody" class="divide-y divide-gray-100">
-                    <!-- Memo Row 1: Added class and data-attributes -->
-                    <tr class="memo-row hover:bg-green-50/40 transition-colors group" data-year="2024" data-content="Memorandum on Mandatory GAD Training for All Dept Heads MEMO-2024-005">
-                        <td class="px-6 py-5 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <div class="w-2 h-2 rounded-full bg-primary-green mr-3"></div>
-                                <span class="text-sm font-bold text-gray-700 uppercase">Feb 14, 2024</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-5">
-                            <div class="text-gray-800 font-bold group-hover:text-primary-green transition-colors">Memorandum on Mandatory GAD Training for All Dept Heads</div>
-                            <div class="flex gap-2 mt-1">
-                                <span class="text-[10px] bg-red-50 text-red-600 px-1.5 py-0.5 rounded font-bold uppercase">Urgent</span>
-                                <span class="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded font-bold uppercase tracking-tight">Internal</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-5 text-sm text-gray-500 font-mono">MEMO-2024-005</td>
-                        <td class="px-6 py-5 text-center">
-                            <a href="#" class="inline-flex items-center gap-2 px-5 py-2 bg-primary-green/10 text-primary-green font-black text-xs rounded-lg hover:bg-primary-green hover:text-white transition-all shadow-sm">
-                                <i class="far fa-eye"></i> VIEW
-                            </a>
-                        </td>
-                    </tr>
-
-                    <!-- Memo Row 2: Added class and data-attributes -->
-                    <tr class="memo-row hover:bg-green-50/40 transition-colors group" data-year="2024" data-content="Submission of Gender Disaggregated Data (GDD) MEMO-2024-002">
-                        <td class="px-6 py-5 whitespace-nowrap text-sm font-bold text-gray-400 uppercase">
-                            <div class="flex items-center">
-                                <div class="w-2 h-2 rounded-full bg-gray-200 mr-3"></div>
-                                Jan 30, 2024
-                            </div>
-                        </td>
-                        <td class="px-6 py-5">
-                            <div class="text-gray-800 font-bold group-hover:text-primary-green transition-colors">Submission of Gender Disaggregated Data (GDD)</div>
-                            <div class="text-xs text-gray-400 mt-1 italic">Quarterly reporting requirements for all units.</div>
-                        </td>
-                        <td class="px-6 py-5 text-sm text-gray-500 font-mono">MEMO-2024-002</td>
-                        <td class="px-6 py-5 text-center">
-                            <a href="#" class="inline-flex items-center gap-2 px-5 py-2 bg-primary-green/10 text-primary-green font-black text-xs rounded-lg hover:bg-primary-green hover:text-white transition-all shadow-sm">
-                                <i class="far fa-eye"></i> VIEW
-                            </a>
-                        </td>
-                    </tr>
+                    {% if policies %}
+                        {% for item in policies %}
+                        <tr class="memo-row hover:bg-green-50/40 transition-colors group" data-year="{{ item.year }}" data-content="{{ item.title }}">
+                            <td class="px-6 py-5 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="w-2 h-2 rounded-full {{ 'bg-primary-green' if item.status == 'Urgent' else 'bg-gray-200' }} mr-3"></div>
+                                    <span class="text-sm font-bold text-gray-700 uppercase">{{ item.date }}</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-5">
+                                <div class="text-gray-800 font-bold group-hover:text-primary-green transition-colors">{{ item.title }}</div>
+                                <div class="flex gap-2 mt-1">
+                                    <span class="text-[10px] bg-red-50 text-red-600 px-1.5 py-0.5 rounded font-bold uppercase">{{ item.status }}</span>
+                                    <span class="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded font-bold uppercase tracking-tight">{{ item.description }}</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-5 text-sm text-gray-500 font-mono">{{ item.id }}</td>
+                            <td class="px-6 py-5 text-center">
+                                <a href="{{ url_for('static', filename=item.file) }}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2 bg-primary-green/10 text-primary-green font-black text-xs rounded-lg hover:bg-primary-green hover:text-white transition-all shadow-sm">
+                                    <i class="far fa-eye"></i> VIEW
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="px-6 py-10 text-center text-sm text-gray-500">
+                                No memoranda found. Please add entries in the admin panel.
+                            </td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>
