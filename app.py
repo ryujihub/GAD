@@ -36,6 +36,7 @@ csp = {
         '\'self\'',
         'https://cdn.tailwindcss.com',
         'https://cdnjs.cloudflare.com',
+        'https://connect.facebook.net',
         '\'unsafe-inline\''  # Necessary for Tailwind CDN and inline scripts
     ],
     'style-src': [
@@ -56,6 +57,11 @@ csp = {
         'https://ui-avatars.com',
         'https://wsrv.nl',
         'https://i.ibb.co'
+    ],
+    'frame-src': [
+        '\'self\'',
+        'https://www.facebook.com',
+        'https://web.facebook.com'
     ]
 }
 
