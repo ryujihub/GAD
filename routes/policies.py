@@ -13,16 +13,16 @@ def load_policies():
             return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
         return {
-            'circulars': [],
-            'resolutions': [],
+            'republic_acts': [],
             'memoranda': [],
+            'resolutions': [],
             'orders': []
         }
 
 
 def get_category_template(category):
     return {
-        'circulars': 'policies/circulars.html',
+        'republic_acts': 'policies/republic-acts.html',
         'resolutions': 'policies/resolution.html',
         'memoranda': 'policies/memoranda.html',
         'orders': 'policies/office-orders.html',

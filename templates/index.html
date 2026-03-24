@@ -11,7 +11,7 @@
             class="hero-slide absolute inset-0 opacity-100 z-10 transition-all duration-1000 flex items-center justify-center text-center text-white">
             <!-- Parallax Background Layer -->
             <div id="heroParallaxBG"
-                class="absolute w-full h-[130%] -top-[15%] left-0 bg-cover bg-center -z-10 will-change-transform"
+                class="absolute w-full h-[150%] top-0 left-0 bg-cover bg-center -z-10 will-change-transform"
                 style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://wsrv.nl/?url=https://i.ibb.co/Ngws7Tkg/image.png&output=webp&q=70&maxage=10y');">
             </div>
 
@@ -38,11 +38,21 @@
             <script>
                 window.fbPlayerInstance = null;
                 window.currentSlideIndex = 0;
+                window.videoHasFinished = false;
                 window.fbAsyncInit = function () {
                     FB.init({ xfbml: true, version: 'v19.0' });
                     FB.Event.subscribe('xfbml.ready', function (msg) {
                         if (msg.type === 'video') {
                             window.fbPlayerInstance = msg.instance;
+
+                            // Auto-scroll to next slide when video finishes
+                            window.fbPlayerInstance.subscribe('finishedPlaying', function () {
+                                window.videoHasFinished = true; // Mark as played for this session
+                                if (typeof window.heroNextSlide === 'function') {
+                                    window.heroNextSlide();
+                                }
+                            });
+
                             // If initialized while on the video slide, play immediately
                             if (window.currentSlideIndex === 1) {
                                 window.fbPlayerInstance.mute(); // Must be muted for autoplay
@@ -306,6 +316,8 @@
 
         let currentIndex = 0;
         let autoPlayTimer;
+        let isHeroVisible = true;
+        let canInteract = true;
 
         const VIDEO_SLIDE_INDEX = 1;
 
@@ -361,28 +373,67 @@
             }
         }
 
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                isHeroVisible = entry.isIntersecting;
+                if (!isHeroVisible) {
+                    stopAutoPlay();
+                } else if (currentIndex !== VIDEO_SLIDE_INDEX) {
+                    startAutoPlay();
+                }
+            });
+        }, { threshold: 0.1 });
+        observer.observe(document.getElementById("heroSection"));
+
         function nextSlide() {
-            showSlide((currentIndex + 1) % slides.length);
+            let nextIndex = (currentIndex + 1) % slides.length;
+            // Skip video slide if already finished in this session
+            if (nextIndex === VIDEO_SLIDE_INDEX && window.videoHasFinished) {
+                nextIndex = (nextIndex + 1) % slides.length;
+            }
+            showSlide(nextIndex);
         }
+        window.heroNextSlide = nextSlide;
 
         function prevSlide() {
-            showSlide((currentIndex - 1 + slides.length) % slides.length);
+            let prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+            // Skip video slide if already finished in this session
+            if (prevIndex === VIDEO_SLIDE_INDEX && window.videoHasFinished) {
+                prevIndex = (prevIndex - 1 + slides.length) % slides.length;
+            }
+            showSlide(prevIndex);
         }
 
         function startAutoPlay() {
             stopAutoPlay();
-            autoPlayTimer = setInterval(nextSlide, 8000);
+            if (isHeroVisible && currentIndex !== VIDEO_SLIDE_INDEX) {
+                autoPlayTimer = setInterval(nextSlide, 8000);
+            }
         }
 
         function stopAutoPlay() {
-            if (autoPlayTimer) clearInterval(autoPlayTimer);
+            if (autoPlayTimer) {
+                clearInterval(autoPlayTimer);
+                autoPlayTimer = null;
+            }
         }
 
-        if (nextBtn) nextBtn.addEventListener("click", () => nextSlide());
-        if (prevBtn) prevBtn.addEventListener("click", () => prevSlide());
+        function handleManualInteraction(action) {
+            if (!canInteract) return;
+            canInteract = false;
+
+            action();
+
+            // Cooldown for interaction + reset autoplay timer
+            setTimeout(() => { canInteract = true; }, 500);
+            startAutoPlay();
+        }
+
+        if (nextBtn) nextBtn.addEventListener("click", () => handleManualInteraction(nextSlide));
+        if (prevBtn) prevBtn.addEventListener("click", () => handleManualInteraction(prevSlide));
 
         dots.forEach(dot => {
-            dot.addEventListener("click", () => showSlide(parseInt(dot.dataset.index)));
+            dot.addEventListener("click", () => handleManualInteraction(() => showSlide(parseInt(dot.dataset.index))));
         });
 
         // Initial Start
@@ -403,7 +454,8 @@
                 if (!ticking) {
                     window.requestAnimationFrame(() => {
                         const scrollY = window.scrollY;
-                        parallaxBG.style.transform = `translateY(${scrollY * 0.4}px)`;
+                        // Strengthened Parallax: More noticeable motion
+                        parallaxBG.style.transform = `translateY(-${scrollY * 0.35}px)`;
                         ticking = false;
                     });
                     ticking = true;
