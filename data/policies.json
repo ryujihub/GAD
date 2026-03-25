@@ -1,5 +1,33 @@
 {
-  "republic_acts": [],
+  "republic_acts": [
+    {
+      "id": "ra_9710",
+      "year": 2009,
+      "title": "Republic Act No. 9710 (Magna Carta of Women)",
+      "description": "An Act Providing for the Magna Carta of Women.",
+      "date": "2009-08-14",
+      "status": "Active",
+      "url": "https://pcw.gov.ph/magna-carta-of-women/"
+    },
+    {
+      "id": "ra_11313",
+      "year": 2019,
+      "title": "Republic Act No. 11313 (Safe Spaces Act)",
+      "description": "An Act Defining Gender-Based Sexual Harassment in Streets, Public Spaces, Online, Workplaces, and Educational or Training Institutions.",
+      "date": "2019-04-17",
+      "status": "Active",
+      "url": "https://pcw.gov.ph/faq-republic-act-no-11313/"
+    },
+    {
+      "id": "ra_9262",
+      "year": 2004,
+      "title": "Republic Act No. 9262 (Anti-VAWC Act)",
+      "description": "Anti-Violence Against Women and Their Children Act of 2004.",
+      "date": "2004-03-08",
+      "status": "Active",
+      "url": "https://pcw.gov.ph/republic-act-9262-anti-violence-against-women-and-their-children-act-of-2004/"
+    }
+  ],
   "memoranda": [
     {
       "id": "c_2026_02",
