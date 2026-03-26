@@ -1,0 +1,46 @@
+[
+    {
+        "id": "kp001",
+        "title": "Safe Spaces Act Brochure",
+        "description": "A comprehensive guide on RA 11313, outlining rights and protections against gender-based harassment.",
+        "type": "Brochure",
+        "date": "Published 2024",
+        "image": "https://wsrv.nl/?url=https://i.ibb.co/Ngws7Tkg/image.png&output=webp&q=70&maxage=10y",
+        "file": "#",
+        "url": "",
+        "action_text": "DOWNLOAD PDF"
+    },
+    {
+        "id": "kp002",
+        "title": "GAD Planning Manual",
+        "description": "Step-by-step toolkit for barangay officials to effectively integrate gender perspectives into local planning.",
+        "type": "Manual",
+        "date": "Published 2023",
+        "image": "https://wsrv.nl/?url=https://i.ibb.co/Ngws7Tkg/image.png&output=webp&q=70&maxage=10y",
+        "file": "#",
+        "url": "",
+        "action_text": "VIEW BOOKLET"
+    },
+    {
+        "id": "kp003",
+        "title": "VAWC Awareness Series",
+        "description": "A set of high-impact visual materials for community awareness on ending violence against women and children.",
+        "type": "Posters",
+        "date": "Digital Pack",
+        "image": "https://wsrv.nl/?url=https://i.ibb.co/Ngws7Tkg/image.png&output=webp&q=70&maxage=10y",
+        "file": "#",
+        "url": "",
+        "action_text": "GET ZIP FILE"
+    },
+    {
+        "id": "kp004",
+        "title": "2024 Gender Leadership Statistics",
+        "description": "Annual tracking of women's representation in leadership and decision-making positions (Department Heads, Barangay Captains, and Local Councilors).",
+        "type": "Statistics",
+        "date": "Updated FY 2024",
+        "image": "https://wsrv.nl/?url=https://i.ibb.co/Ngws7Tkg/image.png&output=webp&q=70&maxage=10y",
+        "file": "#",
+        "url": "",
+        "action_text": "VIEW STATISTICS"
+    }
+]

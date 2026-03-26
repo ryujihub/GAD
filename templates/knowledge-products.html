@@ -71,81 +71,35 @@
             </div>
         </div>
 
-        <!-- IEC Material Card 1 -->
-        <div
-            class="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 hover:-translate-y-2">
-            <div class="h-48 overflow-hidden relative">
-                <img src="https://wsrv.nl/?url=https://i.ibb.co/Ngws7Tkg/image.png&output=webp&q=70&maxage=10y"
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                <div
-                    class="absolute top-4 right-4 bg-primary-green text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
-                    Brochure
+        <!-- Dynamic Knowledge Products -->
+        {% if products %}
+            {% for product in products %}
+            <div
+                class="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 hover:-translate-y-2 flex flex-col">
+                <div class="h-48 overflow-hidden relative">
+                    <img src="{{ product.image if product.image.startswith('http') else url_for('static', filename=product.image) }}"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="{{ product.title }}">
+                    <div
+                        class="absolute top-4 right-4 bg-primary-green text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+                        {{ product.type }}
+                    </div>
+                </div>
+                <div class="p-8 flex-1 flex flex-col">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">{{ product.title }}</h3>
+                    <p class="text-gray-500 text-sm mb-6 leading-relaxed">{{ product.description }}</p>
+                    <div class="flex items-center justify-between mt-auto">
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ product.date }}</span>
+                        <a href="{% if product.url %}{{ product.url }}{% else %}{{ url_for('static', filename=product.file) if not product.file.startswith('#') else '#' }}{% endif %}"
+                           {% if product.url %}target="_blank"{% endif %}
+                            class="inline-flex items-center gap-2 text-primary-green font-bold text-xs hover:gap-3 transition-all">
+                            {{ product.action_text or 'VIEW DOCUMENT' }} 
+                            <i class="fas {% if 'PDF' in (product.action_text|upper) %}fa-download{% elif 'ZIP' in (product.action_text|upper) %}fa-file-archive{% else %}fa-external-link-alt{% endif %}"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="p-8">
-                <h3 class="text-xl font-bold text-gray-800 mb-2">Safe Spaces Act Brochure</h3>
-                <p class="text-gray-500 text-sm mb-6 leading-relaxed">A comprehensive guide on RA 11313, outlining
-                    rights and protections against gender-based harassment.</p>
-                <div class="flex items-center justify-between mt-auto">
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Published 2024</span>
-                    <a href="#"
-                        class="inline-flex items-center gap-2 text-primary-green font-bold text-xs hover:gap-3 transition-all">
-                        DOWNLOAD PDF <i class="fas fa-download"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- IEC Material Card 2 -->
-        <div
-            class="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 hover:-translate-y-2">
-            <div class="h-48 overflow-hidden relative">
-                <img src="https://wsrv.nl/?url=https://i.ibb.co/Ngws7Tkg/image.png&output=webp&q=70&maxage=10y"
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                <div
-                    class="absolute top-4 right-4 bg-primary-green text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
-                    Manual
-                </div>
-            </div>
-            <div class="p-8">
-                <h3 class="text-xl font-bold text-gray-800 mb-2">GAD Planning Manual</h3>
-                <p class="text-gray-500 text-sm mb-6 leading-relaxed">Step-by-step toolkit for barangay officials to
-                    effectively integrate gender perspectives into local planning.</p>
-                <div class="flex items-center justify-between mt-auto">
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Published 2023</span>
-                    <a href="#"
-                        class="inline-flex items-center gap-2 text-primary-green font-bold text-xs hover:gap-3 transition-all">
-                        VIEW BOOKLET <i class="fas fa-external-link-alt"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- IEC Material Card 3 -->
-        <div
-            class="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 hover:-translate-y-2">
-            <div class="h-48 overflow-hidden relative">
-                <img src="https://wsrv.nl/?url=https://i.ibb.co/Ngws7Tkg/image.png&output=webp&q=70&maxage=10y"
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                <div
-                    class="absolute top-4 right-4 bg-primary-green text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
-                    Posters
-                </div>
-            </div>
-            <div class="p-8">
-                <h3 class="text-xl font-bold text-gray-800 mb-2">VAWC Awareness Series</h3>
-                <p class="text-gray-500 text-sm mb-6 leading-relaxed">A set of high-impact visual materials for
-                    community awareness on ending violence against women and children.</p>
-                <div class="flex items-center justify-between mt-auto">
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Digital Pack</span>
-                    <a href="#"
-                        class="inline-flex items-center gap-2 text-primary-green font-bold text-xs hover:gap-3 transition-all">
-                        GET ZIP FILE <i class="fas fa-file-archive"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
+            {% endfor %}
+        {% endif %}
     </div>
 
     <!-- Info Section -->

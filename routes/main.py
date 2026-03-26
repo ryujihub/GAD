@@ -26,6 +26,15 @@ def load_carousel():
     except (FileNotFoundError, json.JSONDecodeError):
         return []
 
+def load_knowledge_products():
+    """Load all knowledge products from data/knowledge_products.json."""
+    knowledge_file = os.path.join(current_app.root_path, 'data', 'knowledge_products.json')
+    try:
+        with open(knowledge_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
+
 # --- Mock Database of Searchable Content ---
 # This list is used by both the search results page and the live suggestion API.
 searchable_content = [
@@ -60,7 +69,8 @@ def index():
 
 @main_bp.route('/knowledge-products')
 def knowledge_products():
-    return render_template('knowledge-products.html')
+    products = load_knowledge_products()
+    return render_template('knowledge-products.html', products=products)
 
 # --- About Section Routes ---
 
