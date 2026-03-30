@@ -18,7 +18,8 @@ def load_policies():
             'resolutions': [],
             'orders': [],
             'lbp_forms': [],
-            'reports': []
+            'reports': [],
+            'estado_ni_juana': []
         }
 
 
@@ -69,3 +70,9 @@ def lbp_forms():
     policies = load_policies()
     form_list = policies.get('lbp_forms', [])
     return render_template('policies/lbp-forms.html', forms=form_list)
+
+@policies_bp.route('/estado-ni-juana')
+def estado_ni_juana():
+    policies = load_policies()
+    report_list = policies.get('estado_ni_juana', [])
+    return render_template('policies/estado-ni-juana.html', reports=report_list)

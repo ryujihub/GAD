@@ -35,6 +35,15 @@ def load_knowledge_products():
     except (FileNotFoundError, json.JSONDecodeError):
         return []
 
+def load_brochures():
+    """Load all brochures from data/brochures.json."""
+    brochures_file = os.path.join(current_app.root_path, 'data', 'brochures.json')
+    try:
+        with open(brochures_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
+
 # --- Mock Database of Searchable Content ---
 # This list is used by both the search results page and the live suggestion API.
 searchable_content = [
@@ -71,6 +80,12 @@ def index():
 def knowledge_products():
     products = load_knowledge_products()
     return render_template('knowledge-products.html', products=products)
+
+
+@main_bp.route('/brochures')
+def brochures():
+    brochures_list = load_brochures()
+    return render_template('brochures.html', brochures=brochures_list)
 
 # --- About Section Routes ---
 

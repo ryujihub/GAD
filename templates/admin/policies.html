@@ -76,6 +76,11 @@
         background: #fff7ed;
         color: #9a3412;
     }
+
+    .pill-cat-estado_ni_juana {
+        background: #fdf2f8;
+        color: #9d174d;
+    }
 </style>
 {% endblock %}
 
@@ -122,6 +127,7 @@
                         <option value="orders">Office Orders</option>
                         <option value="lbp_forms">GAD Plan & Budget (LBP Forms)</option>
                         <option value="reports">Accomplishment Reports</option>
+                        <option value="estado_ni_juana">Estado ni Juana Reports</option>
                     </select>
                 </div>
             </div>
@@ -165,8 +171,9 @@
                         </thead>
                         <tbody id="policiesTableBody" class="divide-y divide-gray-100 bg-white">
                             {% set category_labels = {'republic_acts':'Republic Acts', 'resolutions':'Resolutions',
-                            'memoranda':'Memoranda', 'orders':'Office Orders', 'lbp_forms':'LBP Forms', 'reports':'Reports'} %}
-                            {% for category in ['republic_acts', 'resolutions', 'memoranda', 'orders', 'lbp_forms', 'reports'] %}
+                            'memoranda':'Memoranda', 'orders':'Office Orders', 'lbp_forms':'LBP Forms', 
+                            'reports':'Reports', 'estado_ni_juana':'Estado ni Juana'} %}
+                            {% for category in ['republic_acts', 'resolutions', 'memoranda', 'orders', 'lbp_forms', 'reports', 'estado_ni_juana'] %}
                             {% for entry in policies.get(category, []) %}
                             <tr class="policy-row hover:bg-gray-50 transition-colors" data-category="{{ category }}"
                                 data-search="{{ category_labels[category] }} {{ entry.year }} {{ entry.title }} {{ entry.date }} {{ entry.status }} {{ entry.file }}">
@@ -256,6 +263,7 @@
                     <option value="orders">Office Orders</option>
                     <option value="lbp_forms">GAD Plan & Budget (LBP Forms)</option>
                     <option value="reports">Accomplishment Reports</option>
+                    <option value="estado_ni_juana">Estado ni Juana Reports</option>
                 </select>
             </div>
 
@@ -307,9 +315,12 @@
 
             <div class="md:col-span-1">
                 <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">External URL
-                    (Directs to PCW)</label>
-                <input name="url" type="url" placeholder="https://pcw.gov.ph/..."
+                    (Facebook Video/Page)</label>
+                <input name="url" type="url" placeholder="https://www.facebook.com/reel/..."
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green/30 focus:border-primary-green">
+                <p class="text-[9px] text-gray-400 mt-1 leading-tight">
+                    <i class="fas fa-lightbulb text-amber-400 mr-1"></i> Tip: Use the URL from the browser address bar (copy from top) for better video embedding.
+                </p>
             </div>
 
             <div class="md:col-span-2 flex justify-end gap-3 mt-2">
@@ -351,6 +362,7 @@
                     <option value="orders">Office Orders</option>
                     <option value="lbp_forms">GAD Plan & Budget (LBP Forms)</option>
                     <option value="reports">Accomplishment Reports</option>
+                    <option value="estado_ni_juana">Estado ni Juana Reports</option>
                 </select>
             </div>
 
@@ -404,6 +416,9 @@
                     URL</label>
                 <input id="edit-policy-url" name="url" type="url"
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green/30 focus:border-primary-green">
+                <p class="text-[9px] text-gray-400 mt-1 leading-tight">
+                    <i class="fas fa-lightbulb text-amber-400 mr-1"></i> Tip: Use the URL from the browser address bar (copy from top) for better video embedding.
+                </p>
             </div>
 
             <div class="md:col-span-2 flex justify-end gap-3 mt-2">
