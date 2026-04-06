@@ -1,27 +1,7 @@
-import os
-import json
 from flask import Blueprint, render_template
+from database import supabase
 
 policies_bp = Blueprint('policies', __name__)
-
-POLICIES_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'policies.json')
-
-
-def load_policies():
-    try:
-        with open(POLICIES_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        return {
-            'republic_acts': [],
-            'memoranda': [],
-            'resolutions': [],
-            'orders': [],
-            'lbp_forms': [],
-            'reports': [],
-            'estado_ni_juana': []
-        }
-
 
 def get_category_template(category):
     return {
@@ -32,11 +12,13 @@ def get_category_template(category):
         'hub': 'policies/policies.html'
     }.get(category, 'policies/policies.html')
 
-
 @policies_bp.route('/policies/<category>')
 def policies_hub(category):
-    policies = load_policies()
-    category_list = policies.get(category, []) if category in policies else []
+    try:
+        response = supabase.table('policies').select('*').eq('category', category).order('year', desc=True).execute()
+        category_list = response.data
+    except Exception:
+        category_list = []
 
     stats = {
         'total': len(category_list),
@@ -51,28 +33,35 @@ def policies_hub(category):
 
 @policies_bp.route('/reports')
 def reports():
-    policies = load_policies()
-    report_list = policies.get('reports', [])
+    try:
+        response = supabase.table('policies').select('*').eq('category', 'reports').order('year', desc=True).execute()
+        report_list = response.data
+    except Exception:
+        report_list = []
     return render_template('policies/reports.html', reports=report_list)
 
 @policies_bp.route("/policies")
 def policies_index():
-    """Render the main policies hub (fallback at /policies)."""
     return render_template("policies/policies.html")
 
 @policies_bp.route("/policies/coming-soon")
 def policies_placeholder():
-    """Render a themed placeholder page for upcoming policy sections."""
     return render_template("policies/placeholder.html")
 
 @policies_bp.route('/lbp-forms')
 def lbp_forms():
-    policies = load_policies()
-    form_list = policies.get('lbp_forms', [])
+    try:
+        response = supabase.table('policies').select('*').eq('category', 'lbp_forms').order('year', desc=True).execute()
+        form_list = response.data
+    except Exception:
+        form_list = []
     return render_template('policies/lbp-forms.html', forms=form_list)
 
 @policies_bp.route('/estado-ni-juana')
 def estado_ni_juana():
-    policies = load_policies()
-    report_list = policies.get('estado_ni_juana', [])
+    try:
+        response = supabase.table('policies').select('*').eq('category', 'estado_ni_juana').order('year', desc=True).execute()
+        report_list = response.data
+    except Exception:
+        report_list = []
     return render_template('policies/estado-ni-juana.html', reports=report_list)
