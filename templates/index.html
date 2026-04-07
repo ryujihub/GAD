@@ -247,8 +247,9 @@
             <div
                 class="group bg-white flex flex-col sm:flex-row sm:h-[200px] rounded-2xl md:rounded-3xl overflow-hidden shadow-sm hover:shadow-xl border border-gray-50 nav-transition">
                 <div class="w-full sm:w-56 md:w-72 h-48 sm:h-full relative overflow-hidden flex-shrink-0">
-                    {% if item.photos %}
-                    <img src="{{ item.photos[0] }}" alt="News photo"
+                    {% set news_image = item.image or (item.photos[0] if item.photos else None) %}
+                    {% if news_image %}
+                    <img src="{{ news_image }}" alt="News photo"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy">
                     {% else %}
@@ -262,21 +263,22 @@
                     <div class="flex items-center gap-3 mb-2">
                         <span
                             class="bg-green-100 text-primary-green text-[9px] font-bold px-2 py-0.5 rounded-full uppercase">Update</span>
-                        {% if item.post_date %}
-                        <span class="text-[10px] text-gray-400 font-semibold uppercase">{{ item.post_date }}</span>
+                        {% if item.date %}
+                        <span class="text-[10px] text-gray-400 font-semibold uppercase">{{ item.date }}</span>
                         {% elif item.scraped_at %}
                         <span class="text-[10px] text-gray-400 font-semibold uppercase">{{ item.scraped_at[:10]
                             }}</span>
                         {% endif %}
                     </div>
 
-                    {% set lines = item.caption.split('\n') %}
-                    {% set title = lines[0].strip().strip('"').strip('\u201c').strip('\u201d') %}
+                    {% set full_text = item.title or item.content or "Untitled News" %}
+                    {% set lines = full_text.split('\n') %}
+                    {% set display_title = lines[0].strip().strip('"').strip('\u201c').strip('\u201d') %}
                     <h3
                         class="text-base md:text-lg font-extrabold text-gray-800 mb-1 group-hover:text-primary-green transition-colors leading-tight line-clamp-2">
-                        {{ title[:100] }}{% if title|length > 100 %}…{% endif %}</h3>
+                        {{ display_title[:100] }}{% if display_title|length > 100 %}…{% endif %}</h3>
 
-                    {% set preview = lines[1:]|join(' ')|trim %}
+                    {% set preview = lines[1:]|join(' ')|trim or item.description or "" %}
                     <p class="text-gray-500 text-xs mb-3 line-clamp-2">{{ preview[:150] }}{% if preview|length > 150
                         %}…{% endif %}</p>
 

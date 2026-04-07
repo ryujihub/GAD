@@ -23,9 +23,10 @@
         <article
             class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-all flex flex-col group">
             <!-- Card Image -->
-            {% if item.photos %}
+            {% set news_image = item.image or (item.photos[0] if item.photos else None) %}
+            {% if news_image %}
             <div class="h-48 overflow-hidden relative">
-                <img src="{{ item.photos[0] }}" alt="News photo"
+                <img src="{{ news_image }}" alt="News photo"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy">
                 <div
@@ -44,22 +45,23 @@
             {% endif %}
 
             <div class="p-6 flex-grow flex flex-col">
-                {% if item.post_date %}
-                <span class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">{{ item.post_date
+                {% if item.date %}
+                <span class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">{{ item.date
                     }}</span>
                 {% elif item.scraped_at %}
                 <span class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">{{ item.scraped_at[:10]
                     }}</span>
                 {% endif %}
 
-                {% set lines = item.caption.split('\n') %}
-                {% set title = lines[0].strip().strip('"').strip('\u201c').strip('\u201d') %}
+                {% set full_text = item.title or item.content or "Untitled News" %}
+                {% set lines = full_text.split('\n') %}
+                {% set display_title = lines[0].strip().strip('"').strip('\u201c').strip('\u201d') %}
                 <h3 class="text-lg font-bold text-gray-800 mb-3 hover:text-primary-green transition-colors">
-                    <a href="{{ url_for('main.news_detail', news_id=item.id) }}">{{ title[:100] }}{% if title|length >
+                    <a href="{{ url_for('main.news_detail', news_id=item.id) }}">{{ display_title[:100] }}{% if display_title|length >
                         100 %}…{% endif %}</a>
                 </h3>
 
-                {% set preview = lines[1:]|join(' ')|trim %}
+                {% set preview = lines[1:]|join(' ')|trim or item.description or "" %}
                 <p class="text-gray-600 text-sm line-clamp-3 mb-6">
                     {{ preview[:200] }}{% if preview|length > 200 %}…{% endif %}
                 </p>
