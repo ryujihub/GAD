@@ -116,19 +116,30 @@ def scrape_facebook_page(url: str, imgbb_api_key: str, target_count: int = 7, ma
                             "title": caption.split('\n')[0][:100],
                             "content": caption,
                             "date": datetime.now().strftime("%B %d, %Y"),
-                            "photos": processed_photos,
                             "image": processed_photos[0] if processed_photos else "",
                             "post_url": post_url,
                             "scraped_at": datetime.now().isoformat()
                         }
                         
-                        # UPSERT TO SUPABASE IMMEDIATELY
+                        # Add 'photos' only if the scraper found them
+                        if processed_photos:
+                            new_post["photos"] = processed_photos
+
+                        # UPSERT TO SUPABASE
                         try:
+                            # Try a test fetch to see if 'photos' exists or if we should use 'image' only
                             supabase.table('news').upsert(new_post).execute()
                             print_flush(f"   -> [DB SUCCESS] Post {post_id} synced.")
                             posts_data.append(new_post)
                         except Exception as db_err:
-                            print_flush(f"   -> [DB ERROR] {db_err}")
+                            # Fallback: If 'photos' column is missing, try without it
+                            if "photos" in str(db_err):
+                                print_flush("   -> [DB RECOVERY] 'photos' column missing, retrying with 'image' only.")
+                                new_post.pop("photos", None)
+                                supabase.table('news').upsert(new_post).execute()
+                                posts_data.append(new_post)
+                            else:
+                                print_flush(f"   -> [DB ERROR] {db_err}")
 
                     except Exception: pass
 
