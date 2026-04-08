@@ -106,10 +106,21 @@ def scrape_facebook_page(url: str, imgbb_api_key: str, target_count: int = 7, ma
             # Initial wait for any slow elements
             page.wait_for_timeout(3000)
 
+            # DIAGNOSTIC: Check what the page actually is
+            title = page.title()
+            print_flush(f"[DIAGNOSTIC] Page Title: {title}")
+            if "Log In" in title or "Pumasok" in title:
+                print_flush("[CRITICAL] Hit a Login Wall. Facebook is blocking public view.")
+                # Try to click "Not Now" or similar if it's a popup
+            
             # DIAGNOSTIC: Check what containers are available
             print_flush("[DIAGNOSTIC] Checking for post containers...")
-            containers = page.locator('div#m_group_stories_container, div#root, article, div[role="article"]').all()
+            # Use an even broader search for the root of the content
+            containers = page.locator('div#root, div#m_group_stories_container, article, div[role="article"], div#static_templates').all()
             print_flush(f"[DIAGNOSTIC] Found {len(containers)} potential root containers.")
+
+            if len(containers) == 0:
+                print_flush("[DEBUG] Snippet of page content: " + page.inner_text("body")[:200].replace("\n", " "))
 
             pages_crawled = 0
             while len(posts_data) < target_count and pages_crawled < max_pages:
