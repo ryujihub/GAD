@@ -52,8 +52,18 @@ def scrape_facebook_page(url: str, imgbb_key: str, target: int = 7):
 
         print_flush(f"[ACTION] Opening {url}")
         page.goto(url, wait_until="domcontentloaded", timeout=60000)
-        page.wait_for_timeout(5000) # Wait for React content
+        page.wait_for_timeout(7000) # Give extra time for React
         
+        # [DEBUG] TAKE SCREENSHOT TO SEE WHAT THE ROBOT SEES
+        try:
+            temp_path = "/tmp/debug_screen.png"
+            page.screenshot(path=temp_path)
+            screen_url = upload_img(temp_path, imgbb_key)
+            if screen_url:
+                print_flush(f"[DEBUG] Page Screenshot: {screen_url}")
+        except Exception as e:
+            print_flush(f"[DEBUG] Screenshot failed: {e}")
+
         # Close login popups
         try:
             page.click('div[role="button"]:has-text("Not Now"), div[role="button"]:has-text("Hindi muna"), i[class*="close"]', timeout=3000)
