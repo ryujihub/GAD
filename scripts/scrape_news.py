@@ -249,6 +249,10 @@ def scrape_facebook_page(
                 "--disable-features=IsolateOrigins,site-per-process",
                 "--disable-dev-shm-usage",
                 "--no-sandbox",
+                "--disable-gpu",
+                "--disable-software-rasterizer",
+                "--disable-dev-shm-usage",
+                "--single-process",
             ],
         )
 
