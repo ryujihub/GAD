@@ -51,17 +51,17 @@ def scrape_facebook_page(url: str, imgbb_key: str, target: int = 7):
         page.route("**/*", lambda r: r.abort() if r.request.resource_type in ["media", "font"] else r.continue_())
 
         print_flush(f"[ACTION] Opening {url}")
-        page.goto(url, wait_until="networkidle", timeout=60000)
+        page.goto(url, wait_until="domcontentloaded", timeout=60000)
+        page.wait_for_timeout(5000) # Wait for React content
         
-        # Close login popups if they appear
+        # Close login popups
         try:
             page.click('div[role="button"]:has-text("Not Now"), div[role="button"]:has-text("Hindi muna"), i[class*="close"]', timeout=3000)
         except: pass
 
         while len(posts) < target and (time.time() - start_time) < MAX_RUN_TIME:
-            # Find all story containers
-            # On m.facebook.com, posts are often in div[data-sigil="m-feed-story"] or role="article"
-            articles = page.locator('div[data-sigil*="story"], article, div[id^="u_0_"]').all()
+            # Broad selectors for Facebook Touch/Mobile
+            articles = page.locator('div[data-sigil*="story"], div[data-sigil*="m-feed-story"], article, div[id^="u_0_"], div._5pcr').all()
             print_flush(f"[STATUS] Analyzing {len(articles)} nodes...")
 
             for art in articles:
