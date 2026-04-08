@@ -103,22 +103,36 @@ def scrape_facebook_page(url: str, imgbb_api_key: str, target_count: int = 7, ma
             print_flush(f"[ACTION] Navigating to {url}")
             page.goto(url, wait_until="domcontentloaded", timeout=60000)
             
+            # Initial wait for any slow elements
+            page.wait_for_timeout(3000)
+
+            # DIAGNOSTIC: Check what containers are available
+            print_flush("[DIAGNOSTIC] Checking for post containers...")
+            containers = page.locator('div#m_group_stories_container, div#root, article, div[role="article"]').all()
+            print_flush(f"[DIAGNOSTIC] Found {len(containers)} potential root containers.")
+
             pages_crawled = 0
             while len(posts_data) < target_count and pages_crawled < max_pages:
                 print_flush(f"[STATUS] Crawling Page {pages_crawled+1}...")
                 
-                # mbasic post selector
-                articles = page.locator('article, div[role="article"]')
+                # Robust mbasic post selectors
+                # 1. Look for articles
+                # 2. Look for divs with data-ft (standard FB mobile metadata)
+                # 3. Look for divs inside root that look like segments
+                articles = page.locator('article, div[role="article"], div[data-ft], div#root > div > div > div > div')
                 count = articles.count()
-                
+                print_flush(f"   -> Found {count} post candidates.")
+
                 for i in range(count):
                     if len(posts_data) >= target_count: break
                     
                     article = articles.nth(i)
                     try:
-                        caption = article.inner_text().strip()
-                        if not caption: continue
+                        # Only consider elements with significant text to avoid empty spacer divs
+                        text_content = article.inner_text().strip()
+                        if len(text_content) < 40: continue
                         
+                        caption = text_content
                         post_id = generate_caption_hash(caption)
                         if post_id in seen_ids: continue
                         seen_ids.add(post_id)
