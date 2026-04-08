@@ -202,13 +202,13 @@ def ensure_playwright_browsers() -> None:
         # We use Chromium for this scraper.
         subprocess.run(
             [sys.executable, "-m", "playwright", "install", "chromium"],
-            check=True,
-            capture_output=True,
-            text=True
+            check=True
         )
         print("[STATUS] Playwright environment verified.")
     except Exception as e:
-        print(f"[WARNING] Playwright installation check skipped or failed: {e}")
+        print(f"[WARNING] Playwright installation check returned an error (it might already be installed): {e}")
+        # We don't crash here because Playwright might already be installed in a system-wide path.
+
 
 
 # ---------------------------------------------------------------------------

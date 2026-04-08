@@ -215,10 +215,15 @@ import sys
 def scrape_news():
     try:
         script_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'scripts', 'scrape_news.py')
-        subprocess.run([sys.executable, script_path], check=True)
-        flash('News scraper completed successfully.', 'success')
+        result = subprocess.run([sys.executable, script_path], capture_output=True, text=True)
+        if result.returncode == 0:
+            flash('News scraper completed successfully.', 'success')
+        else:
+            error_msg = result.stderr or result.stdout or "No error output."
+            print(f"Scraper Error: {error_msg}")
+            flash(f'Error running scraper: {error_msg[:200]}...', 'error')
     except Exception as e:
-        flash(f'Error running scraper: {str(e)}', 'error')
+        flash(f'Unexpected error: {str(e)}', 'error')
     return redirect(url_for('admin.features'))
 
 # ── Policies Management ───────────────────────────────────────────────────────
