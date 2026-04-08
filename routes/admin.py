@@ -210,20 +210,30 @@ def save_site_config_route():
 
 import sys
 
+import threading
+
 @admin_bp.route('/scrape_news', methods=['POST'])
 @login_required
 def scrape_news():
+    def run_async_scraper(python_exe, script):
+        try:
+            print(f"[THREAD] Starting news scraper background process...")
+            subprocess.run([python_exe, script], capture_output=True, text=True)
+            print(f"[THREAD] News scraper background process finished.")
+        except Exception as e:
+            print(f"[THREAD] Scraper background process failed: {e}")
+
     try:
         script_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'scripts', 'scrape_news.py')
-        result = subprocess.run([sys.executable, script_path], capture_output=True, text=True)
-        if result.returncode == 0:
-            flash('News scraper completed successfully.', 'success')
-        else:
-            error_msg = result.stderr or result.stdout or "No error output."
-            print(f"Scraper Error: {error_msg}")
-            flash(f'Error running scraper: {error_msg[:200]}...', 'error')
+        # Start thread
+        thread = threading.Thread(target=run_async_scraper, args=(sys.executable, script_path))
+        thread.daemon = True # Ensure it doesn't block app shutdown
+        thread.start()
+        
+        flash('News scraper started in the background. Results will be available in a few minutes.', 'success')
     except Exception as e:
-        flash(f'Unexpected error: {str(e)}', 'error')
+        flash(f'Failed to initiate scraper: {str(e)}', 'error')
+        
     return redirect(url_for('admin.features'))
 
 # ── Policies Management ───────────────────────────────────────────────────────

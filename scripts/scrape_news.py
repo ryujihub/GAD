@@ -247,6 +247,8 @@ def scrape_facebook_page(
             args=[
                 "--disable-blink-features=AutomationControlled",
                 "--disable-features=IsolateOrigins,site-per-process",
+                "--disable-dev-shm-usage",
+                "--no-sandbox",
             ],
         )
 

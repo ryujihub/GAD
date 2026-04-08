@@ -26,5 +26,5 @@ RUN mkdir -p data static scripts
 # We use --with-deps just in case, though the base image covers it.
 RUN playwright install chromium
 
-# Start gunicorn with explicit shell for environment variable expansion
-CMD ["sh", "-c", "gunicorn app:app --workers 2 --bind 0.0.0.0:${PORT:-8080}"]
+# Start gunicorn with 1 worker and 120s timeout for memory-constrained environments
+CMD ["sh", "-c", "gunicorn app:app --workers 1 --timeout 120 --bind 0.0.0.0:${PORT:-8080}"]
