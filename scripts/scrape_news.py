@@ -241,20 +241,25 @@ def scrape_facebook_page(
         existing_posts = {}
 
     with sync_playwright() as p:
-        print("[STATUS] Initializing stealth environment...")
-        browser = p.chromium.launch(
-            headless=True,
-            args=[
-                "--disable-blink-features=AutomationControlled",
-                "--disable-features=IsolateOrigins,site-per-process",
-                "--disable-dev-shm-usage",
-                "--no-sandbox",
-                "--disable-gpu",
-                "--disable-software-rasterizer",
-                "--disable-dev-shm-usage",
-                "--single-process",
-            ],
-        )
+        try:
+            print("[STATUS] Initializing stealth environment...")
+            browser = p.chromium.launch(
+                headless=True,
+                timeout=30000,  # 30 second timeout for launch
+                args=[
+                    "--disable-blink-features=AutomationControlled",
+                    "--disable-features=IsolateOrigins,site-per-process",
+                    "--disable-dev-shm-usage",
+                    "--no-sandbox",
+                    "--disable-gpu",
+                    "--disable-software-rasterizer",
+                    "--single-process",
+                ],
+            )
+        except Exception as e:
+            print(f"[CRITICAL ERROR] Failed to launch Chromium: {e}")
+            print("[HINT] This usually happens if Render is not set to 'Docker' runtime or if the server is Out Of Memory.")
+            return []
 
         context = browser.new_context(
             viewport={"width": 1366, "height": 768},
