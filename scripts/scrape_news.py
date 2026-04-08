@@ -1,6 +1,5 @@
 """
-scrape_news.py — Final Stabilized Social Scraper
-Uses a robust JS injection method to find posts regardless of UI changes.
+scrape_news.py — Final Stabilized Universal Scraper
 """
 
 import time
@@ -41,12 +40,12 @@ def upload_img(url: str, key: str) -> str:
     return ""
 
 def scrape_facebook_page(url: str, imgbb_key: str, target: int = 7):
-    posts = []
+    posts_data = []
     seen = set()
     start_time = time.time()
 
     with sync_playwright() as p:
-        print_flush("[STATUS] Launching Final Universal Scraper...")
+        print_flush("[STATUS] Launching Universal Scraper...")
         browser = p.chromium.launch(headless=True, args=["--no-sandbox", "--disable-gpu"])
         context = browser.new_context(viewport={"width": 450, "height": 900})
         page = context.new_page()
@@ -56,30 +55,28 @@ def scrape_facebook_page(url: str, imgbb_key: str, target: int = 7):
 
         print_flush(f"[ACTION] Navigating to {url}")
         page.goto(url, wait_until="domcontentloaded", timeout=60000)
-        page.wait_for_timeout(7000) # Let React load
+        page.wait_for_timeout(7000) 
 
-        # [DEBUG] Optional: take a screenshot if it fails
-        
-        while len(posts) < target and (time.time() - start_time) < MAX_TIME:
-            print_flush("[STATUS] Analyzing DOM for text blocks...")
+        while len(posts_data) < target and (time.time() - start_time) < MAX_TIME:
+            print_flush("[STATUS] Scanning for posts...")
             
-            # Universal JS extractor (looks for any div with significant text)
+            # Universal JS extractor
             candidates = page.evaluate('''() => {
                 return Array.from(document.querySelectorAll('div, article, p'))
                     .filter(el => el.innerText && el.innerText.trim().length > 70 && el.children.length < 15)
                     .map(el => el.innerText.trim());
             }''')
 
-            print_flush(f"   -> Found {len(candidates)} candidate text blocks.")
+            print_flush(f"   -> Found {len(candidates)} potential blocks.")
 
             for caption in candidates:
-                if len(posts) >= target: break
+                if len(posts_data) >= target: break
                 
                 pid = generate_id(caption)
                 if pid in seen: continue
                 seen.add(pid)
 
-                # Try to find an image near the top
+                # Try to find an image
                 img_src = ""
                 try:
                     img_el = page.locator('img[src*="scontent"]').first
@@ -102,26 +99,29 @@ def scrape_facebook_page(url: str, imgbb_key: str, target: int = 7):
                 if supabase:
                     try:
                         supabase.table('news').upsert(new_post).execute()
-                        posts.append(new_post)
-                        print_flush(f"   -> [DB SUCCESS] Linked post: {new_post['title']}")
+                        posts_data.append(new_post)
+                        print_flush(f"   -> [DB SUCCESS] {new_post['title']}")
                     except Exception as e:
-                        if "photos" in str(e): # Handle schema variation
+                        if "photos" in str(e):
                             new_post.pop("photos", None)
-                            supabase.table('news').upsert(new_post).execute()
-                            posts.append(new_post)
+                            try:
+                                supabase.table('news').upsert(new_post).execute()
+                                posts_data.append(new_post)
+                                print_flush(f"   -> [DB SUCCESS] {new_post['title']}")
+                            except: pass
                         else:
                             print_flush(f"   -> [DB ERROR] {e}")
                 else:
-                    posts.append(new_post)
-                    print_flush(f"   -> [MEM ONLY] {new_post['title']}")
+                    posts_data.append(new_post)
+                    print_flush(f"   -> [LOCAL] {new_post['title']}")
 
-            print_flush("[ACTION] Scrolling for more...")
+            print_flush("[ACTION] Scrolling...")
             page.evaluate("window.scrollBy(0, 1000)")
-            page.wait_for_timeout(3000)
+            page.wait_for_timeout(4000)
 
         browser.close()
-    return posts
+    return posts_data
 
 if __name__ == "__main__":
     scrape_facebook_page(FACEBOOK_PAGE_URL, IMGBB_API_KEY)
-    print_flush("[COMPLETE] news extraction lifecycle finished.")
+    print_flush("[COMPLETE] Extraction finished.")
