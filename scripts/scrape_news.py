@@ -83,12 +83,19 @@ def scrape_facebook_page(url: str, imgbb_key: str, target: int = 7):
             print_flush("[STATUS] Scanning for post content...")
             
             candidates = page.evaluate('''() => {
+                const isArabic = (text) => /[\u0600-\u06FF]/.test(text);
                 return Array.from(document.querySelectorAll('div, article, p'))
-                    .filter(el => el.innerText && el.innerText.trim().length > 70 && el.children.length < 15)
+                    .filter(el => {
+                        const txt = el.innerText || "";
+                        // Ensure it's long enough, not Arabic, and not a massive container
+                        return txt.trim().length > 80 && 
+                               !isArabic(txt) && 
+                               el.children.length < 12;
+                    })
                     .map(el => el.innerText.trim());
             }''')
 
-            print_flush(f"   -> Found {len(candidates)} potential blocks.")
+            print_flush(f"   -> Found {len(candidates)} high-quality blocks.")
 
             for caption in candidates:
                 if len(posts_data) >= target: break
@@ -106,11 +113,12 @@ def scrape_facebook_page(url: str, imgbb_key: str, target: int = 7):
                         img_src = upload_img(src, imgbb_key)
                 except: pass
 
+                # USE YYYY-MM-DD for correct DB sorting
                 new_post = {
                     "id": pid,
                     "title": caption.split('\n')[0][:80],
                     "content": caption,
-                    "date": datetime.now().strftime("%B %d, %Y"),
+                    "date": datetime.now().strftime("%Y-%m-%d"),
                     "image": img_src,
                     "post_url": url,
                     "scraped_at": datetime.now().isoformat()
