@@ -1,0 +1,18 @@
+.git
+.env
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.vscode
+.gemini
+node_modules
+data/*.json
+!data/news.json
+# We keep news.json if we want to seed it, but usually better to have it empty or fetched
+# For now, let's keep the repo lean
+data/
+*.pdf
+*.docx
+temp/
+tmp/

@@ -196,18 +196,26 @@ def ensure_playwright_browsers() -> None:
     """Ensure that the required Playwright browser (Chromium) is installed."""
     import sys
     import subprocess
+    
+    # If explicitly skipped (e.g. in certain Docker setups where they are pre-baked)
+    if os.environ.get("PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD") == "1":
+        print("[STATUS] Playwright browser installation skipped by environment flag.")
+        return
+
     try:
         print("[STATUS] Checking/Installing Playwright browser environment...")
-        # Always run install - it's fast if already present. 
-        # We use Chromium for this scraper.
+        # On Linux (Render/Railway), we might need system dependencies.
+        # Playwright install --with-deps often needs sudo unless run in a container as root.
+        # In our Dockerfile, we handle this. This check is for other environments.
         subprocess.run(
             [sys.executable, "-m", "playwright", "install", "chromium"],
             check=True
         )
         print("[STATUS] Playwright environment verified.")
     except Exception as e:
-        print(f"[WARNING] Playwright installation check returned an error (it might already be installed): {e}")
-        # We don't crash here because Playwright might already be installed in a system-wide path.
+        print(f"[STATUS] Subprocess check: {e}")
+        # Many cloud providers have a local cache or pre-installed driver.
+        # We only warn here; the scraper will crash later with a clear error if actually missing.
 
 
 
@@ -220,6 +228,7 @@ def scrape_facebook_page(
     target_post_count: int = 7,
     max_scrolls: int = 30,
     existing_posts: Dict[str, Dict[str, Any]] = None,
+    test_mode: bool = False,
 ) -> List[Dict[str, Any]]:
     # Ensure browser is ready before starting
     ensure_playwright_browsers()
@@ -436,7 +445,7 @@ def scrape_facebook_page(
                                 if og_img:
                                     clean_imgbb_url = upload_to_imgbb(og_img, imgbb_api_key)
                                     if clean_imgbb_url:
-                                        cached_photos = [f"https://wsrv.nl/?url={clean_imgbb_url}&maxage=7d"]
+                                        cached_photos = [f"https://wsrv.nl/?url={clean_imgbb_url}&maxage=1y"]
                                         print(f"   -> [CACHED] Saved fallback thumbnail: {cached_photos[0]}")
 
                             updated = {
@@ -493,16 +502,20 @@ def scrape_facebook_page(
                                 raw_photos.append(og_img)
 
                         if raw_photos:
-                            print(f"   -> [Batch] Transferring {len(raw_photos)} images to ImgBB...")
+                            if test_mode:
+                                print(f"   -> [TEST] Skipping ImgBB upload for {len(raw_photos)} images.")
+                                processed_photos = raw_photos
+                            else:
+                                print(f"   -> [Batch] Transferring {len(raw_photos)} images to ImgBB...")
 
-                            def process_single_image(fb_src: str) -> str:
-                                clean_imgbb_url = upload_to_imgbb(fb_src, imgbb_api_key)
-                                if clean_imgbb_url:
-                                    return f"https://wsrv.nl/?url={clean_imgbb_url}&maxage=7d"
-                                return fb_src
+                                def process_single_image(fb_src: str) -> str:
+                                    clean_imgbb_url = upload_to_imgbb(fb_src, imgbb_api_key)
+                                    if clean_imgbb_url:
+                                        return f"https://wsrv.nl/?url={clean_imgbb_url}&maxage=1y"
+                                    return fb_src
 
-                            with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-                                processed_photos = list(executor.map(process_single_image, raw_photos))
+                                with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+                                    processed_photos = list(executor.map(process_single_image, raw_photos))
 
                         if caption or processed_photos:
                             post_id = caption_id if caption_id else generate_post_signature(caption, processed_photos)[:8]
@@ -599,10 +612,15 @@ def save_to_json(new_posts: List[Dict[str, Any]], output_path: str = OUTPUT_FILE
 # CLI entry-point
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Facebook Page Scraper for GAD News")
+    parser.add_argument("--test", action="store_true", help="Run in test mode (no saving, no image upload)")
+    args = parser.parse_args()
+
     start_time = time.time()
 
     # Load existing data to avoid re-uploading images
-    existing = load_existing_news()
+    existing = load_existing_news() if not args.test else {}
     if existing:
         print(f"[INFO] Loaded {len(existing)} existing posts from cache.")
 
@@ -612,11 +630,18 @@ if __name__ == "__main__":
         target_post_count=TARGET_POSTS,
         max_scrolls=MAX_SCROLLS,
         existing_posts=existing,
+        test_mode=args.test
     )
 
     print("\n" + "=" * 50)
     print(f"EXTRACTION COMPLETE IN {time.time() - start_time:.2f} SECONDS")
     print("=" * 50 + "\n")
 
-    save_to_json(results)
-    print(json.dumps(results, indent=4, ensure_ascii=False))
+    if not args.test:
+        save_to_json(results)
+    else:
+        print("\n" + "="*50)
+        print("TEST MODE: SCRAPED RESULTS (NOT SAVED)")
+        print("="*50)
+        print(json.dumps(results, indent=4, ensure_ascii=False))
+
