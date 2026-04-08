@@ -229,7 +229,7 @@ def scrape_news():
                 f.write(str(os.getpid()))
             
             print(f"[THREAD] Starting news scraper background process...")
-            subprocess.run([python_exe, script], capture_output=True, text=True)
+            subprocess.run([python_exe, script])
             print(f"[THREAD] News scraper background process finished.")
         except Exception as e:
             print(f"[THREAD] Scraper background process failed: {e}")
