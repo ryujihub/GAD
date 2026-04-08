@@ -1,5 +1,5 @@
 """
-scrape_news.py — Final Stabilized Universal Scraper
+scrape_news.py — Bulletproof Universal Scraper
 """
 
 import time
@@ -39,6 +39,30 @@ def upload_img(url: str, key: str) -> str:
     except: pass
     return ""
 
+def push_to_db(post_data: dict):
+    """Recursively attempts to upsert by removing problematic columns."""
+    if not supabase: return False
+    
+    current_data = post_data.copy()
+    while True:
+        try:
+            supabase.table('news').upsert(current_data).execute()
+            return True
+        except Exception as e:
+            err_str = str(e)
+            # Find the column name in the error message
+            # PostgREST errors usually say "Could not find the 'column' column"
+            import re
+            match = re.search(r"Could not find the '(.+?)' column", err_str)
+            if match:
+                col = match.group(1)
+                print_flush(f"   -> [DB AUTO-FIX] Removing missing column '{col}'")
+                current_data.pop(col, None)
+                if not current_data: return False # Nothing left to push
+            else:
+                print_flush(f"   -> [DB ERROR] {err_str}")
+                return False
+
 def scrape_facebook_page(url: str, imgbb_key: str, target: int = 7):
     posts_data = []
     seen = set()
@@ -49,8 +73,6 @@ def scrape_facebook_page(url: str, imgbb_key: str, target: int = 7):
         browser = p.chromium.launch(headless=True, args=["--no-sandbox", "--disable-gpu"])
         context = browser.new_context(viewport={"width": 450, "height": 900})
         page = context.new_page()
-        
-        # Aggressive blocking for RAM
         page.route("**/*", lambda r: r.abort() if r.request.resource_type in ["media", "font"] else r.continue_())
 
         print_flush(f"[ACTION] Navigating to {url}")
@@ -58,9 +80,8 @@ def scrape_facebook_page(url: str, imgbb_key: str, target: int = 7):
         page.wait_for_timeout(7000) 
 
         while len(posts_data) < target and (time.time() - start_time) < MAX_TIME:
-            print_flush("[STATUS] Scanning for posts...")
+            print_flush("[STATUS] Scanning for post content...")
             
-            # Universal JS extractor
             candidates = page.evaluate('''() => {
                 return Array.from(document.querySelectorAll('div, article, p'))
                     .filter(el => el.innerText && el.innerText.trim().length > 70 && el.children.length < 15)
@@ -95,25 +116,9 @@ def scrape_facebook_page(url: str, imgbb_key: str, target: int = 7):
                     "scraped_at": datetime.now().isoformat()
                 }
 
-                # Push to DB
-                if supabase:
-                    try:
-                        supabase.table('news').upsert(new_post).execute()
-                        posts_data.append(new_post)
-                        print_flush(f"   -> [DB SUCCESS] {new_post['title']}")
-                    except Exception as e:
-                        if "photos" in str(e):
-                            new_post.pop("photos", None)
-                            try:
-                                supabase.table('news').upsert(new_post).execute()
-                                posts_data.append(new_post)
-                                print_flush(f"   -> [DB SUCCESS] {new_post['title']}")
-                            except: pass
-                        else:
-                            print_flush(f"   -> [DB ERROR] {e}")
-                else:
+                if push_to_db(new_post):
                     posts_data.append(new_post)
-                    print_flush(f"   -> [LOCAL] {new_post['title']}")
+                    print_flush(f"   -> [DB SYNCED] {new_post['title']}")
 
             print_flush("[ACTION] Scrolling...")
             page.evaluate("window.scrollBy(0, 1000)")
@@ -124,4 +129,4 @@ def scrape_facebook_page(url: str, imgbb_key: str, target: int = 7):
 
 if __name__ == "__main__":
     scrape_facebook_page(FACEBOOK_PAGE_URL, IMGBB_API_KEY)
-    print_flush("[COMPLETE] Extraction finished.")
+    print_flush("[COMPLETE] News update cycle finished.")
