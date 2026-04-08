@@ -1,6 +1,6 @@
 """
-scrape_news.py — Facebook Scraper (Modern Touch Interface)
-Targets m.facebook.com for stability and high-quality photo extraction.
+scrape_news.py — Final Stabilized Social Scraper
+Uses a robust JS injection method to find posts regardless of UI changes.
 """
 
 import time
@@ -13,16 +13,19 @@ from datetime import datetime
 from typing import List, Dict, Any
 from playwright.sync_api import sync_playwright
 
-# Database Import
+# Database Setup
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(PROJECT_ROOT)
-from database import supabase
+try:
+    from database import supabase
+except ImportError:
+    supabase = None
 
 # Config
 FACEBOOK_PAGE_URL = "https://m.facebook.com/MontalbanGenderAndDevelopment"
 IMGBB_API_KEY = "768e4e92399d79e0b981a3368fe9a046"
 TARGET_POSTS = 7
-MAX_RUN_TIME = 240 # 4 minutes max
+MAX_TIME = 240
 
 def print_flush(msg: str) -> None:
     print(msg, flush=True)
@@ -43,87 +46,82 @@ def scrape_facebook_page(url: str, imgbb_key: str, target: int = 7):
     start_time = time.time()
 
     with sync_playwright() as p:
-        print_flush("[STATUS] Launching Modern Mobile Scraper...")
+        print_flush("[STATUS] Launching Final Universal Scraper...")
         browser = p.chromium.launch(headless=True, args=["--no-sandbox", "--disable-gpu"])
-        page = browser.new_page(viewport={"width": 450, "height": 900})
+        context = browser.new_context(viewport={"width": 450, "height": 900})
+        page = context.new_page()
         
-        # Block heavy garbage
+        # Aggressive blocking for RAM
         page.route("**/*", lambda r: r.abort() if r.request.resource_type in ["media", "font"] else r.continue_())
 
-        print_flush(f"[ACTION] Opening {url}")
+        print_flush(f"[ACTION] Navigating to {url}")
         page.goto(url, wait_until="domcontentloaded", timeout=60000)
-        page.wait_for_timeout(7000) # Give extra time for React
+        page.wait_for_timeout(7000) # Let React load
+
+        # [DEBUG] Optional: take a screenshot if it fails
         
-        # [DEBUG] TAKE SCREENSHOT TO SEE WHAT THE ROBOT SEES
-        try:
-            temp_path = "/tmp/debug_screen.png"
-            page.screenshot(path=temp_path)
-            screen_url = upload_img(temp_path, imgbb_key)
-            if screen_url:
-                print_flush(f"[DEBUG] Page Screenshot: {screen_url}")
-        except Exception as e:
-            print_flush(f"[DEBUG] Screenshot failed: {e}")
+        while len(posts) < target and (time.time() - start_time) < MAX_TIME:
+            print_flush("[STATUS] Analyzing DOM for text blocks...")
+            
+            # Universal JS extractor (looks for any div with significant text)
+            candidates = page.evaluate('''() => {
+                return Array.from(document.querySelectorAll('div, article, p'))
+                    .filter(el => el.innerText && el.innerText.trim().length > 70 && el.children.length < 15)
+                    .map(el => el.innerText.trim());
+            }''')
 
-        # Close login popups
-        try:
-            page.click('div[role="button"]:has-text("Not Now"), div[role="button"]:has-text("Hindi muna"), i[class*="close"]', timeout=3000)
-        except: pass
+            print_flush(f"   -> Found {len(candidates)} candidate text blocks.")
 
-        while len(posts) < target and (time.time() - start_time) < MAX_RUN_TIME:
-            # Broad selectors for Facebook Touch/Mobile
-            articles = page.locator('div[data-sigil*="story"], div[data-sigil*="m-feed-story"], article, div[id^="u_0_"], div._5pcr').all()
-            print_flush(f"[STATUS] Analyzing {len(articles)} nodes...")
-
-            for art in articles:
+            for caption in candidates:
                 if len(posts) >= target: break
-                try:
-                    # Get caption
-                    caption = art.inner_text().strip()
-                    if len(caption) < 25: continue
-                    
-                    pid = generate_id(caption)
-                    if pid in seen: continue
-                    seen.add(pid)
+                
+                pid = generate_id(caption)
+                if pid in seen: continue
+                seen.add(pid)
 
-                    # Extract Image
-                    img_src = ""
-                    img_el = art.locator('img').first
+                # Try to find an image near the top
+                img_src = ""
+                try:
+                    img_el = page.locator('img[src*="scontent"]').first
                     if img_el.count() > 0:
                         src = img_el.get_attribute("src") or ""
-                        if "static" not in src and "emoji" not in src:
-                            img_src = upload_img(src, imgbb_key)
-                    
-                    new_post = {
-                        "id": pid,
-                        "title": caption.split('\n')[0][:80],
-                        "content": caption,
-                        "date": datetime.now().strftime("%B %d, %Y"),
-                        "image": img_src,
-                        "photos": [img_src] if img_src else [],
-                        "post_url": url, # Fallback to page URL
-                        "scraped_at": datetime.now().isoformat()
-                    }
+                        img_src = upload_img(src, imgbb_key)
+                except: pass
 
-                    # Push to DB
+                new_post = {
+                    "id": pid,
+                    "title": caption.split('\n')[0][:80],
+                    "content": caption,
+                    "date": datetime.now().strftime("%B %d, %Y"),
+                    "image": img_src,
+                    "post_url": url,
+                    "scraped_at": datetime.now().isoformat()
+                }
+
+                # Push to DB
+                if supabase:
                     try:
                         supabase.table('news').upsert(new_post).execute()
                         posts.append(new_post)
-                        print_flush(f"   -> [DB SYNC] Post {len(posts)}: {new_post['title']}")
+                        print_flush(f"   -> [DB SUCCESS] Linked post: {new_post['title']}")
                     except Exception as e:
-                        if "photos" in str(e):
+                        if "photos" in str(e): # Handle schema variation
                             new_post.pop("photos", None)
                             supabase.table('news').upsert(new_post).execute()
                             posts.append(new_post)
-                            print_flush(f"   -> [DB SYNC] Post {len(posts)} (No Gallery)")
-                except: continue
+                        else:
+                            print_flush(f"   -> [DB ERROR] {e}")
+                else:
+                    posts.append(new_post)
+                    print_flush(f"   -> [MEM ONLY] {new_post['title']}")
 
-            # Scroll and wait for React to render more
-            page.evaluate("window.scrollBy(0, 800)")
-            page.wait_for_timeout(2000)
+            print_flush("[ACTION] Scrolling for more...")
+            page.evaluate("window.scrollBy(0, 1000)")
+            page.wait_for_timeout(3000)
 
         browser.close()
     return posts
 
 if __name__ == "__main__":
     scrape_facebook_page(FACEBOOK_PAGE_URL, IMGBB_API_KEY)
-    print_flush("[FINISHED] News cycle complete.")
+    print_flush("[COMPLETE] news extraction lifecycle finished.")
