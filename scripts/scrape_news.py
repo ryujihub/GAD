@@ -364,7 +364,7 @@ def scrape_facebook_page(
                     if len(posts_data) >= target_post_count:
                         break
 
-                    print(f"[STATUS] Analyzing post node {i+1}...")
+                    print(f"[STATUS] Analyzing post node {i+1}/{current_count}...")
                     article = page.locator('div[role="article"]').nth(i)
 
                     try:

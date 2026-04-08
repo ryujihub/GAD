@@ -215,22 +215,36 @@ import threading
 @admin_bp.route('/scrape_news', methods=['POST'])
 @login_required
 def scrape_news():
-    def run_async_scraper(python_exe, script):
+    lock_file = "/tmp/scraper.lock"
+    
+    if os.path.exists(lock_file):
+        # Check if the process is actually still alive (optional but good)
+        flash('A news scraper is already running in the background. Please wait for it to finish.', 'warning')
+        return redirect(url_for('admin.features'))
+
+    def run_async_scraper(python_exe, script, lock_path):
         try:
+            # Create lock file
+            with open(lock_path, 'w') as f:
+                f.write(str(os.getpid()))
+            
             print(f"[THREAD] Starting news scraper background process...")
             subprocess.run([python_exe, script], capture_output=True, text=True)
             print(f"[THREAD] News scraper background process finished.")
         except Exception as e:
             print(f"[THREAD] Scraper background process failed: {e}")
+        finally:
+            # Always remove the lock
+            if os.path.exists(lock_path):
+                os.remove(lock_path)
 
     try:
         script_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'scripts', 'scrape_news.py')
-        # Start thread
-        thread = threading.Thread(target=run_async_scraper, args=(sys.executable, script_path))
-        thread.daemon = True # Ensure it doesn't block app shutdown
+        thread = threading.Thread(target=run_async_scraper, args=(sys.executable, script_path, lock_file))
+        thread.daemon = True
         thread.start()
         
-        flash('News scraper started in the background. Results will be available in a few minutes.', 'success')
+        flash('News scraper started in the background. This may take 3-5 minutes. Check logs for progress.', 'success')
     except Exception as e:
         flash(f'Failed to initiate scraper: {str(e)}', 'error')
         
