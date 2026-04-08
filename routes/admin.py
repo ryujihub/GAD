@@ -208,12 +208,14 @@ def save_site_config_route():
         flash(f'Failed to save site settings: {e}', 'error')
     return redirect(url_for('admin.policies_settings'))
 
+import sys
+
 @admin_bp.route('/scrape_news', methods=['POST'])
 @login_required
 def scrape_news():
     try:
         script_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'scripts', 'scrape_news.py')
-        subprocess.run(['python', script_path], check=True)
+        subprocess.run([sys.executable, script_path], check=True)
         flash('News scraper completed successfully.', 'success')
     except Exception as e:
         flash(f'Error running scraper: {str(e)}', 'error')

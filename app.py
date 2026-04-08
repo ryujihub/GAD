@@ -195,12 +195,14 @@ def ratelimit_handler(e):
 # ---------------------------------------------------------
 # 6. SCHEDULER IMPLEMENTATION
 # ---------------------------------------------------------
+import sys
+
 def run_news_scraper():
     """Background job to run the scraper."""
     script_path = os.path.join(app.root_path, 'scripts', 'scrape_news.py')
     print(f"[{os.getpid()}] Running scheduled news scraper...")
     try:
-        subprocess.run(['python', script_path], check=True)
+        subprocess.run([sys.executable, script_path], check=True)
         print("Scheduled scraper finished successfully.")
     except Exception as e:
         print(f"Scheduled scraper failed: {e}")

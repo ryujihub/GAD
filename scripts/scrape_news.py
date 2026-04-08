@@ -192,6 +192,25 @@ def fetch_post_og_image_via_playwright(context, url: str, timeout: int = 20000) 
         return ""
 
 
+def ensure_playwright_browsers() -> None:
+    """Ensure that the required Playwright browser (Chromium) is installed."""
+    import sys
+    import subprocess
+    try:
+        print("[STATUS] Checking/Installing Playwright browser environment...")
+        # Always run install - it's fast if already present. 
+        # We use Chromium for this scraper.
+        subprocess.run(
+            [sys.executable, "-m", "playwright", "install", "chromium"],
+            check=True,
+            capture_output=True,
+            text=True
+        )
+        print("[STATUS] Playwright environment verified.")
+    except Exception as e:
+        print(f"[WARNING] Playwright installation check skipped or failed: {e}")
+
+
 # ---------------------------------------------------------------------------
 # Core scraper
 # ---------------------------------------------------------------------------
@@ -202,6 +221,9 @@ def scrape_facebook_page(
     max_scrolls: int = 30,
     existing_posts: Dict[str, Dict[str, Any]] = None,
 ) -> List[Dict[str, Any]]:
+    # Ensure browser is ready before starting
+    ensure_playwright_browsers()
+
     posts_data: List[Dict[str, Any]] = []
     seen_signatures: Set[str] = set()
     # Allows de-duping by URL in case a post is processed multiple times.
