@@ -155,8 +155,7 @@ def push_to_db(post_data: Dict[str, Any]) -> bool:
         "date": post_data.get("post_date", datetime.now().strftime("%B %d, %Y")),
         "image": post_data["photos"][0] if post_data.get("photos") else "",
         "url": post_data.get("post_url", ""),
-        "author": "GAD Office",
-        "scraped_at": post_data.get("scraped_at", datetime.now().isoformat())
+        "author": "GAD Office"
     }
     
     try:
@@ -191,10 +190,10 @@ def load_existing_news(path: str = None) -> Dict[str, Dict[str, Any]]:
         return {}
 
 
-def upload_to_imgbb(image_url: str, api_key: str, expiration: int = 604800) -> str:
+def upload_to_imgbb(image_url: str, api_key: str, expiration: int = 31536000) -> str:
     """
     Uploads an image URL to ImgBB and returns the direct link.
-    Expiration is set to 7 days (604800 seconds) by default.
+    Expiration is set to 1 year (31,536,000 seconds) by default.
     """
     try:
         url = "https://api.imgbb.com/1/upload"
@@ -520,7 +519,7 @@ def scrape_facebook_page(
                             def process_single_image(fb_src: str) -> str:
                                 clean_imgbb_url = upload_to_imgbb(fb_src, imgbb_api_key)
                                 if clean_imgbb_url:
-                                    return f"https://wsrv.nl/?url={clean_imgbb_url}&maxage=7d"
+                                    return f"https://wsrv.nl/?url={clean_imgbb_url}&maxage=1y"
                                 return fb_src
 
                             with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:

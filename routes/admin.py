@@ -235,8 +235,8 @@ def scrape_news():
                 f.write(str(os.getpid()))
             
             print(f"[THREAD] Starting news scraper background process...")
-            # Use a longer timeout or no timeout for the background process
-            subprocess.run([python_exe, script], capture_output=True, text=True)
+            # Remove capture_output to let the script's prints show up in the terminal
+            subprocess.run([python_exe, script])
             print(f"[THREAD] News scraper background process finished.")
         except Exception as e:
             print(f"[THREAD] Scraper background process failed: {e}")
