@@ -26,8 +26,8 @@
         <!-- Social Share -->
         <div class="flex gap-4 border-y border-gray-100 py-4">
             <span class="text-xs text-gray-400 font-bold uppercase self-center mr-2">Share:</span>
-            {% if article.post_url %}
-            <a href="{{ article.post_url }}" target="_blank" class="text-gray-400 hover:text-blue-600"
+            {% if article.url %}
+            <a href="{{ article.url }}" target="_blank" class="text-gray-400 hover:text-blue-600"
                 title="View on Facebook"><i class="fab fa-facebook-f"></i></a>
             {% else %}
             <a href="#" class="text-gray-400 hover:text-blue-600"><i class="fab fa-facebook-f"></i></a>

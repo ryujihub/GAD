@@ -10,7 +10,7 @@
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/GAD-logo.png') }}">
 
     <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -25,7 +25,10 @@
                         text: { dark: '#1a1a1a', light: '#666666' },
                         bgLight: '#f4f7f5',
                     },
-                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    fontFamily: { 
+                        sans: ['Inter', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif']
+                    },
                 }
             }
         }
@@ -161,7 +164,7 @@
     {% block extra_css %}{% endblock %}
 </head>
 
-<body class="bg-bgLight text-text-dark font-sans leading-relaxed">
+<body class="bg-bgLight text-text-dark font-outfit leading-relaxed">
 
     <!-- Top Accessibility Bar -->
     <div
