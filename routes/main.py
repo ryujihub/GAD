@@ -10,7 +10,7 @@ POSTS_PER_PAGE = 6
 @main_bp.route('/')
 def index():
     try:
-        news_response = supabase.table('news').select('*').order('created_at', desc=True).limit(3).execute()
+        news_response = supabase.table('news').select('*').order('date', desc=True).limit(3).execute()
         latest_news = news_response.data
         carousel_response = supabase.table('carousel').select('url').order('display_order').execute()
         carousel_images = [item['url'] for item in carousel_response.data]
@@ -86,7 +86,7 @@ def news_hub():
         page = max(1, min(page, total_pages))
 
         start = (page - 1) * POSTS_PER_PAGE
-        news_response = supabase.table('news').select('*').order('created_at', desc=True).range(start, start + POSTS_PER_PAGE - 1).execute()
+        news_response = supabase.table('news').select('*').order('date', desc=True).range(start, start + POSTS_PER_PAGE - 1).execute()
         news_items = news_response.data
     except Exception:
         news_items = []

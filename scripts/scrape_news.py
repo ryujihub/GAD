@@ -104,38 +104,53 @@ def normalize_fb_date(raw: str) -> str:
     if not t:
         return ""
 
-    # Relative: just now / today
-    if t in ("just now", "today"):
-        return now.strftime("%B %d, %Y")
-
-    # Relative: yesterday
-    if t == "yesterday":
-        return (now - timedelta(days=1)).strftime("%B %d, %Y")
-
-    # Relative: Nh, Nm, Ns
-    m = re.match(r"^(\d+)\s*([hms])", t)
-    if m:
-        return now.strftime("%B %d, %Y")
-
-    # Relative: Nd (days ago)
-    m = re.match(r"^(\d+)\s*d", t)
-    if m:
-        days = int(m.group(1))
-        return (now - timedelta(days=days)).strftime("%B %d, %Y")
-
-    # "March 10 at 10:30 AM" -> "March 10, 2026"
-    m = re.match(r"^([A-Za-z]+ \d{1,2})\s+at\s+", raw.strip())
-    if m:
-        date_part = m.group(1)
-        return f"{date_part}, {now.year}"
-
-    # "March 10" (no year, no time)
-    m = re.match(r"^([A-Za-z]+ \d{1,2})$", raw.strip())
-    if m:
-        return f"{m.group(1)}, {now.year}"
-
-    # Already looks complete (e.g. "March 10, 2026")
-    return raw.strip()
+    # Convert to YYYY-MM-DD for sorting
+    try:
+        if t in ("just now", "today") or re.match(r"^\d+\s*[hms]", t):
+            res_date = now
+        elif t == "yesterday":
+            res_date = now - timedelta(days=1)
+        elif "d" in t and any(c.isdigit() for c in t):
+            dm = re.match(r"^(\d+)", t)
+            if dm:
+                days = int(dm.group(1))
+                res_date = now - timedelta(days=days)
+            else:
+                res_date = now
+        else:
+            # Handle "March 10 at 10:30 AM" or "March 10" or "March 10, 2026"
+            clean_raw = raw.strip().split(" at ")[0] # Remove " at 10:30 AM"
+            
+            # Try formats: "March 10, 2026", "March 10 2026", "March 10"
+            for fmt in ("%B %d, %Y", "%B %d %Y", "%B %d"):
+                try:
+                    res_date = datetime.strptime(clean_raw, fmt)
+                    if fmt == "%B %d":
+                        res_date = res_date.replace(year=now.year)
+                    break
+                except ValueError:
+                    continue
+            else:
+                # If all failed, check for month names manually
+                found_month = False
+                for m_idx, m_name in enumerate(_MONTHS):
+                    if m_name in clean_raw:
+                        # Try to find day and year
+                        dm = re.search(r"(\d{1,2})", clean_raw)
+                        ym = re.search(r"(\d{4})", clean_raw)
+                        day = int(dm.group(1)) if dm else 1
+                        year = int(ym.group(1)) if ym else now.year
+                        res_date = datetime(year, m_idx + 1, day)
+                        found_month = True
+                        break
+                if not found_month:
+                    return raw.strip() # Give up
+        
+        return res_date.strftime("%Y-%m-%d")
+    except Exception:
+        return raw.strip()
+    except Exception:
+        return raw.strip()
 
 
 def push_to_db(post_data: Dict[str, Any]) -> bool:
@@ -294,8 +309,8 @@ def scrape_facebook_page(
 
         try:
             print(f"[ACTION] Navigating to {url}")
-            page.goto(url, wait_until="domcontentloaded", timeout=60000)
-            random_delay(3, 5)
+            page.goto(url, wait_until="networkidle", timeout=90000)
+            random_delay(5, 8)
 
             scroll_attempts = 0
             processed_index = 0
@@ -311,7 +326,7 @@ def scrape_facebook_page(
                         if close_btns.nth(i).is_visible():
                             close_btns.nth(i).click(force=True)
                             print("[ACTION] Cleared standard UI overlay.")
-                            page.wait_for_timeout(1000)
+                            page.wait_for_timeout(2000)
                 except Exception:
                     pass
 
@@ -373,7 +388,7 @@ def scrape_facebook_page(
 
                     try:
                         article.scroll_into_view_if_needed()
-                        page.wait_for_timeout(500)
+                        page.wait_for_timeout(2000)
 
                         see_more = article.locator(
                             'div[role="button"]:has-text("See more"), div[role="button"]:has-text("See More")'
@@ -381,7 +396,7 @@ def scrape_facebook_page(
                         if see_more.count() > 0:
                             print("   -> Forcing text expansion...")
                             see_more.first.evaluate("node => node.click()")
-                            page.wait_for_timeout(800)
+                            page.wait_for_timeout(1500)
 
                         caption = ""
                         msg_locator = article.locator('div[data-ad-preview="message"]')
