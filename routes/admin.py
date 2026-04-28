@@ -475,6 +475,33 @@ def delete_knowledge_entry(item_id):
     flash('Knowledge Product deleted.', 'success')
     return redirect(url_for('admin.knowledge'))
 
+@admin_bp.route('/knowledge/edit/<item_id>', methods=['POST'])
+@login_required
+def edit_knowledge_entry(item_id):
+    existing = supabase.table('knowledge_products').select('*').eq('id', item_id).execute()
+    if not existing.data:
+        flash('Knowledge Product not found.', 'error')
+        return redirect(url_for('admin.knowledge'))
+    old = existing.data[0]
+
+    image_path = save_uploaded_file(request.files.get('image'), KNOWLEDGE_UPLOAD_FOLDER, prefix="kp_img") or old.get('image')
+    file_path = save_uploaded_file(request.files.get('file'), KNOWLEDGE_UPLOAD_FOLDER, prefix="kp_file") or old.get('file')
+
+    updated = {
+        'title': request.form.get('title', old.get('title', '')).strip(),
+        'description': request.form.get('description', old.get('description', '')).strip(),
+        'type': request.form.get('type', old.get('type', 'Material')).strip(),
+        'date': request.form.get('date', old.get('date', '')).strip(),
+        'image': image_path or request.form.get('image_url', old.get('image', '')),
+        'file': file_path or request.form.get('file_url', old.get('file', '#')),
+        'url': request.form.get('url', old.get('url', '')).strip(),
+        'action_text': request.form.get('action_text', old.get('action_text', 'View Document')).strip(),
+    }
+
+    supabase.table('knowledge_products').update(updated).eq('id', item_id).execute()
+    flash('Knowledge Product updated.', 'success')
+    return redirect(url_for('admin.knowledge'))
+
 # ── Brochures Management ──────────────────────────────────────────────────
 @admin_bp.route('/brochures')
 @login_required

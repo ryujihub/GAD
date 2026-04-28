@@ -35,16 +35,15 @@ csp = {
     'default-src': '\'self\'',
     'script-src': [
         '\'self\'',
-        'https://cdn.tailwindcss.com',
         'https://cdnjs.cloudflare.com',
         'https://connect.facebook.net',
-        '\'unsafe-inline\''  # Necessary for Tailwind CDN and inline scripts
+        '\'unsafe-inline\''  # Necessary for the app's inline scripts
     ],
     'style-src': [
         '\'self\'',
         'https://fonts.googleapis.com',
         'https://cdnjs.cloudflare.com',
-        '\'unsafe-inline\''  # Necessary for Tailwind and your custom aurora-glow styles
+        '\'unsafe-inline\''  # Necessary for inline component styles
     ],
     'font-src': [
         '\'self\'',
@@ -57,7 +56,9 @@ csp = {
         'https://images.unsplash.com',
         'https://ui-avatars.com',
         'https://wsrv.nl',
-        'https://i.ibb.co'
+        'https://i.ibb.co',
+        'https://*.fbcdn.net',
+        'https://*.facebook.com'
     ],
     'frame-src': [
         '\'self\'',

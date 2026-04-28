@@ -14,25 +14,8 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: { green: '#006837', hover: '#004d29' },
-                        text: { dark: '#1a1a1a', light: '#666666' },
-                        bgLight: '#f4f7f5',
-                    },
-                    fontFamily: { 
-                        sans: ['Inter', 'sans-serif'],
-                        outfit: ['Outfit', 'sans-serif']
-                    },
-                }
-            }
-        }
-    </script>
+    <!-- Tailwind (precompiled) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
 
     <style type="text/css">
         .nav-transition {
