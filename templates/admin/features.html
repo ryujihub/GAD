@@ -3,9 +3,9 @@
 {% block page_title %}Features Control{% endblock %}
 
 {% block content %}
-
-<!-- System Features Grid -->
-<div class="grid grid-cols-1 gap-6">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+    <h3 class="font-bold text-gray-800 text-sm">System Features & Control</h3>
+</div>
 
     <!-- News Scraper Combined Control -->
     <div
@@ -70,7 +70,7 @@
                                 class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500">
                             </div>
                         </label>
-                        <span class="text-sm font-bold text-gray-700 flex-1">Enable Daily Auto-Scraper</span>
+                        <span class="text-sm font-bold text-gray-700 flex-1 whitespace-nowrap">Enable Daily Auto-Scraper</span>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">

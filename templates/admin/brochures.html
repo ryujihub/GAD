@@ -18,7 +18,7 @@
 <div class="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden overflow-x-auto">
     {% if items %}
     <table class="w-full text-left border-collapse text-sm">
-        <thead class="bg-gray-50/80 text-gray-400 text-[10px] uppercase tracking-widest font-black border-b border-gray-100">
+        <thead class="bg-gray-50/80 text-gray-500 text-[10px] uppercase tracking-widest font-black border-b border-gray-100">
             <tr>
                 <th class="px-8 py-5">Brochure Title</th>
                 <th class="px-6 py-5">Source / File</th>
@@ -36,7 +36,7 @@
                         <span class="font-bold text-gray-800 text-base">{{ item.title }}</span>
                     </div>
                 </td>
-                <td class="px-6 py-6 font-mono text-[10px] text-gray-400">
+                <td class="px-6 py-6 font-mono text-[10px] text-gray-500">
                     {% if item.url and item.url != '#' %}
                     <a href="{{ item.url }}" target="_blank" class="hover:text-primary-green underline decoration-dotted">{{ item.url }}</a>
                     {% else %}

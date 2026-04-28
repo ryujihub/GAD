@@ -5,7 +5,7 @@ from functools import wraps
 from datetime import date, datetime
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, flash
 from werkzeug.utils import secure_filename
-from database import supabase
+from database import supabase, log_tracking
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -41,31 +41,6 @@ def save_site_config(config):
     supabase.table('site_config').upsert({'id': 'singleton', 'config': config}).execute()
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
-def log_tracking(corner, entry_type, description, technical_officer=None):
-    if not technical_officer:
-        try:
-            from flask import session
-            technical_officer = session.get('admin_user', 'System')
-        except Exception:
-            technical_officer = 'System'
-            
-    now = datetime.now()
-    hour_12 = now.strftime('%I').lstrip('0') or '12'
-    time_str = f"{hour_12}:{now.strftime('%M %p')}"
-    date_str = now.strftime('%B %d, %Y')
-    
-    entry = {
-        'id': 'trk' + str(uuid.uuid4())[:8],
-        'corner': corner,
-        'date': date_str,
-        'time_started': time_str,
-        'time_completed': time_str,
-        'type': entry_type,
-        'description': description,
-        'updates_posted': f"{date_str}, {time_str}",
-        'technical_officer': technical_officer
-    }
-    supabase.table('tracking_matrix').insert(entry).execute()
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -164,6 +139,7 @@ def save_carousel():
         flash('Carousel images updated successfully.', 'success')
     except Exception as e:
         flash(f'Failed to update carousel: {e}', 'error')
+    log_tracking("Digital", "System Features", "Updated homepage carousel images")
     return redirect(url_for('admin.features'))
 
 @admin_bp.route('/configure_scraper', methods=['POST'])
@@ -184,6 +160,7 @@ def configure_scraper():
         flash(msg, 'success')
     except Exception as e:
         flash(f'Failed to save schedule: {e}', 'error')
+    log_tracking("Digital", "System Features", f"Configured scraper schedule: {hour.zfill(2)}:{minute.zfill(2)} (Enabled: {enabled})")
     return redirect(url_for('admin.features'))
 
 @admin_bp.route('/save_site_config', methods=['POST'], endpoint='save_site_config')
@@ -206,6 +183,7 @@ def save_site_config_route():
         flash('Site configuration saved successfully.', 'success')
     except Exception as e:
         flash(f'Failed to save site settings: {e}', 'error')
+    log_tracking("Digital", "System Features", "Updated site metadata configuration")
     return redirect(url_for('admin.policies_settings'))
 
 import sys
@@ -255,6 +233,7 @@ def scrape_news():
         thread.start()
         
         flash('News scraper started in the background. This may take 3-5 minutes. Check logs for progress.', 'success')
+        log_tracking("Digital", "System Features", "Manually initiated news scraper execution")
     except Exception as e:
         flash(f'Failed to initiate scraper: {str(e)}', 'error')
         
@@ -376,6 +355,7 @@ def edit_event(event_id):
         'description': request.form.get('desc', '').strip(),
     }
     supabase.table('events').update(updated).eq('id', event_id).execute()
+    log_tracking("Digital", "Event", f"Updated event: {updated['title']}")
     flash('Event updated.', 'success')
     return redirect(url_for('admin.events'))
 
@@ -383,6 +363,7 @@ def edit_event(event_id):
 @login_required
 def delete_event(event_id):
     supabase.table('events').delete().eq('id', event_id).execute()
+    log_tracking("Digital", "Event", "Deleted an event")
     flash('Event deleted.', 'success')
     return redirect(url_for('admin.events'))
 
@@ -430,6 +411,7 @@ def edit_project(project_id):
         'image': image_path
     }
     supabase.table('projects').update(updated).eq('id', project_id).execute()
+    log_tracking("Digital", "Project Archive", f"Updated project: {updated['title']}")
     flash('Project updated.', 'success')
     return redirect(url_for('admin.projects'))
 
@@ -437,6 +419,7 @@ def edit_project(project_id):
 @login_required
 def delete_project(project_id):
     supabase.table('projects').delete().eq('id', project_id).execute()
+    log_tracking("Digital", "Project Archive", "Deleted a project archive entry")
     flash('Project deleted.', 'success')
     return redirect(url_for('admin.projects'))
 
@@ -465,6 +448,7 @@ def add_knowledge_entry():
         'action_text': request.form.get('action_text', 'View Document').strip()
     }
     supabase.table('knowledge_products').insert(new_item).execute()
+    log_tracking("Digital", "Knowledge Product", f"Added knowledge product: {new_item['title']}")
     flash('Knowledge Product added.', 'success')
     return redirect(url_for('admin.knowledge'))
 
@@ -472,6 +456,7 @@ def add_knowledge_entry():
 @login_required
 def delete_knowledge_entry(item_id):
     supabase.table('knowledge_products').delete().eq('id', item_id).execute()
+    log_tracking("Digital", "Knowledge Product", "Deleted a knowledge product")
     flash('Knowledge Product deleted.', 'success')
     return redirect(url_for('admin.knowledge'))
 
@@ -499,6 +484,7 @@ def edit_knowledge_entry(item_id):
     }
 
     supabase.table('knowledge_products').update(updated).eq('id', item_id).execute()
+    log_tracking("Digital", "Knowledge Product", f"Updated knowledge product: {updated['title']}")
     flash('Knowledge Product updated.', 'success')
     return redirect(url_for('admin.knowledge'))
 
@@ -520,6 +506,7 @@ def add_brochure():
         'file': file_path or request.form.get('file_url', '#')
     }
     supabase.table('brochures').insert(new_item).execute()
+    log_tracking("Digital", "Brochure Library", f"Added brochure: {new_item['title']}")
     flash('Brochure added.', 'success')
     return redirect(url_for('admin.brochures'))
 
@@ -527,6 +514,7 @@ def add_brochure():
 @login_required
 def delete_brochure(item_id):
     supabase.table('brochures').delete().eq('id', item_id).execute()
+    log_tracking("Digital", "Brochure Library", "Deleted a brochure")
     flash('Brochure deleted.', 'success')
     return redirect(url_for('admin.brochures'))
 
@@ -551,6 +539,7 @@ def add_livelihood_feed():
         'date': request.form.get('date', '').strip() or date.today().isoformat()
     }
     supabase.table('livelihood_feeds').insert(new_item).execute()
+    log_tracking("Digital", "Livelihood Feeds", f"Added livelihood feed: {new_item['title']}")
     flash('Livelihood Feed added.', 'success')
     return redirect(url_for('admin.livelihood_feeds'))
 
@@ -558,6 +547,7 @@ def add_livelihood_feed():
 @login_required
 def delete_livelihood_feed(feed_id):
     supabase.table('livelihood_feeds').delete().eq('id', feed_id).execute()
+    log_tracking("Digital", "Livelihood Feeds", "Deleted a livelihood feed item")
     flash('Feed deleted.', 'success')
     return redirect(url_for('admin.livelihood_feeds'))
 
@@ -587,6 +577,7 @@ def update_org_structure():
     data['components'] = [{"title": t.strip(), "description": d.strip()} for t, d in zip(component_titles, component_descs) if t.strip() or d.strip()]
     
     supabase.table('org_structure').upsert(data).execute()
+    log_tracking("Digital", "GFPS Organization", "Updated organizational structure and components")
     flash('Organization structure updated.', 'success')
     return redirect(url_for('admin.org_structure'))
 
@@ -609,6 +600,7 @@ def add_committee_member():
         'image': image_path
     }
     supabase.table('committee').insert(new_member).execute()
+    log_tracking("Digital", "GFPS Committee", f"Added committee member: {new_member['name']}")
     flash('Member added.', 'success')
     return redirect(url_for('admin.committee'))
 
@@ -616,6 +608,7 @@ def add_committee_member():
 @login_required
 def delete_committee_member(member_id):
     supabase.table('committee').delete().eq('id', member_id).execute()
+    log_tracking("Digital", "GFPS Committee", "Removed a committee member")
     flash('Member removed.', 'success')
     return redirect(url_for('admin.committee'))
 

@@ -37,7 +37,7 @@
 
 <!-- Header + Add Button -->
 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
-    <h3 class="font-bold text-gray-700 text-sm">All Projects</h3>
+    <h3 class="font-bold text-gray-800 text-sm">All Projects</h3>
     <button onclick="document.getElementById('addModal').classList.remove('hidden')"
         class="flex items-center justify-center gap-2 bg-primary-green text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-primary-hover transition-colors shadow-sm w-full sm:w-auto">
         <i class="fas fa-plus"></i> Add Project
@@ -49,12 +49,12 @@
 <div class="overflow-x-auto pb-2 -mx-1 px-1 custom-scrollbar">
     <div class="flex gap-2 mb-2 flex-nowrap whitespace-nowrap" id="yearTabs">
         <button onclick="filterYear('all')" data-year="all"
-            class="year-tab active text-xs font-bold px-4 py-1.5 rounded-full border border-gray-200 bg-white hover:border-primary-green hover:text-primary-green transition-all shrink-0">
+            class="year-tab active text-xs font-bold px-4 py-1.5 rounded-full border border-gray-200 bg-white text-gray-700 hover:border-primary-green hover:text-primary-green transition-all shrink-0">
             All Years
         </button>
         {% for yr in years %}
         <button onclick="filterYear('{{ yr }}')" data-year="{{ yr }}"
-            class="year-tab text-xs font-bold px-4 py-1.5 rounded-full border border-gray-200 bg-white hover:border-primary-green hover:text-primary-green transition-all shrink-0">
+            class="year-tab text-xs font-bold px-4 py-1.5 rounded-full border border-gray-200 bg-white text-gray-700 hover:border-primary-green hover:text-primary-green transition-all shrink-0">
             {{ yr }}
         </button>
         {% endfor %}
@@ -67,7 +67,7 @@
     {% if projects %}
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse text-sm">
-            <thead class="bg-gray-50 text-gray-400 text-[10px] uppercase tracking-widest font-bold border-b border-gray-100">
+            <thead class="bg-gray-50 text-gray-500 text-[10px] uppercase tracking-widest font-black border-b border-gray-100">
                 <tr>
                     <th class="px-6 py-4">Project Title</th>
                     <th class="px-6 py-4">Year</th>
@@ -90,7 +90,7 @@
                             {% endif %}
                             <div>
                                 <p class="font-semibold text-gray-800 group-hover:text-primary-green transition-colors">{{ p.title }}</p>
-                                <p class="text-[11px] text-gray-400 mt-0.5 line-clamp-1 max-w-xs">{{ p.description }}</p>
+                                <p class="text-[11px] text-gray-500 mt-0.5 line-clamp-1 max-w-xs">{{ p.description }}</p>
                             </div>
                         </div>
                     </td>
@@ -98,7 +98,15 @@
                         <span class="bg-gray-100 text-gray-600 text-[10px] font-bold px-2.5 py-1 rounded-full">{{ p.year }}</span>
                     </td>
                     <td class="px-6 py-4">
-                        <span class="text-xs text-gray-600 font-medium">{{ p.category or '—' }}</span>
+                        {% if p.category %}
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-primary-green/10 text-primary-green border border-primary-green/20">
+                            {{ p.category }}
+                        </span>
+                        {% else %}
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-gray-100 text-gray-500 border border-gray-200">
+                            Uncategorised
+                        </span>
+                        {% endif %}
                     </td>
                     <td class="px-6 py-4">
                         {% if p.status == 'Completed' %}
@@ -244,7 +252,7 @@
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green/20 focus:border-primary-green transition-all resize-none"></textarea>
             </div>
             <div>
-                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1.5">Replace Image <span class="normal-case font-normal text-gray-300">(optional)</span></label>
+                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1.5">Replace Image <span class="normal-case font-normal text-gray-400">(optional)</span></label>
                 <input type="file" name="image" accept="image/*"
                     class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-green-50 file:text-primary-green hover:file:bg-primary-green hover:file:text-white file:transition-all cursor-pointer">
             </div>
@@ -306,7 +314,7 @@ function filterYear(year) {
     // Update active tab style
     document.querySelectorAll('.year-tab').forEach(btn => {
         btn.classList.remove('active', 'bg-primary-green', 'text-white', 'border-primary-green');
-        btn.classList.add('bg-white', 'text-gray-600');
+        btn.classList.add('bg-white', 'text-gray-500');
     });
     const active = document.querySelector(`.year-tab[data-year="${year}"]`);
     if (active) {

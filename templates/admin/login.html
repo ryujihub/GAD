@@ -13,11 +13,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
     <style>
         body {
-            background: linear-gradient(135deg, #0f1f15 0%, #1a3321 50%, #0f1f15 100%);
+            background: #f8fafc;
         }
 
         .card-glow {
-            box-shadow: 0 0 60px rgba(0, 104, 55, 0.25), 0 25px 50px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.05), 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
         .input-field {
@@ -51,9 +51,8 @@
 
 <body class="min-h-screen flex items-center justify-center font-sans px-4">
 
-    <!-- Subtle grid pattern overlay -->
-    <div class="absolute inset-0 opacity-5" style="background-image: repeating-linear-gradient(0deg,#fff 0,#fff 1px,transparent 1px,transparent 40px),
-                                  repeating-linear-gradient(90deg,#fff 0,#fff 1px,transparent 1px,transparent 40px)">
+    <!-- Subtle decorative pattern -->
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 30px 30px;">
     </div>
 
     <div class="relative z-10 w-full max-w-sm fade-up">
@@ -123,7 +122,7 @@
             </p>
         </div>
 
-        <p class="text-center text-[10px] text-white/20 mt-6">Restricted access · Authorized personnel only</p>
+        <p class="text-center text-[10px] text-gray-400 mt-6">Restricted access · Authorized personnel only</p>
     </div>
 </body>
 

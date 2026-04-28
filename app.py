@@ -79,7 +79,7 @@ talisman = Talisman(app, content_security_policy=csp, force_https=False)
 limiter = Limiter(
     get_remote_address,
     app=app,
-    default_limits=["200 per day", "50 per hour"],
+    default_limits=["500 per day", "50 per hour"],
     storage_uri="memory://",
 )
 
@@ -112,7 +112,7 @@ app.register_blueprint(admin_bp)
 # ---------------------------------------------------------
 # 5. GLOBAL CONTEXT PROCESSOR
 # ---------------------------------------------------------
-from database import supabase
+from database import supabase, log_tracking
 
 def load_site_config():
     """Load site-wide configuration from Supabase."""
@@ -205,6 +205,7 @@ def run_news_scraper():
     try:
         subprocess.run([sys.executable, script_path], check=True)
         print("Scheduled scraper finished successfully.")
+        log_tracking("Digital", "System Features", "Automated scheduled news scraper run completed", technical_officer="System")
     except Exception as e:
         print(f"Scheduled scraper failed: {e}")
 

@@ -8,6 +8,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        sidebar: {
+          bg: '#101915',
+        },
         primary: {
           green: '#006837',
           hover: '#004d29',
