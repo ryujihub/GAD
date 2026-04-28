@@ -1,109 +1,154 @@
-{% extends "base.html" %}
-
-{% block title %}Contact Us - GAD Montalban{% endblock %}
-
-{% block breadcrumb_current %}Contact Us{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Contact Us - GAD Montalban{% endblock
+%} {% block breadcrumb_current %}Contact Us{% endblock %} {% block content %}
 <div class="max-w-7xl mx-auto px-6 py-16">
+  <!-- Main Wrapper -->
+  <div
+    class="flex flex-col lg:flex-row bg-white rounded-[3rem] overflow-hidden shadow-2xl border border-gray-50 min-h-[700px]"
+  >
+    <!-- Sidebar Info (Green Panel) -->
+    <aside
+      class="lg:w-2/5 bg-primary-green text-white p-12 lg:p-16 flex flex-col justify-between relative overflow-hidden"
+    >
+      <!-- Decorative circle -->
+      <div
+        class="absolute top-0 left-0 w-64 h-64 bg-white opacity-5 rounded-full -translate-x-1/2 -translate-y-1/2"
+      ></div>
 
-    <!-- Main Wrapper -->
-    <div
-        class="flex flex-col lg:flex-row bg-white rounded-[3rem] overflow-hidden shadow-2xl border border-gray-50 min-h-[700px]">
+      <div class="relative z-10">
+        <h2
+          class="text-4xl font-black mb-6 tracking-tight leading-none uppercase"
+        >
+          Get in <br /><span class="opacity-60">Touch</span>
+        </h2>
+        <p class="text-green-50 opacity-80 mb-16 leading-relaxed font-medium">
+          Have questions or need assistance regarding our GAD programs? Reach
+          out to our dedicated team.
+        </p>
 
-        <!-- Sidebar Info (Green Panel) -->
-        <aside
-            class="lg:w-2/5 bg-primary-green text-white p-12 lg:p-16 flex flex-col justify-between relative overflow-hidden">
-            <!-- Decorative circle -->
+        <div class="space-y-10">
+          <div class="flex items-start gap-6 group">
             <div
-                class="absolute top-0 left-0 w-64 h-64 bg-white opacity-5 rounded-full -translate-x-1/2 -translate-y-1/2">
+              class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-white group-hover:text-primary-green nav-transition"
+            >
+              <i class="fas fa-map-marker-alt text-xl"></i>
             </div>
-
-            <div class="relative z-10">
-                <h2 class="text-4xl font-black mb-6 tracking-tight leading-none uppercase">Get in <br><span
-                        class="opacity-60">Touch</span></h2>
-                <p class="text-green-50 opacity-80 mb-16 leading-relaxed font-medium">
-                    Have questions or need assistance regarding our GAD programs? Reach out to our dedicated team.
-                </p>
-
-                <div class="space-y-10">
-                    <div class="flex items-start gap-6 group">
-                        <div
-                            class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-white group-hover:text-primary-green nav-transition">
-                            <i class="fas fa-map-marker-alt text-xl"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-[10px] font-black uppercase tracking-widest opacity-50 mb-1">Our Office</h4>
-                            <span class="text-sm leading-relaxed font-semibold">Municipal Hall, Rodriguez
-                                (Montalban),<br>Rizal, Philippines 1860</span>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start gap-6 group">
-                        <div
-                            class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-white group-hover:text-primary-green nav-transition">
-                            <i class="fas fa-envelope text-xl"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-[10px] font-black uppercase tracking-widest opacity-50 mb-1">Email Us</h4>
-                            <a href="mailto:lgugadrodriguezrizal@gmail.com"
-                                class="text-sm font-semibold break-all hover:underline">lgugadrodriguezrizal@gmail.com</a>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start gap-6 group">
-                        <div
-                            class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-white group-hover:text-primary-green nav-transition">
-                            <i class="fas fa-phone-alt text-xl"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-[10px] font-black uppercase tracking-widest opacity-50 mb-1">Call Us</h4>
-                            <span class="text-sm font-semibold">0927 033 9067</span>
-                        </div>
-                    </div>
-
-                    <!-- Updated Sidebar QR Link -->
-                </div>
+            <div>
+              <h4
+                class="text-[10px] font-black uppercase tracking-widest opacity-50 mb-1"
+              >
+                Our Office
+              </h4>
+              <span class="text-sm leading-relaxed font-semibold"
+                >Municipal Hall, Rodriguez (Montalban),<br />Rizal, Philippines
+                1860</span
+              >
             </div>
+          </div>
 
-            <!-- Social Media Icons -->
-            <div class="relative z-10 pt-12">
-                <p class="text-[10px] uppercase tracking-[0.3em] mb-6 opacity-40 font-black italic">Connect with us</p>
-                <div class="flex gap-4">
-                    <a href="https://www.facebook.com/MontalbanGenderAndDevelopment" target="_blank"
-                        class="w-12 h-12 rounded-2xl border border-white/20 flex items-center justify-center hover:bg-white hover:text-primary-green nav-transition shadow-lg">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                </div>
+          <div class="flex items-start gap-6 group">
+            <div
+              class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-white group-hover:text-primary-green nav-transition"
+            >
+              <i class="fas fa-envelope text-xl"></i>
             </div>
-        </aside>
-
-        <!-- QR Area (White Panel - Replacing Messenger) -->
-        <main class="lg:w-3/5 p-12 lg:p-20 bg-white flex flex-col items-center justify-center text-center">
-            <div class="w-48 h-48 bg-gray-50 rounded-[2rem] flex items-center justify-center mx-auto mb-10 shadow-inner p-4 cursor-pointer hover:scale-105 transition-transform border border-gray-100"
-                onclick="openGlobalLightbox('{{ url_for('static', filename='assets/GAD-qr.svg') }}')">
-                <img src="{{ url_for('static', filename='assets/GAD-qr.svg') }}" alt="GAD QR Support"
-                    class="w-full h-full object-contain">
+            <div>
+              <h4
+                class="text-[10px] font-black uppercase tracking-widest opacity-50 mb-1"
+              >
+                Email Us
+              </h4>
+              <a
+                href="mailto:lgugadrodriguezrizal@gmail.com"
+                class="text-sm font-semibold break-all hover:underline"
+                >lgugadrodriguezrizal@gmail.com</a
+              >
             </div>
-            <h3 class="text-4xl md:text-5xl font-black text-gray-800 mb-6 tracking-tight">Scan for Support</h3>
-            <p class="text-gray-500 text-base md:text-lg font-medium mb-10 max-w-md mx-auto leading-relaxed">
-                Need immediate assistance? Scan our official QR code above or click the box to expand it. We typically
-                respond to all inquiries within 24 hours.
-            </p>
+          </div>
 
-            <button onclick="openGlobalLightbox('{{ url_for('static', filename='assets/GAD-qr.svg') }}')"
-                class="inline-flex items-center justify-center gap-4 bg-primary-green text-white font-black text-sm md:text-base uppercase tracking-[0.15em] py-5 px-10 md:px-14 rounded-[2rem] hover:bg-primary-hover hover:shadow-[0_10px_40px_rgba(0,104,55,0.4)] hover:-translate-y-2 active:scale-95 transition-all w-full sm:w-auto overflow-hidden relative group">
-                <div
-                    class="absolute inset-0 w-full h-full bg-white/20 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-out">
-                </div>
-                <span class="relative z-10 flex items-center gap-3">
-                    View Full QR Code
-                    <i class="fas fa-qrcode"></i>
-                </span>
-            </button>
+          <div class="flex items-start gap-6 group">
+            <div
+              class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-white group-hover:text-primary-green nav-transition"
+            >
+              <i class="fas fa-phone-alt text-xl"></i>
+            </div>
+            <div>
+              <h4
+                class="text-[10px] font-black uppercase tracking-widest opacity-50 mb-1"
+              >
+                Call Us
+              </h4>
+              <span class="text-sm font-semibold">0927 033 9067</span>
+            </div>
+          </div>
 
-            <p class="text-gray-400 text-xs font-medium italic mt-8 uppercase tracking-widest">GAD Support Hub</p>
-        </main>
-    </div>
+          <!-- Updated Sidebar QR Link -->
+        </div>
+      </div>
+
+      <!-- Social Media Icons -->
+      <div class="relative z-10 pt-12">
+        <p
+          class="text-[10px] uppercase tracking-[0.3em] mb-6 opacity-40 font-black italic"
+        >
+          Connect with us
+        </p>
+        <div class="flex gap-4">
+          <a
+            href="https://www.facebook.com/MontalbanGenderAndDevelopment"
+            target="_blank"
+            class="w-12 h-12 rounded-2xl border border-white/20 flex items-center justify-center hover:bg-white hover:text-primary-green nav-transition shadow-lg"
+          >
+            <i class="fab fa-facebook-f"></i>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- QR Area (White Panel - Replacing Messenger) -->
+    <main
+      class="lg:w-3/5 p-12 lg:p-20 bg-white flex flex-col items-center justify-center text-center"
+    >
+      <div
+        class="w-48 h-48 bg-gray-50 rounded-[2rem] flex items-center justify-center mx-auto mb-10 shadow-inner p-4 cursor-pointer hover:scale-105 transition-transform border border-gray-100"
+        onclick="openGlobalLightbox('{{ url_for('static', filename='assets/GAD-qr.svg') }}')"
+      >
+        <img
+          src="{{ url_for('static', filename='assets/GAD-qr.svg') }}"
+          alt="GAD QR Support"
+          class="w-full h-full object-contain"
+        />
+      </div>
+      <h3
+        class="text-4xl md:text-5xl font-black text-gray-800 mb-6 tracking-tight"
+      >
+        Scan for Support
+      </h3>
+      <p
+        class="text-gray-500 text-base md:text-lg font-medium mb-10 max-w-md mx-auto leading-relaxed"
+      >
+        Need immediate assistance? Scan our official QR code above or click the
+        box to expand it. We typically respond to all inquiries within 24 hours.
+      </p>
+
+      <button
+        onclick="openGlobalLightbox('{{ url_for('static', filename='assets/GAD-qr.svg') }}')"
+        class="inline-flex items-center justify-center gap-4 bg-primary-green text-white font-black text-sm md:text-base uppercase tracking-[0.15em] py-5 px-10 md:px-14 rounded-[2rem] hover:bg-primary-hover hover:shadow-[0_10px_40px_rgba(0,104,55,0.4)] hover:-translate-y-2 active:scale-95 transition-all w-full sm:w-auto overflow-hidden relative group"
+      >
+        <div
+          class="absolute inset-0 w-full h-full bg-white/20 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-out"
+        ></div>
+        <span class="relative z-10 flex items-center gap-3">
+          View Full QR Code
+          <i class="fas fa-qrcode"></i>
+        </span>
+      </button>
+
+      <p
+        class="text-gray-400 text-xs font-medium italic mt-8 uppercase tracking-widest"
+      >
+        GAD Support Hub
+      </p>
+    </main>
+  </div>
 </div>
 {% endblock %}

@@ -1,89 +1,129 @@
-{% extends "base.html" %}
-
-{% block title %}Policies and Reports - GAD Corner{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Policies and Reports - GAD Corner{%
+endblock %} {% block content %}
 <div class="max-w-7xl mx-auto px-6 py-12">
+  <!-- Page Header -->
+  <div class="mb-10">
+    <h2
+      class="text-3xl font-bold text-gray-800 border-l-8 border-primary-green pl-4 uppercase"
+    >
+      Document <span class="text-primary-green">Center</span>
+    </h2>
+    <p class="text-gray-500 mt-2 ml-6">
+      Access official GAD frameworks, legislative resolutions, and annual
+      performance reports.
+    </p>
+  </div>
 
+  <!-- Grid Container -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Republic Acts -->
+    <a
+      href="{{ url_for('policies.policies_hub', category='republic_acts') }}"
+      class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all"
+    >
+      <div
+        class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all"
+      >
+        <i class="fas fa-balance-scale text-2xl"></i>
+      </div>
+      <h3
+        class="text-xl font-bold text-gray-800 group-hover:text-primary-green"
+      >
+        Republic Acts (RA)
+      </h3>
+      <p class="text-gray-500 text-sm mt-2">
+        National laws, the Magna Carta of Women, and other legislative
+        frameworks for gender equality.
+      </p>
+    </a>
 
-    <!-- Page Header -->
-    <div class="mb-10">
-        <h2 class="text-3xl font-bold text-gray-800 border-l-8 border-primary-green pl-4 uppercase">
-            Document <span class="text-primary-green">Center</span>
-        </h2>
-        <p class="text-gray-500 mt-2 ml-6">
-            Access official GAD frameworks, legislative resolutions, and annual performance reports.
-        </p>
-    </div>
+    <!-- Resolutions -->
+    <!-- FIXED: Added 'policies.' prefix -->
+    <a
+      href="{{ url_for('policies.policies_hub', category='resolutions') }}"
+      class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all"
+    >
+      <div
+        class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all"
+      >
+        <i class="fas fa-gavel text-2xl"></i>
+      </div>
+      <h3
+        class="text-xl font-bold text-gray-800 group-hover:text-primary-green"
+      >
+        Resolutions
+      </h3>
+      <p class="text-gray-500 text-sm mt-2">
+        Local legislative actions and council-approved GAD policies.
+      </p>
+    </a>
 
-    <!-- Grid Container -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Memoranda -->
+    <!-- FIXED: Added 'policies.' prefix -->
+    <a
+      href="{{ url_for('policies.policies_hub', category='memoranda') }}"
+      class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all"
+    >
+      <div
+        class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all"
+      >
+        <i class="fas fa-clipboard-list text-2xl"></i>
+      </div>
+      <h3
+        class="text-xl font-bold text-gray-800 group-hover:text-primary-green"
+      >
+        Memoranda
+      </h3>
+      <p class="text-gray-500 text-sm mt-2">
+        Administrative instructions and internal guidelines for local
+        departments.
+      </p>
+    </a>
 
-        <!-- Republic Acts -->
-        <a href="{{ url_for('policies.policies_hub', category='republic_acts') }}"
-            class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all">
-            <div
-                class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all">
-                <i class="fas fa-balance-scale text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-bold text-gray-800 group-hover:text-primary-green">Republic Acts (RA)</h3>
-            <p class="text-gray-500 text-sm mt-2">National laws, the Magna Carta of Women, and other legislative
-                frameworks for gender equality.</p>
-        </a>
+    <!-- Executive Orders -->
+    <!-- FIXED: Added 'policies.' prefix -->
+    <a
+      href="{{ url_for('policies.policies_hub', category='orders') }}"
+      class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all"
+    >
+      <div
+        class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all"
+      >
+        <i class="fas fa-file-signature text-2xl"></i>
+      </div>
+      <h3
+        class="text-xl font-bold text-gray-800 group-hover:text-primary-green"
+      >
+        Executive Orders
+      </h3>
+      <p class="text-gray-500 text-sm mt-2">
+        Official designations and executive orders for the GFPS committee.
+      </p>
+    </a>
 
-        <!-- Resolutions -->
-        <!-- FIXED: Added 'policies.' prefix -->
-        <a href="{{ url_for('policies.policies_hub', category='resolutions') }}"
-            class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all">
-            <div
-                class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all">
-                <i class="fas fa-gavel text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-bold text-gray-800 group-hover:text-primary-green">Resolutions</h3>
-            <p class="text-gray-500 text-sm mt-2">Local legislative actions and council-approved GAD policies.</p>
-        </a>
+    <!-- Accomplishment Reports -->
+    <!-- FIXED: Added 'policies.' prefix -->
+    <a
+      href="{{ url_for('policies.reports') }}"
+      class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all"
+    >
+      <div
+        class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all"
+      >
+        <i class="fas fa-chart-line text-2xl"></i>
+      </div>
+      <h3
+        class="text-xl font-bold text-gray-800 group-hover:text-primary-green"
+      >
+        Accomplishment Reports
+      </h3>
+      <p class="text-gray-500 text-sm mt-2">
+        Annual results, data profiling, and GAD fund utilization summaries.
+      </p>
+    </a>
+  </div>
 
-        <!-- Memoranda -->
-        <!-- FIXED: Added 'policies.' prefix -->
-        <a href="{{ url_for('policies.policies_hub', category='memoranda') }}"
-            class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all">
-            <div
-                class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all">
-                <i class="fas fa-clipboard-list text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-bold text-gray-800 group-hover:text-primary-green">Memoranda</h3>
-            <p class="text-gray-500 text-sm mt-2">Administrative instructions and internal guidelines for local
-                departments.</p>
-        </a>
-
-        <!-- Executive Orders -->
-        <!-- FIXED: Added 'policies.' prefix -->
-        <a href="{{ url_for('policies.policies_hub', category='orders') }}"
-            class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all">
-            <div
-                class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all">
-                <i class="fas fa-file-signature text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-bold text-gray-800 group-hover:text-primary-green">Executive Orders</h3>
-            <p class="text-gray-500 text-sm mt-2">Official designations and executive orders for the GFPS committee.</p>
-        </a>
-
-        <!-- Accomplishment Reports -->
-        <!-- FIXED: Added 'policies.' prefix -->
-        <a href="{{ url_for('policies.reports') }}"
-            class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all">
-            <div
-                class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all">
-                <i class="fas fa-chart-line text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-bold text-gray-800 group-hover:text-primary-green">Accomplishment Reports</h3>
-            <p class="text-gray-500 text-sm mt-2">Annual results, data profiling, and GAD fund utilization summaries.
-            </p>
-        </a>
-
-    </div>
-
-    <!-- Decorative Section Line -->
-    <div class="mt-16 border-t border-gray-100"></div>
+  <!-- Decorative Section Line -->
+  <div class="mt-16 border-t border-gray-100"></div>
 </div>
 {% endblock %}

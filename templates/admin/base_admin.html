@@ -1,246 +1,321 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Admin{% endblock %} | GAD Admin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
 
     <!-- Tailwind (precompiled) -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/output.css') }}"
+    />
     <style>
-        .nav-transition {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      .nav-transition {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .sidebar-link {
+        transition: all 0.15s ease;
+      }
+
+      .sidebar-link:hover {
+        background: #f0f7f3;
+        color: #006837;
+      }
+
+      .sidebar-link.active {
+        background: #f0fdf4;
+        color: #006837;
+        border-left: 4px solid #006837;
+      }
+
+      .flash-success {
+        background: #d1fae5;
+        color: #065f46;
+        border-left: 4px solid #10b981;
+      }
+
+      .flash-error {
+        background: #fee2e2;
+        color: #991b1b;
+        border-left: 4px solid #ef4444;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
         }
 
-        .sidebar-link {
-            transition: all 0.15s ease;
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .flash-anim {
+        animation: slideDown 0.3s ease both;
+      }
+
+      .modal-backdrop {
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+      }
+
+      @keyframes scaleIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
         }
 
-        .sidebar-link:hover {
-            background: #f0f7f3;
-            color: #006837;
+        to {
+          opacity: 1;
+          transform: scale(1);
         }
+      }
 
-        .sidebar-link.active {
-            background: #f0fdf4;
-            color: #006837;
-            border-left: 4px solid #006837;
-        }
+      .modal-box {
+        animation: scaleIn 0.2s ease both;
+      }
 
-        .flash-success {
-            background: #d1fae5;
-            color: #065f46;
-            border-left: 4px solid #10b981;
-        }
+      /* Global Form Element Styling for Light Theme */
+      input,
+      textarea,
+      select {
+        color: #1a1a1a !important; /* text-text-dark */
+        background-color: #ffffff !important;
+        border: 1px solid #e5e7eb !important; /* gray-200 */
+      }
 
-        .flash-error {
-            background: #fee2e2;
-            color: #991b1b;
-            border-left: 4px solid #ef4444;
-        }
+      input:focus,
+      textarea:focus,
+      select:focus {
+        border-color: #006837 !important; /* primary-green */
+        box-shadow: 0 0 0 3px rgba(0, 104, 55, 0.1) !important;
+      }
 
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-8px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .flash-anim {
-            animation: slideDown 0.3s ease both;
-        }
-
-        .modal-backdrop {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-        }
-
-        @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .modal-box {
-            animation: scaleIn 0.2s ease both;
-        }
-
-        /* Global Form Element Styling for Light Theme */
-        input, textarea, select {
-            color: #1a1a1a !important; /* text-text-dark */
-            background-color: #ffffff !important;
-            border: 1px solid #e5e7eb !important; /* gray-200 */
-        }
-
-        input:focus, textarea:focus, select:focus {
-            border-color: #006837 !important; /* primary-green */
-            box-shadow: 0 0 0 3px rgba(0, 104, 55, 0.1) !important;
-        }
-
-        ::placeholder {
-            color: #9ca3af !important; /* gray-400 */
-        }
+      ::placeholder {
+        color: #9ca3af !important; /* gray-400 */
+      }
     </style>
     {% block extra_css %}{% endblock %}
-</head>
+  </head>
 
-<body class="bg-bgLight font-sans text-text-dark flex h-screen overflow-hidden relative">
-
+  <body
+    class="bg-bgLight font-sans text-text-dark flex h-screen overflow-hidden relative"
+  >
     <!-- ── MOBILE OVERLAY ────────────────────────────────────────────── -->
-    <div id="sidebar-overlay" onclick="toggleSidebar()"
-        class="fixed inset-0 bg-black/20 backdrop-blur-sm z-[40] hidden lg:hidden transition-all duration-300"></div>
+    <div
+      id="sidebar-overlay"
+      onclick="toggleSidebar()"
+      class="fixed inset-0 bg-black/20 backdrop-blur-sm z-[40] hidden lg:hidden transition-all duration-300"
+    ></div>
 
     <!-- ── SIDEBAR ─────────────────────────────────────────────────────── -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 flex flex-col shrink-0 overflow-y-auto z-[50] 
-                  -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out">
-        <!-- Logo -->
-        <div class="px-5 py-7 border-b border-gray-100 bg-gray-50/50">
-            <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-0.5">GAD Corner</p>
-            <h1 class="text-primary-green font-extrabold text-lg leading-tight uppercase tracking-tight">Admin Panel</h1>
-            <p class="text-gray-400 text-[10px] mt-0.5 font-medium">Rodriguez, Rizal</p>
+    <aside
+      id="sidebar"
+      class="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 flex flex-col shrink-0 overflow-y-auto z-[50] -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out"
+    >
+      <!-- Logo -->
+      <div class="px-5 py-7 border-b border-gray-100 bg-gray-50/50">
+        <p
+          class="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-0.5"
+        >
+          GAD Corner
+        </p>
+        <h1
+          class="text-primary-green font-extrabold text-lg leading-tight uppercase tracking-tight"
+        >
+          Admin Panel
+        </h1>
+        <p class="text-gray-400 text-[10px] mt-0.5 font-medium">
+          Rodriguez, Rizal
+        </p>
+      </div>
+      <!-- Nav -->
+      <nav class="flex-1 px-3 py-6 space-y-1">
+        <a
+          href="{{ url_for('admin.dashboard') }}"
+          class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all {% if request.endpoint == 'admin.dashboard' %}active{% endif %}"
+        >
+          <i class="fas fa-chart-pie w-5 text-center"></i> Dashboard
+        </a>
+        <a
+          href="{{ url_for('admin.events') }}"
+          class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all {% if request.endpoint == 'admin.events' %}active{% endif %}"
+        >
+          <i class="fas fa-calendar-alt w-5 text-center"></i> Calendar Events
+        </a>
+        <a
+          href="{{ url_for('admin.projects') }}"
+          class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all {% if request.endpoint in ['admin.projects', 'admin.add_project', 'admin.edit_project', 'admin.delete_project'] %}active{% endif %}"
+        >
+          <i class="fas fa-folder-open w-5 text-center"></i> Project Archives
+        </a>
+        <a
+          href="{{ url_for('admin.features') }}"
+          class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all {% if request.endpoint == 'admin.features' %}active{% endif %}"
+        >
+          <i class="fas fa-cogs w-5 text-center"></i> Features
+        </a>
+        <a
+          href="{{ url_for('admin.policies_settings') }}"
+          class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all {% if request.endpoint == 'admin.policies_settings' %}active{% endif %}"
+        >
+          <i class="fas fa-file-alt w-5 text-center"></i> Policies & Reports
+        </a>
+        <a
+          href="{{ url_for('admin.knowledge') }}"
+          class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all {% if request.endpoint == 'admin.knowledge' %}active{% endif %}"
+        >
+          <i class="fas fa-book-open w-5 text-center"></i> Knowledge & IEC
+        </a>
+        <a
+          href="{{ url_for('admin.brochures') }}"
+          class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all {% if request.endpoint == 'admin.brochures' %}active{% endif %}"
+        >
+          <i class="fas fa-copy w-5 text-center"></i> Brochures Library
+        </a>
+        <a
+          href="{{ url_for('admin.livelihood_feeds') }}"
+          class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all {% if request.endpoint == 'admin.livelihood_feeds' %}active{% endif %}"
+        >
+          <i class="fas fa-stream w-5 text-center"></i> Livelihood Feeds
+        </a>
+
+        <a
+          href="{{ url_for('admin.tracking_matrix') }}"
+          class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all {% if request.endpoint == 'admin.tracking_matrix' %}active{% endif %}"
+        >
+          <i class="fas fa-table w-5 text-center"></i> Tracking Matrix
+        </a>
+
+        <div class="px-5 pt-8 pb-2">
+          <p
+            class="text-[8px] font-black uppercase tracking-[0.2em] text-gray-400"
+          >
+            Organization
+          </p>
         </div>
-        <!-- Nav -->
-        <nav class="flex-1 px-3 py-6 space-y-1">
-            <a href="{{ url_for('admin.dashboard') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all
-                      {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
-                <i class="fas fa-chart-pie w-5 text-center"></i> Dashboard
-            </a>
-            <a href="{{ url_for('admin.events') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all
-                      {% if request.endpoint == 'admin.events' %}active{% endif %}">
-                <i class="fas fa-calendar-alt w-5 text-center"></i> Calendar Events
-            </a>
-            <a href="{{ url_for('admin.projects') }}"
-                class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all
-                      {% if request.endpoint in ['admin.projects', 'admin.add_project', 'admin.edit_project', 'admin.delete_project'] %}active{% endif %}">
-                <i class="fas fa-folder-open w-5 text-center"></i> Project Archives
-            </a>
-            <a href="{{ url_for('admin.features') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all
-                      {% if request.endpoint == 'admin.features' %}active{% endif %}">
-                <i class="fas fa-cogs w-5 text-center"></i> Features
-            </a>
-            <a href="{{ url_for('admin.policies_settings') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all
-                      {% if request.endpoint == 'admin.policies_settings' %}active{% endif %}">
-                <i class="fas fa-file-alt w-5 text-center"></i> Policies & Reports
-            </a>
-            <a href="{{ url_for('admin.knowledge') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all
-                      {% if request.endpoint == 'admin.knowledge' %}active{% endif %}">
-                <i class="fas fa-book-open w-5 text-center"></i> Knowledge & IEC
-            </a>
-            <a href="{{ url_for('admin.brochures') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all
-                      {% if request.endpoint == 'admin.brochures' %}active{% endif %}">
-                <i class="fas fa-copy w-5 text-center"></i> Brochures Library
-            </a>
-            <a href="{{ url_for('admin.livelihood_feeds') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all
-                      {% if request.endpoint == 'admin.livelihood_feeds' %}active{% endif %}">
-                <i class="fas fa-stream w-5 text-center"></i> Livelihood Feeds
-            </a>
-            
-            <a href="{{ url_for('admin.tracking_matrix') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all
-                      {% if request.endpoint == 'admin.tracking_matrix' %}active{% endif %}">
-                <i class="fas fa-table w-5 text-center"></i> Tracking Matrix
-            </a>
-            
-            <div class="px-5 pt-8 pb-2">
-                <p class="text-[8px] font-black uppercase tracking-[0.2em] text-gray-400">Organization</p>
-            </div>
-            <a href="{{ url_for('admin.org_structure') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all
-                      {% if request.endpoint == 'admin.org_structure' %}active{% endif %}">
-                <i class="fas fa-sitemap w-5 text-center"></i> GFPS Structure
-            </a>
-            <a href="{{ url_for('admin.committee') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all
-                      {% if request.endpoint == 'admin.committee' %}active{% endif %}">
-                <i class="fas fa-users w-5 text-center"></i> GFPS Committee
-            </a>
-        </nav>
-        <!-- Footer -->
-        <div class="px-3 py-6 border-t border-gray-100 bg-gray-50/30">
-            <a href="{{ url_for('main.index') }}" target="_blank"
-                class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-xl text-sm font-semibold transition-all">
-                <i class="fas fa-external-link-alt w-5 text-center"></i> Public Site
-            </a>
-            <a href="{{ url_for('admin.logout') }}"
-                class="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl text-sm font-semibold transition-all">
-                <i class="fas fa-sign-out-alt w-5 text-center"></i> Logout
-            </a>
-        </div>
+        <a
+          href="{{ url_for('admin.org_structure') }}"
+          class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all {% if request.endpoint == 'admin.org_structure' %}active{% endif %}"
+        >
+          <i class="fas fa-sitemap w-5 text-center"></i> GFPS Structure
+        </a>
+        <a
+          href="{{ url_for('admin.committee') }}"
+          class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-r-xl border-l-4 border-transparent text-sm font-semibold transition-all {% if request.endpoint == 'admin.committee' %}active{% endif %}"
+        >
+          <i class="fas fa-users w-5 text-center"></i> GFPS Committee
+        </a>
+      </nav>
+      <!-- Footer -->
+      <div class="px-3 py-6 border-t border-gray-100 bg-gray-50/30">
+        <a
+          href="{{ url_for('main.index') }}"
+          target="_blank"
+          class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-primary-green hover:bg-green-50 rounded-xl text-sm font-semibold transition-all"
+        >
+          <i class="fas fa-external-link-alt w-5 text-center"></i> Public Site
+        </a>
+        <a
+          href="{{ url_for('admin.logout') }}"
+          class="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl text-sm font-semibold transition-all"
+        >
+          <i class="fas fa-sign-out-alt w-5 text-center"></i> Logout
+        </a>
+      </div>
     </aside>
 
     <!-- ── MAIN AREA ───────────────────────────────────────────────────── -->
     <div class="flex-1 flex flex-col overflow-hidden bg-[#f8faf9]">
-
-        <!-- Topbar -->
-        <header class="bg-white border-b border-gray-100 px-4 md:px-8 py-4 flex items-center justify-between shrink-0">
-            <div class="flex items-center gap-4">
-                <!-- Hamburger Menu -->
-                <button onclick="toggleSidebar()"
-                    class="lg:hidden w-10 h-10 flex items-center justify-center text-gray-500 hover:bg-gray-50 rounded-xl transition-all">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <h2 class="text-xs font-black uppercase tracking-widest text-gray-400 hidden sm:block">{% block page_title %}Dashboard{% endblock %}</h2>
-            </div>
-            <div class="flex items-center gap-4">
-                <div class="hidden md:flex flex-col items-right text-right mr-2">
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Logged in as</p>
-                    <p class="text-xs font-extra-bold text-primary-green">{{ session.get('admin_user', 'Admin') }}</p>
-                </div>
-                <div class="w-10 h-10 bg-primary-green rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-primary-green/20">
-                    {{ session.get('admin_user', 'A')[0]|upper }}
-                </div>
-            </div>
-        </header>
-
-        <!-- Flash messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        <div class="px-4 md:px-8 pt-4 space-y-2">
-            {% for category, message in messages %}
-            <div class="flash-anim flash-{{ category }} text-sm px-4 py-3 rounded-lg flex items-center gap-2">
-                <i
-                    class="fas {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
-                {{ message }}
-            </div>
-            {% endfor %}
+      <!-- Topbar -->
+      <header
+        class="bg-white border-b border-gray-100 px-4 md:px-8 py-4 flex items-center justify-between shrink-0"
+      >
+        <div class="flex items-center gap-4">
+          <!-- Hamburger Menu -->
+          <button
+            onclick="toggleSidebar()"
+            class="lg:hidden w-10 h-10 flex items-center justify-center text-gray-500 hover:bg-gray-50 rounded-xl transition-all"
+          >
+            <i class="fas fa-bars"></i>
+          </button>
+          <h2
+            class="text-xs font-black uppercase tracking-widest text-gray-400 hidden sm:block"
+          >
+            {% block page_title %}Dashboard{% endblock %}
+          </h2>
         </div>
-        {% endif %}
-        {% endwith %}
+        <div class="flex items-center gap-4">
+          <div class="hidden md:flex flex-col items-right text-right mr-2">
+            <p
+              class="text-[10px] font-bold text-gray-400 uppercase tracking-tight"
+            >
+              Logged in as
+            </p>
+            <p class="text-xs font-extra-bold text-primary-green">
+              {{ session.get('admin_user', 'Admin') }}
+            </p>
+          </div>
+          <div
+            class="w-10 h-10 bg-primary-green rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-primary-green/20"
+          >
+            {{ session.get('admin_user', 'A')[0]|upper }}
+          </div>
+        </div>
+      </header>
 
-        <!-- Page Content -->
-        <main class="flex-1 overflow-y-auto px-4 md:px-8 py-6">
-            {% block content %}{% endblock %}
-        </main>
+      <!-- Flash messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <div class="px-4 md:px-8 pt-4 space-y-2">
+        {% for category, message in messages %}
+        <div
+          class="flash-anim flash-{{ category }} text-sm px-4 py-3 rounded-lg flex items-center gap-2"
+        >
+          <i
+            class="fas {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"
+          ></i>
+          {{ message }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+
+      <!-- Page Content -->
+      <main class="flex-1 overflow-y-auto px-4 md:px-8 py-6">
+        {% block content %}{% endblock %}
+      </main>
     </div>
 
     <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            const isSidebarVisible = !sidebar.classList.contains('-translate-x-full');
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("sidebar-overlay");
+        const isSidebarVisible =
+          !sidebar.classList.contains("-translate-x-full");
 
-            if (isSidebarVisible) {
-                sidebar.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
-            } else {
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.remove('hidden');
-            }
+        if (isSidebarVisible) {
+          sidebar.classList.add("-translate-x-full");
+          overlay.classList.add("hidden");
+        } else {
+          sidebar.classList.remove("-translate-x-full");
+          overlay.classList.remove("hidden");
         }
+      }
     </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     {% block extra_js %}{% endblock %}
-</body>
-
+  </body>
 </html>

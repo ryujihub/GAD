@@ -1,52 +1,77 @@
-{% extends 'base.html' %}
-{% block title %}Terms of Use - GAD Montalban{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% block title %}Terms of Use - GAD Montalban{%
+endblock %} {% block content %}
 <div class="min-h-screen py-16 bg-white">
-    <div class="max-w-4xl mx-auto px-6">
-        <nav class="mb-8">
-            <!-- FIXED: Added 'main.' prefix -->
-            <a href="{{ url_for('main.index') }}" class="text-primary-green text-sm hover:underline"><i class="fas fa-arrow-left mr-2"></i>Back to Home</a>
-        </nav>
+  <div class="max-w-4xl mx-auto px-6">
+    <nav class="mb-8">
+      <!-- FIXED: Added 'main.' prefix -->
+      <a
+        href="{{ url_for('main.index') }}"
+        class="text-primary-green text-sm hover:underline"
+        ><i class="fas fa-arrow-left mr-2"></i>Back to Home</a
+      >
+    </nav>
 
-        <header class="border-b pb-8 mb-12">
-            <h1 class="text-4xl font-extrabold text-gray-900 mb-4">Terms of Use</h1>
-            <p class="text-gray-500">Last Revised: October 2024</p>
-        </header>
+    <header class="border-b pb-8 mb-12">
+      <h1 class="text-4xl font-extrabold text-gray-900 mb-4">Terms of Use</h1>
+      <p class="text-gray-500">Last Revised: October 2024</p>
+    </header>
 
-        <div class="space-y-10 text-gray-700">
-            <div class="flex gap-6">
-                <span class="text-3xl font-bold text-gray-200">01</span>
-                <div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Acceptance of Terms</h3>
-                    <p>By accessing the GAD Corner website, you agree to comply with and be bound by these terms. If you do not agree, please refrain from using the site.</p>
-                </div>
-            </div>
-
-            <div class="flex gap-6">
-                <span class="text-3xl font-bold text-gray-200">02</span>
-                <div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Intellectual Property</h3>
-                    <p>All content, including the logos of the Municipality of Montalban, GAD Corner, and specific project reports, are the property of the Municipal Government unless otherwise stated. Unauthorized reproduction is prohibited.</p>
-                </div>
-            </div>
-
-            <div class="flex gap-6">
-                <span class="text-3xl font-bold text-gray-200">03</span>
-                <div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Prohibited Conduct</h3>
-                    <p>Users are prohibited from using this site to upload malicious software, engage in data mining, or attempt unauthorized access to the web server.</p>
-                </div>
-            </div>
-
-            <div class="flex gap-6">
-                <span class="text-3xl font-bold text-gray-200">04</span>
-                <div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Disclaimer</h3>
-                    <p>While we strive for accuracy, the GAD Office is not responsible for any errors or omissions in the reports provided. Information is subject to change without notice.</p>
-                </div>
-            </div>
+    <div class="space-y-10 text-gray-700">
+      <div class="flex gap-6">
+        <span class="text-3xl font-bold text-gray-200">01</span>
+        <div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">
+            Acceptance of Terms
+          </h3>
+          <p>
+            By accessing the GAD Corner website, you agree to comply with and be
+            bound by these terms. If you do not agree, please refrain from using
+            the site.
+          </p>
         </div>
+      </div>
+
+      <div class="flex gap-6">
+        <span class="text-3xl font-bold text-gray-200">02</span>
+        <div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">
+            Intellectual Property
+          </h3>
+          <p>
+            All content, including the logos of the Municipality of Montalban,
+            GAD Corner, and specific project reports, are the property of the
+            Municipal Government unless otherwise stated. Unauthorized
+            reproduction is prohibited.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex gap-6">
+        <span class="text-3xl font-bold text-gray-200">03</span>
+        <div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">
+            Prohibited Conduct
+          </h3>
+          <p>
+            Users are prohibited from using this site to upload malicious
+            software, engage in data mining, or attempt unauthorized access to
+            the web server.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex gap-6">
+        <span class="text-3xl font-bold text-gray-200">04</span>
+        <div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">Disclaimer</h3>
+          <p>
+            While we strive for accuracy, the GAD Office is not responsible for
+            any errors or omissions in the reports provided. Information is
+            subject to change without notice.
+          </p>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}

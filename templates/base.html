@@ -1,556 +1,835 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}GAD Corner - Bagong Montalban{% endblock %}</title>
 
     <!-- Website Favicon -->
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/GAD-logo.png') }}">
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='assets/GAD-logo.png') }}"
+    />
 
     <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
 
     <!-- Tailwind (precompiled) -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/output.css') }}"
+    />
 
     <style type="text/css">
-        .nav-transition {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      .nav-transition {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .dropdown-shadow {
+        box-shadow:
+          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Desktop Navigation Hover Logic */
+      @media (min-width: 1024px) {
+        .group:hover > .dropdown-menu {
+          display: block !important;
         }
 
-        .dropdown-shadow {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        .group\/flyout:hover > .dropdown-menu {
+          display: block !important;
         }
+      }
 
-        html {
-            scroll-behavior: smooth;
-        }
+      /* Accessibility Classes */
+      body.high-contrast {
+        filter: contrast(130%) saturate(120%);
+      }
 
-        /* Desktop Navigation Hover Logic */
-        @media (min-width: 1024px) {
-            .group:hover>.dropdown-menu {
-                display: block !important;
-            }
+      body.invert-colors {
+        filter: invert(100%) hue-rotate(180deg);
+        background-color: #0b080a;
+        /* Inverted bgLight */
+      }
 
-            .group\/flyout:hover>.dropdown-menu {
-                display: block !important;
-            }
-        }
-
-        /* Accessibility Classes */
-        body.high-contrast {
-            filter: contrast(130%) saturate(120%);
-        }
-
-        body.invert-colors {
-            filter: invert(100%) hue-rotate(180deg);
-            background-color: #0b080a;
-            /* Inverted bgLight */
-        }
-
-        body.invert-colors img,
-        body.invert-colors video,
-        body.invert-colors .bg-cover {
-            filter: invert(100%) hue-rotate(180deg);
-        }
+      body.invert-colors img,
+      body.invert-colors video,
+      body.invert-colors .bg-cover {
+        filter: invert(100%) hue-rotate(180deg);
+      }
     </style>
 
     <!-- Floating Navigation Styles -->
     <style>
-        #floating-nav-btn {
-            box-shadow: 0 10px 30px -5px rgba(0, 104, 55, 0.4);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+      #floating-nav-btn {
+        box-shadow: 0 10px 30px -5px rgba(0, 104, 55, 0.4);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
 
-        #floating-nav-btn:hover {
-            transform: scale(1.1) translateY(-5px);
-            box-shadow: 0 15px 40px -5px rgba(0, 104, 55, 0.5);
-        }
+      #floating-nav-btn:hover {
+        transform: scale(1.1) translateY(-5px);
+        box-shadow: 0 15px 40px -5px rgba(0, 104, 55, 0.5);
+      }
 
-        #floating-nav-btn:active {
-            transform: scale(0.9);
-        }
+      #floating-nav-btn:active {
+        transform: scale(0.9);
+      }
 
-        .fab-menu-item {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+      .fab-menu-item {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
 
-        .fab-menu-active .fab-menu-item {
-            opacity: 1;
-            transform: translateY(0);
-        }
+      .fab-menu-active .fab-menu-item {
+        opacity: 1;
+        transform: translateY(0);
+      }
 
-        /* Staggered animation for menu items */
-        .fab-menu-active .fab-menu-item:nth-child(1) {
-            transition-delay: 0.1s;
-        }
+      /* Staggered animation for menu items */
+      .fab-menu-active .fab-menu-item:nth-child(1) {
+        transition-delay: 0.1s;
+      }
 
-        .fab-menu-active .fab-menu-item:nth-child(2) {
-            transition-delay: 0.15s;
-        }
+      .fab-menu-active .fab-menu-item:nth-child(2) {
+        transition-delay: 0.15s;
+      }
 
-        .fab-menu-active .fab-menu-item:nth-child(3) {
-            transition-delay: 0.2s;
-        }
+      .fab-menu-active .fab-menu-item:nth-child(3) {
+        transition-delay: 0.2s;
+      }
 
-        .fab-menu-active .fab-menu-item:nth-child(4) {
-            transition-delay: 0.25s;
-        }
+      .fab-menu-active .fab-menu-item:nth-child(4) {
+        transition-delay: 0.25s;
+      }
 
-        .fab-menu-active .fab-menu-item:nth-child(5) {
-            transition-delay: 0.3s;
-        }
+      .fab-menu-active .fab-menu-item:nth-child(5) {
+        transition-delay: 0.3s;
+      }
 
-        #fab-overlay {
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            transition: all 0.5s ease;
-        }
+      #fab-overlay {
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        transition: all 0.5s ease;
+      }
 
-        /* Hamburger Animation */
-        .burger-line {
-            transition: all 0.3s ease;
-        }
+      /* Hamburger Animation */
+      .burger-line {
+        transition: all 0.3s ease;
+      }
 
-        .burger-active .line-1 {
-            transform: translateY(7px) rotate(45deg);
-        }
+      .burger-active .line-1 {
+        transform: translateY(7px) rotate(45deg);
+      }
 
-        .burger-active .line-2 {
-            opacity: 0;
-            transform: translateX(10px);
-        }
+      .burger-active .line-2 {
+        opacity: 0;
+        transform: translateX(10px);
+      }
 
-        .burger-active .line-3 {
-            transform: translateY(-7px) rotate(-45deg);
-        }
+      .burger-active .line-3 {
+        transform: translateY(-7px) rotate(-45deg);
+      }
 
-        /* Floating Nav Button should only show after scroll */
-        #floating-nav-container {
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease;
-        }
+      /* Floating Nav Button should only show after scroll */
+      #floating-nav-container {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease;
+      }
 
-        #floating-nav-container.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
+      #floating-nav-container.visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
     </style>
 
     {% block extra_css %}{% endblock %}
-</head>
+  </head>
 
-<body class="bg-bgLight text-text-dark font-outfit leading-relaxed">
-
+  <body class="bg-bgLight text-text-dark font-outfit leading-relaxed">
     <!-- Top Accessibility Bar -->
     <div
-        class="hidden md:flex bg-primary-green px-[5%] lg:px-[10%] py-3 justify-end items-center border-b border-white/10 gap-6">
+      class="hidden md:flex bg-primary-green px-[5%] lg:px-[10%] py-3 justify-end items-center border-b border-white/10 gap-6"
+    >
+      <!-- SINGLE SEARCH BAR WITH SUGGESTION LOGIC -->
+      <div class="relative">
+        <form
+          action="{{ url_for('main.search') }}"
+          method="GET"
+          class="relative flex items-center group"
+          autocomplete="off"
+        >
+          <input
+            type="text"
+            id="search-input"
+            name="q"
+            placeholder="Search resources..."
+            class="pl-4 pr-10 py-2 bg-white/10 border border-white/20 rounded-full text-sm text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/40 focus:bg-white/20 w-64 nav-transition"
+          />
 
-        <!-- SINGLE SEARCH BAR WITH SUGGESTION LOGIC -->
-        <div class="relative">
-            <form action="{{ url_for('main.search') }}" method="GET" class="relative flex items-center group"
-                autocomplete="off">
-                <input type="text" id="search-input" name="q" placeholder="Search resources..."
-                    class="pl-4 pr-10 py-2 bg-white/10 border border-white/20 rounded-full text-sm text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/40 focus:bg-white/20 w-64 nav-transition">
+          <button
+            type="submit"
+            class="absolute right-4 text-white/60 text-xs group-focus-within:text-white group-focus-within:scale-110 transition-all"
+          >
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
 
-                <button type="submit"
-                    class="absolute right-4 text-white/60 text-xs group-focus-within:text-white group-focus-within:scale-110 transition-all">
-                    <i class="fas fa-search"></i>
+        <!-- Suggestion Dropdown (The Ghost Box) -->
+        <div
+          id="suggestion-box"
+          class="absolute top-full left-0 mt-2 w-full bg-[#1a1a1a] text-white rounded-xl shadow-2xl hidden z-[2000] border border-white/10 overflow-hidden"
+        ></div>
+      </div>
+
+      <!-- Accessibility Icons & Menu -->
+      <div
+        class="flex gap-4 text-white/80 border-l pl-6 border-white/20 relative"
+      >
+        <button
+          id="a11y-menu-btn"
+          class="focus:outline-none hover:text-white nav-transition"
+          title="Accessibility Menu"
+        >
+          <i class="fas fa-universal-access"></i>
+        </button>
+        <button
+          id="a11y-quick-text-btn"
+          class="focus:outline-none hover:text-white nav-transition"
+          title="Quick Text Zoom"
+        >
+          <i class="fas fa-font"></i>
+        </button>
+
+        <!-- A11y Menu Dropdown -->
+        <div
+          id="a11y-menu"
+          class="absolute top-full right-0 mt-3 w-72 bg-white text-gray-800 rounded-xl shadow-2xl hidden z-[2000] border border-gray-100 overflow-hidden transform origin-top-right transition-all"
+        >
+          <div
+            class="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center"
+          >
+            <h3 class="font-bold text-sm text-primary-green">
+              <i class="fas fa-wheelchair mr-2"></i>Accessibility Options
+            </h3>
+            <button
+              id="a11y-close"
+              class="text-gray-400 hover:text-red-500 transition-colors"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="p-2 space-y-1">
+            <button
+              class="a11y-toggle w-full flex items-center gap-3 px-3 py-2 text-sm text-left hover:bg-green-50 rounded-lg transition-colors"
+              data-action="contrast"
+            >
+              <div
+                class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600"
+              >
+                <i class="fas fa-adjust"></i>
+              </div>
+              <div>
+                <p class="font-bold">High Contrast</p>
+                <p class="text-[10px] text-gray-500">Enhance readability</p>
+              </div>
+            </button>
+            <button
+              class="a11y-toggle w-full flex items-center gap-3 px-3 py-2 text-sm text-left hover:bg-green-50 rounded-lg transition-colors"
+              data-action="invert"
+            >
+              <div
+                class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600"
+              >
+                <i class="fas fa-fill-drip"></i>
+              </div>
+              <div>
+                <p class="font-bold">Invert Colors</p>
+                <p class="text-[10px] text-gray-500">Reverse color scheme</p>
+              </div>
+            </button>
+            <div class="px-3 py-3 mt-1 border-t border-gray-100">
+              <p
+                class="font-bold text-xs text-gray-600 uppercase tracking-wider mb-2"
+              >
+                Text Size
+              </p>
+              <div class="flex items-center gap-2">
+                <button
+                  id="a11y-text-dec"
+                  class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-1.5 rounded font-bold text-xs"
+                  title="Decrease Text Size"
+                >
+                  -A
                 </button>
-            </form>
-
-            <!-- Suggestion Dropdown (The Ghost Box) -->
-            <div id="suggestion-box"
-                class="absolute top-full left-0 mt-2 w-full bg-[#1a1a1a] text-white rounded-xl shadow-2xl hidden z-[2000] border border-white/10 overflow-hidden">
+                <button
+                  id="a11y-text-reset"
+                  class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-1.5 rounded text-xs"
+                  title="Reset Text Size"
+                >
+                  <i class="fas fa-undo"></i> Reset
+                </button>
+                <button
+                  id="a11y-text-inc"
+                  class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-1.5 rounded font-bold text-base"
+                  title="Increase Text Size"
+                >
+                  +A
+                </button>
+              </div>
             </div>
-        </div>
-
-        <!-- Accessibility Icons & Menu -->
-        <div class="flex gap-4 text-white/80 border-l pl-6 border-white/20 relative">
-            <button id="a11y-menu-btn" class="focus:outline-none hover:text-white nav-transition"
-                title="Accessibility Menu">
-                <i class="fas fa-universal-access"></i>
+            <button
+              id="a11y-reset-all"
+              class="w-full mt-1 text-center text-xs text-red-500 font-bold py-2.5 hover:bg-red-50 rounded transition-colors"
+            >
+              Reset All Settings
             </button>
-            <button id="a11y-quick-text-btn" class="focus:outline-none hover:text-white nav-transition"
-                title="Quick Text Zoom">
-                <i class="fas fa-font"></i>
-            </button>
-
-            <!-- A11y Menu Dropdown -->
-            <div id="a11y-menu"
-                class="absolute top-full right-0 mt-3 w-72 bg-white text-gray-800 rounded-xl shadow-2xl hidden z-[2000] border border-gray-100 overflow-hidden transform origin-top-right transition-all">
-                <div class="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-                    <h3 class="font-bold text-sm text-primary-green"><i class="fas fa-wheelchair mr-2"></i>Accessibility
-                        Options</h3>
-                    <button id="a11y-close" class="text-gray-400 hover:text-red-500 transition-colors"><i
-                            class="fas fa-times"></i></button>
-                </div>
-                <div class="p-2 space-y-1">
-                    <button
-                        class="a11y-toggle w-full flex items-center gap-3 px-3 py-2 text-sm text-left hover:bg-green-50 rounded-lg transition-colors"
-                        data-action="contrast">
-                        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600"><i
-                                class="fas fa-adjust"></i></div>
-                        <div>
-                            <p class="font-bold">High Contrast</p>
-                            <p class="text-[10px] text-gray-500">Enhance readability</p>
-                        </div>
-                    </button>
-                    <button
-                        class="a11y-toggle w-full flex items-center gap-3 px-3 py-2 text-sm text-left hover:bg-green-50 rounded-lg transition-colors"
-                        data-action="invert">
-                        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600"><i
-                                class="fas fa-fill-drip"></i></div>
-                        <div>
-                            <p class="font-bold">Invert Colors</p>
-                            <p class="text-[10px] text-gray-500">Reverse color scheme</p>
-                        </div>
-                    </button>
-                    <div class="px-3 py-3 mt-1 border-t border-gray-100">
-                        <p class="font-bold text-xs text-gray-600 uppercase tracking-wider mb-2">Text Size</p>
-                        <div class="flex items-center gap-2">
-                            <button id="a11y-text-dec"
-                                class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-1.5 rounded font-bold text-xs"
-                                title="Decrease Text Size">-A</button>
-                            <button id="a11y-text-reset"
-                                class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-1.5 rounded text-xs"
-                                title="Reset Text Size"><i class="fas fa-undo"></i> Reset</button>
-                            <button id="a11y-text-inc"
-                                class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-1.5 rounded font-bold text-base"
-                                title="Increase Text Size">+A</button>
-                        </div>
-                    </div>
-                    <button id="a11y-reset-all"
-                        class="w-full mt-1 text-center text-xs text-red-500 font-bold py-2.5 hover:bg-red-50 rounded transition-colors">
-                        Reset All Settings
-                    </button>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
     </div>
 
     <!-- Header -->
     <header
-        class="bg-white px-[5%] lg:px-[10%] py-6 md:py-8 flex flex-col md:flex-row items-center gap-4 md:gap-8 text-center md:text-left">
-        <div class="flex gap-4">
-            <div class="w-[50px] h-[50px] md:w-[85px] md:h-[85px] flex items-center justify-center">
-                <img src="{{ url_for('static', filename='assets/montalban-logo.png') }}" alt="Montalban Logo"
-                    class="w-full h-full object-contain">
-            </div>
-            <div class="w-[50px] h-[50px] md:w-[85px] md:h-[85px] flex items-center justify-center">
-                <img src="{{ url_for('static', filename='assets/GAD-logo.png') }}" alt="GAD Logo"
-                    class="w-full h-full object-contain">
-            </div>
+      class="bg-white px-[5%] lg:px-[10%] py-6 md:py-8 flex flex-col md:flex-row items-center gap-4 md:gap-8 text-center md:text-left"
+    >
+      <div class="flex gap-4">
+        <div
+          class="w-[50px] h-[50px] md:w-[85px] md:h-[85px] flex items-center justify-center"
+        >
+          <img
+            src="{{ url_for('static', filename='assets/montalban-logo.png') }}"
+            alt="Montalban Logo"
+            class="w-full h-full object-contain"
+          />
         </div>
-        <div class="flex flex-col">
-            <h2 class="text-[8px] md:text-xs font-bold uppercase tracking-[0.2em] text-gray-500 mb-1">Republic of the
-                Philippines</h2>
-            <h1 class="text-xl md:text-4xl font-extrabold text-primary-green tracking-tight leading-tight mb-1">
-                MUNICIPALITY OF RODRIGUEZ</h1>
-            <p class="text-sm md:text-lg font-medium text-gray-600 tracking-wide uppercase md:normal-case">Gender and
-                Development (GAD) Corner</p>
+        <div
+          class="w-[50px] h-[50px] md:w-[85px] md:h-[85px] flex items-center justify-center"
+        >
+          <img
+            src="{{ url_for('static', filename='assets/GAD-logo.png') }}"
+            alt="GAD Logo"
+            class="w-full h-full object-contain"
+          />
         </div>
+      </div>
+      <div class="flex flex-col">
+        <h2
+          class="text-[8px] md:text-xs font-bold uppercase tracking-[0.2em] text-gray-500 mb-1"
+        >
+          Republic of the Philippines
+        </h2>
+        <h1
+          class="text-xl md:text-4xl font-extrabold text-primary-green tracking-tight leading-tight mb-1"
+        >
+          MUNICIPALITY OF RODRIGUEZ
+        </h1>
+        <p
+          class="text-sm md:text-lg font-medium text-gray-600 tracking-wide uppercase md:normal-case"
+        >
+          Gender and Development (GAD) Corner
+        </p>
+      </div>
     </header>
 
     <!-- Navigation -->
     <nav class="bg-primary-green sticky top-0 z-[1000] shadow-lg">
-        <div class="px-[5%] lg:px-[10%]">
-            <div class="flex lg:hidden justify-between items-center py-4 text-white">
-                <span class="font-bold uppercase tracking-wider text-xs">Menu</span>
-                <button id="mobile-menu-btn" class="text-2xl focus:outline-none p-2">
-                    <i class="fas fa-bars" id="menu-icon"></i>
-                </button>
-            </div>
-
-            <ul id="nav-menu"
-                class="hidden lg:flex flex-col lg:flex-row list-none pb-6 lg:pb-0 divide-y divide-white/5 lg:divide-y-0">
-                <li><a href="{{ url_for('main.index') }}"
-                        class="block py-4 lg:py-5 px-6 text-white text-[0.95rem] font-semibold hover:bg-primary-hover nav-transition flex items-center gap-2">
-                        <i class="fas fa-home text-sm opacity-80"></i> Home</a>
-                </li>
-
-                <!-- About Us -->
-                <li class="relative group">
-                    <button
-                        class="w-full flex justify-between lg:justify-start items-center gap-2 py-4 lg:py-5 px-6 text-white text-[0.95rem] font-semibold hover:bg-primary-hover nav-transition dropdown-toggle">
-                        <span class="flex items-center gap-2"><i class="fas fa-info-circle text-sm opacity-80"></i>
-                            About Us</span>
-                        <i
-                            class="fas fa-chevron-down text-[10px] opacity-70 group-hover:rotate-180 transition-transform"></i>
-                    </button>
-                    <ul
-                        class="dropdown-menu lg:absolute left-0 top-full w-full lg:w-64 bg-white lg:dropdown-shadow lg:border-t-4 border-primary-green hidden">
-                        <li><a href="{{ url_for('main.vision_mission') }}"
-                                class="block px-10 lg:px-6 py-4 text-text-dark text-sm hover:bg-green-50 hover:text-primary-green border-b border-gray-50">Vision
-                                and Mission</a></li>
-                        <li><a href="{{ url_for('main.org_structure') }}"
-                                class="block px-10 lg:px-6 py-4 text-text-dark text-sm hover:bg-green-50 hover:text-primary-green border-b border-gray-50">Organization
-                                Structure</a></li>
-                        <li><a href="{{ url_for('main.gad_committee') }}"
-                                class="block px-10 lg:px-6 py-4 text-text-dark text-sm hover:bg-green-50 hover:text-primary-green border-b border-gray-50">GAD
-                                Committee</a></li>
-                        <li><a href="{{ url_for('main.contact') }}"
-                                class="block px-10 lg:px-6 py-4 text-text-dark text-sm hover:bg-green-50 hover:text-primary-green">Contact
-                                Us</a></li>
-                    </ul>
-                </li>
-
-                <!-- Policies and Reports -->
-                <li class="relative group">
-                    <button
-                        class="w-full flex justify-between lg:justify-start items-center gap-2 py-4 lg:py-5 px-6 text-white text-[0.95rem] font-semibold hover:bg-primary-hover nav-transition dropdown-toggle">
-                        <span class="flex items-center gap-2"><i class="fas fa-file-contract text-sm opacity-80"></i>
-                            Policies and Reports</span>
-                        <i
-                            class="fas fa-chevron-down text-[10px] opacity-70 group-hover:rotate-180 transition-transform"></i>
-                    </button>
-                    <ul
-                        class="dropdown-menu lg:absolute left-0 top-full w-full lg:w-64 bg-white lg:dropdown-shadow lg:border-t-4 border-primary-green hidden">
-                        <li class="relative group/flyout">
-                            <button
-                                class="w-full flex justify-between items-center px-10 lg:px-6 py-4 text-text-dark text-sm hover:bg-green-50 hover:text-primary-green border-b border-gray-50 dropdown-toggle-sub">
-                                Policies <i class="fas fa-chevron-right hidden lg:block text-[10px] opacity-50"></i>
-                                <i class="fas fa-chevron-down block lg:hidden text-[10px] opacity-50"></i>
-                            </button>
-                            <ul
-                                class="dropdown-menu lg:absolute lg:left-full lg:top-0 w-full lg:w-64 bg-gray-50 lg:bg-white lg:dropdown-shadow lg:border-l-4 border-primary-green hidden">
-                                <li><a href="{{ url_for('policies.policies_hub', category='republic_acts') }}"
-                                        class="block px-14 lg:px-6 py-4 text-sm hover:bg-green-100">Republic
-                                        Acts (RA)</a></li>
-                                <li><a href="{{ url_for('policies.policies_hub', category='resolutions') }}"
-                                        class="block px-14 lg:px-6 py-4 text-sm hover:bg-green-100">Resolutions</a></li>
-                                <li><a href="{{ url_for('policies.policies_hub', category='memoranda') }}"
-                                        class="block px-14 lg:px-6 py-4 text-sm hover:bg-green-100">Memorandum
-                                        Circulars</a></li>
-                                <li><a href="{{ url_for('policies.policies_hub', category='orders') }}"
-                                        class="block px-14 lg:px-6 py-4 text-sm hover:bg-green-100">Executive Orders</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="relative group/flyout">
-                            <button
-                                class="w-full flex justify-between items-center px-10 lg:px-6 py-4 text-text-dark text-sm hover:bg-green-50 hover:text-primary-green dropdown-toggle-sub">
-                                Reports <i class="fas fa-chevron-right hidden lg:block text-[10px] opacity-50"></i>
-                                <i class="fas fa-chevron-down block lg:hidden text-[10px] opacity-50"></i>
-                            </button>
-                            <ul
-                                class="dropdown-menu lg:absolute lg:left-full lg:top-0 w-full lg:w-64 bg-gray-50 lg:bg-white lg:dropdown-shadow lg:border-l-4 border-primary-green hidden">
-                                <li><a href="{{ url_for('policies.lbp_forms') }}"
-                                        class="block px-14 lg:px-6 py-4 text-sm hover:bg-green-100">LBP Forms (Plan &
-                                        Budget)</a></li>
-                                <li><a href="{{ url_for('policies.reports') }}"
-                                        class="block px-14 lg:px-6 py-4 text-sm hover:bg-green-100">Accomplishment
-                                        Reports</a></li>
-                                <li><a href="{{ url_for('policies.estado_ni_juana') }}"
-                                        class="block px-14 lg:px-6 py-4 text-sm hover:bg-green-100">Estado ni Juana
-                                        Report</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-
-                <!-- Projects -->
-                <li class="relative group">
-                    <button
-                        class="w-full flex justify-between lg:justify-start items-center gap-2 py-4 lg:py-5 px-6 text-white text-[0.95rem] font-semibold hover:bg-primary-hover nav-transition dropdown-toggle">
-                        <span class="flex items-center gap-2"><i class="fas fa-tasks text-sm opacity-80"></i>
-                            Projects</span>
-                        <i
-                            class="fas fa-chevron-down text-[10px] opacity-70 group-hover:rotate-180 transition-transform"></i>
-                    </button>
-                    <ul
-                        class="dropdown-menu lg:absolute left-0 top-full w-full lg:w-52 bg-white lg:dropdown-shadow lg:border-t-4 border-primary-green hidden">
-                        {% for yr in nav_project_years[:4] %}
-                        <li><a href="{{ url_for('projects.project_year', year=yr) }}"
-                                class="block px-10 lg:px-6 py-4 text-text-dark text-sm hover:bg-green-50">Year {{ yr
-                                }}</a>
-                        </li>
-                        {% endfor %}
-                        <li><a href="{{ url_for('projects.projects_archive') }}"
-                                class="block px-10 lg:px-6 py-4 text-text-dark text-sm hover:bg-green-50">More...</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <!-- Knowledge & IEC -->
-                <li><a href="{{ url_for('main.knowledge_products') }}"
-                        class="block py-4 lg:py-5 px-6 text-white text-[0.95rem] font-semibold hover:bg-primary-hover nav-transition flex items-center gap-2">
-                        <i class="fas fa-lightbulb text-sm opacity-80"></i> GAD Knowledge & IEC</a>
-                </li>
-
-                <!-- Calendar -->
-                <li><a href="{{ url_for('calendar.calendar_view') }}"
-                        class="block py-4 lg:py-5 px-6 text-white text-[0.95rem] font-semibold hover:bg-primary-hover nav-transition flex items-center gap-2">
-                        <i class="fas fa-calendar-alt text-sm opacity-80"></i> Calendar
-                    </a>
-                </li>
-            </ul>
+      <div class="px-[5%] lg:px-[10%]">
+        <div
+          class="flex lg:hidden justify-between items-center py-4 text-white"
+        >
+          <span class="font-bold uppercase tracking-wider text-xs">Menu</span>
+          <button id="mobile-menu-btn" class="text-2xl focus:outline-none p-2">
+            <i class="fas fa-bars" id="menu-icon"></i>
+          </button>
         </div>
+
+        <ul
+          id="nav-menu"
+          class="hidden lg:flex flex-col lg:flex-row list-none pb-6 lg:pb-0 divide-y divide-white/5 lg:divide-y-0"
+        >
+          <li>
+            <a
+              href="{{ url_for('main.index') }}"
+              class="block py-4 lg:py-5 px-6 text-white text-[0.95rem] font-semibold hover:bg-primary-hover nav-transition flex items-center gap-2"
+            >
+              <i class="fas fa-home text-sm opacity-80"></i> Home</a
+            >
+          </li>
+
+          <!-- About Us -->
+          <li class="relative group">
+            <button
+              class="w-full flex justify-between lg:justify-start items-center gap-2 py-4 lg:py-5 px-6 text-white text-[0.95rem] font-semibold hover:bg-primary-hover nav-transition dropdown-toggle"
+            >
+              <span class="flex items-center gap-2"
+                ><i class="fas fa-info-circle text-sm opacity-80"></i> About
+                Us</span
+              >
+              <i
+                class="fas fa-chevron-down text-[10px] opacity-70 group-hover:rotate-180 transition-transform"
+              ></i>
+            </button>
+            <ul
+              class="dropdown-menu lg:absolute left-0 top-full w-full lg:w-64 bg-white lg:dropdown-shadow lg:border-t-4 border-primary-green hidden"
+            >
+              <li>
+                <a
+                  href="{{ url_for('main.vision_mission') }}"
+                  class="block px-10 lg:px-6 py-4 text-text-dark text-sm hover:bg-green-50 hover:text-primary-green border-b border-gray-50"
+                  >Vision and Mission</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{{ url_for('main.org_structure') }}"
+                  class="block px-10 lg:px-6 py-4 text-text-dark text-sm hover:bg-green-50 hover:text-primary-green border-b border-gray-50"
+                  >Organization Structure</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{{ url_for('main.gad_committee') }}"
+                  class="block px-10 lg:px-6 py-4 text-text-dark text-sm hover:bg-green-50 hover:text-primary-green border-b border-gray-50"
+                  >GAD Committee</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{{ url_for('main.contact') }}"
+                  class="block px-10 lg:px-6 py-4 text-text-dark text-sm hover:bg-green-50 hover:text-primary-green"
+                  >Contact Us</a
+                >
+              </li>
+            </ul>
+          </li>
+
+          <!-- Policies and Reports -->
+          <li class="relative group">
+            <button
+              class="w-full flex justify-between lg:justify-start items-center gap-2 py-4 lg:py-5 px-6 text-white text-[0.95rem] font-semibold hover:bg-primary-hover nav-transition dropdown-toggle"
+            >
+              <span class="flex items-center gap-2"
+                ><i class="fas fa-file-contract text-sm opacity-80"></i>
+                Policies and Reports</span
+              >
+              <i
+                class="fas fa-chevron-down text-[10px] opacity-70 group-hover:rotate-180 transition-transform"
+              ></i>
+            </button>
+            <ul
+              class="dropdown-menu lg:absolute left-0 top-full w-full lg:w-64 bg-white lg:dropdown-shadow lg:border-t-4 border-primary-green hidden"
+            >
+              <li class="relative group/flyout">
+                <button
+                  class="w-full flex justify-between items-center px-10 lg:px-6 py-4 text-text-dark text-sm hover:bg-green-50 hover:text-primary-green border-b border-gray-50 dropdown-toggle-sub"
+                >
+                  Policies
+                  <i
+                    class="fas fa-chevron-right hidden lg:block text-[10px] opacity-50"
+                  ></i>
+                  <i
+                    class="fas fa-chevron-down block lg:hidden text-[10px] opacity-50"
+                  ></i>
+                </button>
+                <ul
+                  class="dropdown-menu lg:absolute lg:left-full lg:top-0 w-full lg:w-64 bg-gray-50 lg:bg-white lg:dropdown-shadow lg:border-l-4 border-primary-green hidden"
+                >
+                  <li>
+                    <a
+                      href="{{ url_for('policies.policies_hub', category='republic_acts') }}"
+                      class="block px-14 lg:px-6 py-4 text-sm hover:bg-green-100"
+                      >Republic Acts (RA)</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="{{ url_for('policies.policies_hub', category='resolutions') }}"
+                      class="block px-14 lg:px-6 py-4 text-sm hover:bg-green-100"
+                      >Resolutions</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="{{ url_for('policies.policies_hub', category='memoranda') }}"
+                      class="block px-14 lg:px-6 py-4 text-sm hover:bg-green-100"
+                      >Memorandum Circulars</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="{{ url_for('policies.policies_hub', category='orders') }}"
+                      class="block px-14 lg:px-6 py-4 text-sm hover:bg-green-100"
+                      >Executive Orders</a
+                    >
+                  </li>
+                </ul>
+              </li>
+              <li class="relative group/flyout">
+                <button
+                  class="w-full flex justify-between items-center px-10 lg:px-6 py-4 text-text-dark text-sm hover:bg-green-50 hover:text-primary-green dropdown-toggle-sub"
+                >
+                  Reports
+                  <i
+                    class="fas fa-chevron-right hidden lg:block text-[10px] opacity-50"
+                  ></i>
+                  <i
+                    class="fas fa-chevron-down block lg:hidden text-[10px] opacity-50"
+                  ></i>
+                </button>
+                <ul
+                  class="dropdown-menu lg:absolute lg:left-full lg:top-0 w-full lg:w-64 bg-gray-50 lg:bg-white lg:dropdown-shadow lg:border-l-4 border-primary-green hidden"
+                >
+                  <li>
+                    <a
+                      href="{{ url_for('policies.lbp_forms') }}"
+                      class="block px-14 lg:px-6 py-4 text-sm hover:bg-green-100"
+                      >LBP Forms (Plan & Budget)</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="{{ url_for('policies.reports') }}"
+                      class="block px-14 lg:px-6 py-4 text-sm hover:bg-green-100"
+                      >Accomplishment Reports</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="{{ url_for('policies.estado_ni_juana') }}"
+                      class="block px-14 lg:px-6 py-4 text-sm hover:bg-green-100"
+                      >Estado ni Juana Report</a
+                    >
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Projects -->
+          <li class="relative group">
+            <button
+              class="w-full flex justify-between lg:justify-start items-center gap-2 py-4 lg:py-5 px-6 text-white text-[0.95rem] font-semibold hover:bg-primary-hover nav-transition dropdown-toggle"
+            >
+              <span class="flex items-center gap-2"
+                ><i class="fas fa-tasks text-sm opacity-80"></i> Projects</span
+              >
+              <i
+                class="fas fa-chevron-down text-[10px] opacity-70 group-hover:rotate-180 transition-transform"
+              ></i>
+            </button>
+            <ul
+              class="dropdown-menu lg:absolute left-0 top-full w-full lg:w-52 bg-white lg:dropdown-shadow lg:border-t-4 border-primary-green hidden"
+            >
+              {% for yr in nav_project_years[:4] %}
+              <li>
+                <a
+                  href="{{ url_for('projects.project_year', year=yr) }}"
+                  class="block px-10 lg:px-6 py-4 text-text-dark text-sm hover:bg-green-50"
+                  >Year {{ yr }}</a
+                >
+              </li>
+              {% endfor %}
+              <li>
+                <a
+                  href="{{ url_for('projects.projects_archive') }}"
+                  class="block px-10 lg:px-6 py-4 text-text-dark text-sm hover:bg-green-50"
+                  >More...</a
+                >
+              </li>
+            </ul>
+          </li>
+
+          <!-- Knowledge & IEC -->
+          <li>
+            <a
+              href="{{ url_for('main.knowledge_products') }}"
+              class="block py-4 lg:py-5 px-6 text-white text-[0.95rem] font-semibold hover:bg-primary-hover nav-transition flex items-center gap-2"
+            >
+              <i class="fas fa-lightbulb text-sm opacity-80"></i> GAD Knowledge
+              & IEC</a
+            >
+          </li>
+
+          <!-- Calendar -->
+          <li>
+            <a
+              href="{{ url_for('calendar.calendar_view') }}"
+              class="block py-4 lg:py-5 px-6 text-white text-[0.95rem] font-semibold hover:bg-primary-hover nav-transition flex items-center gap-2"
+            >
+              <i class="fas fa-calendar-alt text-sm opacity-80"></i> Calendar
+            </a>
+          </li>
+        </ul>
+      </div>
     </nav>
 
-    <main class="min-h-[60vh]">
-        {% block content %}{% endblock %}
-    </main>
+    <main class="min-h-[60vh]">{% block content %}{% endblock %}</main>
 
     <!-- Floating Navigation Burger (FAB) -->
     <div id="floating-nav-container" class="fixed bottom-8 right-8 z-[9000]">
-        <button id="floating-nav-btn" title="Quick Navigation" aria-label="Toggle Navigation Menu"
-            class="w-16 h-16 bg-primary-green text-white rounded-full flex flex-col items-center justify-center gap-1.5 focus:outline-none relative">
-            <div class="burger-line line-1 w-6 h-0.5 bg-white rounded-full"></div>
-            <div class="burger-line line-2 w-6 h-0.5 bg-white rounded-full"></div>
-            <div class="burger-line line-3 w-6 h-0.5 bg-white rounded-full"></div>
-            <span
-                class="absolute -top-12 right-0 bg-[#1a1a1a] text-white text-[10px] font-black px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap hidden md:block border border-white/10 uppercase tracking-widest">Quick
-                Navigation</span>
-        </button>
+      <button
+        id="floating-nav-btn"
+        title="Quick Navigation"
+        aria-label="Toggle Navigation Menu"
+        class="w-16 h-16 bg-primary-green text-white rounded-full flex flex-col items-center justify-center gap-1.5 focus:outline-none relative"
+      >
+        <div class="burger-line line-1 w-6 h-0.5 bg-white rounded-full"></div>
+        <div class="burger-line line-2 w-6 h-0.5 bg-white rounded-full"></div>
+        <div class="burger-line line-3 w-6 h-0.5 bg-white rounded-full"></div>
+        <span
+          class="absolute -top-12 right-0 bg-[#1a1a1a] text-white text-[10px] font-black px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap hidden md:block border border-white/10 uppercase tracking-widest"
+          >Quick Navigation</span
+        >
+      </button>
     </div>
 
     <!-- Full Screen Navigation Overlay -->
-    <div id="fab-overlay"
-        class="fixed inset-0 bg-primary-green/90 z-[8500] flex items-center justify-center translate-x-full transition-transform duration-500 overflow-hidden">
-        <div
-            class="absolute inset-0 bg-[url('https://wsrv.nl/?url=https://i.ibb.co/Ngws7Tkg/image.png&output=webp&q=10&maxage=10y')] bg-cover bg-center opacity-10 mix-blend-overlay">
+    <div
+      id="fab-overlay"
+      class="fixed inset-0 bg-primary-green/90 z-[8500] flex items-center justify-center translate-x-full transition-transform duration-500 overflow-hidden"
+    >
+      <div
+        class="absolute inset-0 bg-[url('https://wsrv.nl/?url=https://i.ibb.co/Ngws7Tkg/image.png&output=webp&q=10&maxage=10y')] bg-cover bg-center opacity-10 mix-blend-overlay"
+      ></div>
+
+      <div
+        class="relative z-10 w-full max-w-lg px-8 text-center"
+        id="fab-menu-container"
+      >
+        <h2
+          class="text-white/40 text-xs font-black uppercase tracking-[0.4em] mb-12"
+        >
+          Quick Access
+        </h2>
+        <div class="flex flex-col gap-6">
+          <a
+            href="{{ url_for('main.index') }}"
+            class="fab-menu-item text-white text-3xl md:text-5xl font-black hover:text-green-400 transition-colors uppercase tracking-tight"
+            >Home</a
+          >
+          <a
+            href="{{ url_for('main.news_hub') }}"
+            class="fab-menu-item text-white text-3xl md:text-5xl font-black hover:text-green-400 transition-colors uppercase tracking-tight"
+            >Latest News</a
+          >
+          <a
+            href="{{ url_for('policies.reports') }}"
+            class="fab-menu-item text-white text-3xl md:text-5xl font-black hover:text-green-400 transition-colors uppercase tracking-tight"
+            >Reports</a
+          >
+          <a
+            href="{{ url_for('projects.projects_archive') }}"
+            class="fab-menu-item text-white text-3xl md:text-5xl font-black hover:text-green-400 transition-colors uppercase tracking-tight"
+            >Projects</a
+          >
+          <a
+            href="{{ url_for('main.contact') }}"
+            class="fab-menu-item text-white text-3xl md:text-5xl font-black hover:text-green-400 transition-colors uppercase tracking-tight"
+            >Contact Us</a
+          >
         </div>
 
-        <div class="relative z-10 w-full max-w-lg px-8 text-center" id="fab-menu-container">
-            <h2 class="text-white/40 text-xs font-black uppercase tracking-[0.4em] mb-12">Quick Access</h2>
-            <div class="flex flex-col gap-6">
-                <a href="{{ url_for('main.index') }}"
-                    class="fab-menu-item text-white text-3xl md:text-5xl font-black hover:text-green-400 transition-colors uppercase tracking-tight">Home</a>
-                <a href="{{ url_for('main.news_hub') }}"
-                    class="fab-menu-item text-white text-3xl md:text-5xl font-black hover:text-green-400 transition-colors uppercase tracking-tight">Latest
-                    News</a>
-                <a href="{{ url_for('policies.reports') }}"
-                    class="fab-menu-item text-white text-3xl md:text-5xl font-black hover:text-green-400 transition-colors uppercase tracking-tight">Reports</a>
-                <a href="{{ url_for('projects.projects_archive') }}"
-                    class="fab-menu-item text-white text-3xl md:text-5xl font-black hover:text-green-400 transition-colors uppercase tracking-tight">Projects</a>
-                <a href="{{ url_for('main.contact') }}"
-                    class="fab-menu-item text-white text-3xl md:text-5xl font-black hover:text-green-400 transition-colors uppercase tracking-tight">Contact
-                    Us</a>
-            </div>
-
-            <div class="mt-20 pt-12 border-t border-white/10 fab-menu-item">
-                <p class="text-white/60 text-xs font-bold uppercase tracking-widest mb-4 italic">Social Hub</p>
-                <div class="flex justify-center gap-4">
-                    <a href="https://www.facebook.com/MontalbanGenderAndDevelopment" target="_blank" rel="noopener"
-                        title="Visit our Facebook Page"
-                        class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-primary-green transition-all"><i
-                            class="fab fa-facebook-f text-lg"></i></a>
-                    <button id="scrollToTopFAB" title="Scroll to Top"
-                        class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-primary-green transition-all"><i
-                            class="fas fa-arrow-up text-lg"></i></button>
-                </div>
-            </div>
+        <div class="mt-20 pt-12 border-t border-white/10 fab-menu-item">
+          <p
+            class="text-white/60 text-xs font-bold uppercase tracking-widest mb-4 italic"
+          >
+            Social Hub
+          </p>
+          <div class="flex justify-center gap-4">
+            <a
+              href="https://www.facebook.com/MontalbanGenderAndDevelopment"
+              target="_blank"
+              rel="noopener"
+              title="Visit our Facebook Page"
+              class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-primary-green transition-all"
+              ><i class="fab fa-facebook-f text-lg"></i
+            ></a>
+            <button
+              id="scrollToTopFAB"
+              title="Scroll to Top"
+              class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-primary-green transition-all"
+            >
+              <i class="fas fa-arrow-up text-lg"></i>
+            </button>
+          </div>
         </div>
+      </div>
     </div>
 
-    <footer class="bg-gray-900 text-gray-400 border-t-4 border-primary-green relative overflow-hidden">
-        <div class="px-[5%] lg:px-[10%] pt-16 pb-12">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
-                <div class="lg:col-span-5 space-y-6">
-                    <h2 class="text-white text-2xl font-bold">GAD<span class="text-primary-green">.</span> MONTALBAN
-                    </h2>
-                    <p class="text-sm border-l-2 border-primary-green/30 pl-4">Official digital hub for Gender and
-                        Development initiatives of Montalban, Rizal.</p>
+    <footer
+      class="bg-gray-900 text-gray-400 border-t-4 border-primary-green relative overflow-hidden"
+    >
+      <div class="px-[5%] lg:px-[10%] pt-16 pb-12">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8"
+        >
+          <div class="lg:col-span-5 space-y-6">
+            <h2 class="text-white text-2xl font-bold">
+              GAD<span class="text-primary-green">.</span> MONTALBAN
+            </h2>
+            <p class="text-sm border-l-2 border-primary-green/30 pl-4">
+              Official digital hub for Gender and Development initiatives of
+              Montalban, Rizal.
+            </p>
+          </div>
+          <div class="lg:col-span-2 lg:col-start-7">
+            <h4 class="text-white font-semibold uppercase text-xs mb-6">
+              Legal
+            </h4>
+            <ul class="space-y-3 text-sm">
+              <li>
+                <a
+                  href="{{ url_for('legal.privacy_policy') }}"
+                  class="hover:text-white"
+                  >Privacy Policy</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{{ url_for('legal.terms_conditions') }}"
+                  class="hover:text-white"
+                  >Terms of Use</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{{ url_for('legal.developers') }}"
+                  class="hover:text-white"
+                  >The Team</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="lg:col-span-3 lg:col-start-10">
+            <h4 class="text-white font-semibold uppercase text-xs mb-6">
+              Contact
+            </h4>
+            <ul class="space-y-3 text-sm">
+              <li class="flex items-center gap-3">
+                <i class="fas fa-phone-alt w-4 text-center"></i> 0927 033 9067
+              </li>
+              <li class="flex items-center gap-3">
+                <a
+                  href="mailto:lgugadrodriguezrizal@gmail.com"
+                  class="hover:text-white flex items-center gap-3"
+                  ><i class="fas fa-envelope w-4 text-center"></i>
+                  lgugadrodriguezrizal@gmail.com</a
+                >
+              </li>
+              <li class="flex items-center gap-3">
+                <a
+                  href="https://www.facebook.com/MontalbanGenderAndDevelopment"
+                  target="_blank"
+                  class="hover:text-white flex items-center gap-3"
+                  ><i class="fab fa-facebook-f w-4 text-center"></i> Montalban
+                  GAD Office</a
+                >
+              </li>
+              <!-- GAD QR Code Support -->
+              {% set gad_qr_url = url_for('static',
+              filename='assets/GAD-qr.svg') %}
+              <li
+                class="flex items-start gap-4 p-4 bg-gray-800/50 rounded-2xl border border-gray-700/50 mt-4 group hover:bg-gray-800 transition-all duration-300 cursor-pointer"
+                onclick="openGlobalLightbox('{{ gad_qr_url }}')"
+              >
+                <div
+                  class="shrink-0 w-14 h-14 bg-white p-1.5 rounded-xl shadow-lg group-hover:scale-105 transition-transform"
+                >
+                  <img
+                    src="{{ url_for('static', filename='assets/GAD-qr.svg') }}"
+                    alt="GAD QR Support"
+                    class="w-full h-full object-contain"
+                  />
                 </div>
-                <div class="lg:col-span-2 lg:col-start-7">
-                    <h4 class="text-white font-semibold uppercase text-xs mb-6">Legal</h4>
-                    <ul class="space-y-3 text-sm">
-                        <li><a href="{{ url_for('legal.privacy_policy') }}" class="hover:text-white">Privacy Policy</a>
-                        </li>
-                        <li><a href="{{ url_for('legal.terms_conditions') }}" class="hover:text-white">Terms of Use</a>
-                        </li>
-                        <li><a href="{{ url_for('legal.developers') }}" class="hover:text-white">The Team</a>
-                        </li>
-                    </ul>
+                <div class="flex flex-col justify-center h-full">
+                  <span
+                    class="block text-white font-black text-[10px] uppercase tracking-widest mb-1.5"
+                    >Scan for Support</span
+                  >
+                  <p
+                    class="text-[9px] leading-relaxed text-gray-500 font-medium"
+                  >
+                    Click to expand or scan our QR code for quick assistance and
+                    GAD inquiries.
+                  </p>
                 </div>
-                <div class="lg:col-span-3 lg:col-start-10">
-                    <h4 class="text-white font-semibold uppercase text-xs mb-6">Contact</h4>
-                    <ul class="space-y-3 text-sm">
-                        <li class="flex items-center gap-3"><i class="fas fa-phone-alt w-4 text-center"></i> 0927 033
-                            9067</li>
-                        <li class="flex items-center gap-3"><a href="mailto:lgugadrodriguezrizal@gmail.com"
-                                class="hover:text-white flex items-center gap-3"><i
-                                    class="fas fa-envelope w-4 text-center"></i> lgugadrodriguezrizal@gmail.com</a></li>
-                        <li class="flex items-center gap-3"><a
-                                href="https://www.facebook.com/MontalbanGenderAndDevelopment" target="_blank"
-                                class="hover:text-white flex items-center gap-3"><i
-                                    class="fab fa-facebook-f w-4 text-center"></i> Montalban GAD Office</a></li>
-                        <!-- GAD QR Code Support -->
-                        {% set gad_qr_url = url_for('static', filename='assets/GAD-qr.svg') %}
-                        <li class="flex items-start gap-4 p-4 bg-gray-800/50 rounded-2xl border border-gray-700/50 mt-4 group hover:bg-gray-800 transition-all duration-300 cursor-pointer"
-                            onclick="openGlobalLightbox('{{ gad_qr_url }}')">
-                            <div
-                                class="shrink-0 w-14 h-14 bg-white p-1.5 rounded-xl shadow-lg group-hover:scale-105 transition-transform">
-                                <img src="{{ url_for('static', filename='assets/GAD-qr.svg') }}" alt="GAD QR Support"
-                                    class="w-full h-full object-contain">
-                            </div>
-                            <div class="flex flex-col justify-center h-full">
-                                <span
-                                    class="block text-white font-black text-[10px] uppercase tracking-widest mb-1.5">Scan
-                                    for Support</span>
-                                <p class="text-[9px] leading-relaxed text-gray-500 font-medium">Click to expand or scan
-                                    our QR code for quick assistance and GAD inquiries.</p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div class="border-t border-gray-800 bg-gray-900/50 py-6 text-center">
-            <p class="text-[10px] uppercase">&copy; 2026 Municipality of Rodriguez. All rights reserved.</p>
-        </div>
+      </div>
+      <div class="border-t border-gray-800 bg-gray-900/50 py-6 text-center">
+        <p class="text-[10px] uppercase">
+          &copy; 2026 Municipality of Rodriguez. All rights reserved.
+        </p>
+      </div>
     </footer>
 
     <!-- Global Lightbox Overlay -->
-    <div id="globalLightbox"
-        class="fixed inset-0 bg-black/95 z-[9999] hidden items-center justify-center p-4 backdrop-blur-sm"
-        onclick="closeGlobalLightboxOutside(event)">
-        <button onclick="closeGlobalLightbox()"
-            class="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-all z-10 border border-white/10">
-            <i class="fas fa-times text-xl"></i>
-        </button>
-        <img id="globalLbImage" src="" alt="Full View"
-            class="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl select-none">
+    <div
+      id="globalLightbox"
+      class="fixed inset-0 bg-black/95 z-[9999] hidden items-center justify-center p-4 backdrop-blur-sm"
+      onclick="closeGlobalLightboxOutside(event)"
+    >
+      <button
+        onclick="closeGlobalLightbox()"
+        class="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-all z-10 border border-white/10"
+      >
+        <i class="fas fa-times text-xl"></i>
+      </button>
+      <img
+        id="globalLbImage"
+        src=""
+        alt="Full View"
+        class="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl select-none"
+      />
     </div>
 
     <script>
-        window.openGlobalLightbox = function (src) {
-            const lb = document.getElementById('globalLightbox');
-            const img = document.getElementById('globalLbImage');
-            if (!lb || !img) return;
-            img.src = src;
-            lb.classList.remove('hidden');
-            lb.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        };
+      window.openGlobalLightbox = function (src) {
+        const lb = document.getElementById("globalLightbox");
+        const img = document.getElementById("globalLbImage");
+        if (!lb || !img) return;
+        img.src = src;
+        lb.classList.remove("hidden");
+        lb.classList.add("flex");
+        document.body.style.overflow = "hidden";
+      };
 
-        window.closeGlobalLightbox = function () {
-            const lb = document.getElementById('globalLightbox');
-            if (!lb) return;
-            lb.classList.add('hidden');
-            lb.classList.remove('flex');
-            document.body.style.overflow = '';
-        };
+      window.closeGlobalLightbox = function () {
+        const lb = document.getElementById("globalLightbox");
+        if (!lb) return;
+        lb.classList.add("hidden");
+        lb.classList.remove("flex");
+        document.body.style.overflow = "";
+      };
 
-        window.closeGlobalLightboxOutside = function (e) {
-            if (e.target.id === 'globalLightbox') closeGlobalLightbox();
-        };
+      window.closeGlobalLightboxOutside = function (e) {
+        if (e.target.id === "globalLightbox") closeGlobalLightbox();
+      };
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeGlobalLightbox();
-        });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeGlobalLightbox();
+      });
     </script>
 
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     {% block extra_js %}{% endblock %}
-</body>
-
+  </body>
 </html>

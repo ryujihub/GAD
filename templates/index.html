@@ -1,469 +1,640 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <!-- Hero Section -->
-<section id="heroSection" class="px-[5%] lg:px-[10%] py-6 md:py-12 relative z-20 bg-gray-50">
-    <div id="heroCarousel" class="rounded-[1.5rem] md:rounded-[2rem] relative overflow-hidden shadow-2xl group"
-        style="height:300px; transition: height 0.6s cubic-bezier(0.4,0,0.2,1);">
+<section
+  id="heroSection"
+  class="px-[5%] lg:px-[10%] py-6 md:py-12 relative z-20 bg-gray-50"
+>
+  <div
+    id="heroCarousel"
+    class="rounded-[1.5rem] md:rounded-[2rem] relative overflow-hidden shadow-2xl group"
+    style="height: 300px; transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1)"
+  >
+    <!-- Slide 1: Welcome -->
+    <div
+      class="hero-slide absolute inset-0 opacity-100 z-10 transition-all duration-1000 flex items-center justify-center text-center text-white"
+    >
+      <!-- Parallax Background Layer -->
+      <div
+        id="heroParallaxBG"
+        class="absolute w-full h-[150%] top-0 left-0 bg-cover bg-center -z-10 will-change-transform"
+        style="
+          background-image:
+            linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+            url(&quot;https://wsrv.nl/?url=https://i.ibb.co/Ngws7Tkg/image.png&output=webp&q=70&maxage=10y&quot;);
+        "
+      ></div>
 
-        <!-- Slide 1: Welcome -->
-        <div
-            class="hero-slide absolute inset-0 opacity-100 z-10 transition-all duration-1000 flex items-center justify-center text-center text-white">
-            <!-- Parallax Background Layer -->
-            <div id="heroParallaxBG"
-                class="absolute w-full h-[150%] top-0 left-0 bg-cover bg-center -z-10 will-change-transform"
-                style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://wsrv.nl/?url=https://i.ibb.co/Ngws7Tkg/image.png&output=webp&q=70&maxage=10y');">
-            </div>
+      <div class="max-w-2xl px-6 relative z-10">
+        <span
+          class="uppercase tracking-[0.2em] text-[10px] md:text-sm font-bold text-green-400 mb-2 md:mb-4 block"
+          >Welcome to GAD Corner</span
+        >
+        <h1
+          class="text-3xl md:text-5xl font-extrabold mb-4 md:mb-6 leading-tight"
+        >
+          Empowering Every Gender in Montalban
+        </h1>
+        <p
+          class="text-sm md:text-lg opacity-90 font-light mb-6 md:mb-8 hidden sm:block"
+        >
+          Discover our latest initiatives, programs, and resources dedicated to
+          equality.
+        </p>
 
-            <div class="max-w-2xl px-6 relative z-10">
-                <span
-                    class="uppercase tracking-[0.2em] text-[10px] md:text-sm font-bold text-green-400 mb-2 md:mb-4 block">Welcome
-                    to GAD Corner</span>
-                <h1 class="text-3xl md:text-5xl font-extrabold mb-4 md:mb-6 leading-tight">Empowering Every Gender in
-                    Montalban</h1>
-                <p class="text-sm md:text-lg opacity-90 font-light mb-6 md:mb-8 hidden sm:block">Discover our latest
-                    initiatives, programs, and resources dedicated to equality.</p>
-
-                <a href="{{ url_for('main.about') }}"
-                    class="bg-primary-green hover:bg-primary-hover px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-xs md:text-sm uppercase tracking-widest nav-transition shadow-lg">Learn
-                    More</a>
-            </div>
-        </div>
-
-        <!-- Slide 2: Facebook Embed -->
-        <div
-            class="hero-slide absolute inset-0 opacity-0 z-0 transition-all duration-1000 flex items-center justify-center bg-black overflow-hidden pointer-events-none">
-            <!-- Facebook SDK Root + Player Setup -->
-            <div id="fb-root"></div>
-            <script>
-                window.fbPlayerInstance = null;
-                window.currentSlideIndex = 0;
-                window.videoHasFinished = false;
-                window.fbAsyncInit = function () {
-                    FB.init({ xfbml: true, version: 'v19.0' });
-                    FB.Event.subscribe('xfbml.ready', function (msg) {
-                        if (msg.type === 'video') {
-                            window.fbPlayerInstance = msg.instance;
-
-                            // Auto-scroll to next slide when video finishes
-                            window.fbPlayerInstance.subscribe('finishedPlaying', function () {
-                                window.videoHasFinished = true; // Mark as played for this session
-                                if (typeof window.heroNextSlide === 'function') {
-                                    window.heroNextSlide();
-                                }
-                            });
-
-                            // If initialized while on the video slide, play immediately
-                            if (window.currentSlideIndex === 1) {
-                                window.fbPlayerInstance.mute(); // Must be muted for autoplay
-                                window.fbPlayerInstance.play();
-                            }
-                        }
-                    });
-                };
-            </script>
-            <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
-
-            <div class="fb-video w-full h-full flex justify-center items-center"
-                data-href="https://www.facebook.com/reel/927800116517540/" data-width="auto" data-show-text="false"
-                data-autoplay="false" data-allowfullscreen="true">
-            </div>
-
-            <!-- Overlay for Video Slide (Optional text) -->
-            <div
-                class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none flex items-end p-8">
-                <div class="text-left text-white max-w-lg">
-                    <span
-                        class="text-[10px] md:text-xs font-bold text-green-400 uppercase tracking-widest mb-1 block">Featured
-                        Video</span>
-                    <h2 class="text-xl md:text-2xl font-black">Latest GAD Initiatives</h2>
-                    <p class="text-[10px] md:text-xs opacity-80 mt-1">Watch our recent story on community empowering
-                        programs.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Dots -->
-        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2.5 z-30">
-            <button class="hero-dot w-2 h-2 rounded-full bg-white/40 hover:bg-white transition-all duration-300"
-                data-index="0"></button>
-            <button class="hero-dot w-2 h-2 rounded-full bg-white/40 hover:bg-white transition-all duration-300"
-                data-index="1"></button>
-        </div>
-
-        <!-- Buttons -->
-        <button id="heroPrev"
-            class="absolute left-6 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white flex items-center justify-center z-30 opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-4 group-hover:translate-x-0">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <button id="heroNext"
-            class="absolute right-6 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white flex items-center justify-center z-30 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0">
-            <i class="fas fa-chevron-right"></i>
-        </button>
+        <a
+          href="{{ url_for('main.about') }}"
+          class="bg-primary-green hover:bg-primary-hover px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-xs md:text-sm uppercase tracking-widest nav-transition shadow-lg"
+          >Learn More</a
+        >
+      </div>
     </div>
+
+    <!-- Slide 2: Facebook Embed -->
+    <div
+      class="hero-slide absolute inset-0 opacity-0 z-0 transition-all duration-1000 flex items-center justify-center bg-black overflow-hidden pointer-events-none"
+    >
+      <!-- Facebook SDK Root + Player Setup -->
+      <div id="fb-root"></div>
+      <script>
+        window.fbPlayerInstance = null;
+        window.currentSlideIndex = 0;
+        window.videoHasFinished = false;
+        window.fbAsyncInit = function () {
+          FB.init({ xfbml: true, version: "v19.0" });
+          FB.Event.subscribe("xfbml.ready", function (msg) {
+            if (msg.type === "video") {
+              window.fbPlayerInstance = msg.instance;
+
+              // Auto-scroll to next slide when video finishes
+              window.fbPlayerInstance.subscribe("finishedPlaying", function () {
+                window.videoHasFinished = true; // Mark as played for this session
+                if (typeof window.heroNextSlide === "function") {
+                  window.heroNextSlide();
+                }
+              });
+
+              // If initialized while on the video slide, play immediately
+              if (window.currentSlideIndex === 1) {
+                window.fbPlayerInstance.mute(); // Must be muted for autoplay
+                window.fbPlayerInstance.play();
+              }
+            }
+          });
+        };
+      </script>
+      <script
+        async
+        defer
+        crossorigin="anonymous"
+        src="https://connect.facebook.net/en_US/sdk.js"
+      ></script>
+
+      <div
+        class="fb-video w-full h-full flex justify-center items-center"
+        data-href="https://www.facebook.com/reel/927800116517540/"
+        data-width="auto"
+        data-show-text="false"
+        data-autoplay="false"
+        data-allowfullscreen="true"
+      ></div>
+
+      <!-- Overlay for Video Slide (Optional text) -->
+      <div
+        class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none flex items-end p-8"
+      >
+        <div class="text-left text-white max-w-lg">
+          <span
+            class="text-[10px] md:text-xs font-bold text-green-400 uppercase tracking-widest mb-1 block"
+            >Featured Video</span
+          >
+          <h2 class="text-xl md:text-2xl font-black">Latest GAD Initiatives</h2>
+          <p class="text-[10px] md:text-xs opacity-80 mt-1">
+            Watch our recent story on community empowering programs.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dots -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2.5 z-30">
+      <button
+        class="hero-dot w-2 h-2 rounded-full bg-white/40 hover:bg-white transition-all duration-300"
+        data-index="0"
+      ></button>
+      <button
+        class="hero-dot w-2 h-2 rounded-full bg-white/40 hover:bg-white transition-all duration-300"
+        data-index="1"
+      ></button>
+    </div>
+
+    <!-- Buttons -->
+    <button
+      id="heroPrev"
+      class="absolute left-6 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white flex items-center justify-center z-30 opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-4 group-hover:translate-x-0"
+    >
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button
+      id="heroNext"
+      class="absolute right-6 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white flex items-center justify-center z-30 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0"
+    >
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
 </section>
 
 <!-- Scroll-Triggered Carousel -->
 <div class="px-[5%] lg:px-[10%] relative z-10">
-    <div id="scrollCarouselWrapper" class="overflow-hidden opacity-0 h-0 transition-all duration-[800ms] ease-in-out">
-        <div class="w-full relative group py-2 mt-4 pb-8 rounded-[1.5rem] md:rounded-[2rem]">
-            <!-- Optional fading edges -->
-            <div
-                class="absolute left-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none">
-            </div>
-            <div
-                class="absolute right-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none">
-            </div>
+  <div
+    id="scrollCarouselWrapper"
+    class="overflow-hidden opacity-0 h-0 transition-all duration-[800ms] ease-in-out"
+  >
+    <div
+      class="w-full relative group py-2 mt-4 pb-8 rounded-[1.5rem] md:rounded-[2rem]"
+    >
+      <!-- Optional fading edges -->
+      <div
+        class="absolute left-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none"
+      ></div>
+      <div
+        class="absolute right-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none"
+      ></div>
 
-            <div
-                class="flex gap-4 md:gap-6 w-max animate-[scroll_40s_linear_infinite] group-hover:[animation-play-state:paused] px-4">
-
-                {% if carousel_images %}
-                <!-- Original set -->
-                {% for img_url in carousel_images %}
-                <div
-                    class="w-48 md:w-64 h-32 md:h-48 bg-gradient-to-br from-green-100 to-blue-50 rounded-2xl flex-shrink-0 relative overflow-hidden shadow-md">
-                    <img src="{{ img_url }}" alt="Carousel Image"
-                        class="w-full h-full object-cover opacity-90 transition-transform duration-500 hover:scale-105">
-                </div>
-                {% endfor %}
-                <!-- Duplicate for infinite scroll effect (using absolute minimum necessary duplicates, Playwright usually requires at least 2 identical sets to seamlessly loop, but we will add a 3rd set if the list is short to ensure the row is filled without snapping) -->
-                {% for img_url in carousel_images %}
-                <div
-                    class="w-48 md:w-64 h-32 md:h-48 bg-gradient-to-br from-green-100 to-blue-50 rounded-2xl flex-shrink-0 relative overflow-hidden shadow-md">
-                    <img src="{{ img_url }}" alt="Carousel Image"
-                        class="w-full h-full object-cover opacity-90 transition-transform duration-500 hover:scale-105">
-                </div>
-                {% endfor %}
-                {% if carousel_images|length < 5 %} {% for img_url in carousel_images %} <div
-                    class="w-48 md:w-64 h-32 md:h-48 bg-gradient-to-br from-green-100 to-blue-50 rounded-2xl flex-shrink-0 relative overflow-hidden shadow-md">
-                    <img src="{{ img_url }}" alt="Carousel Image"
-                        class="w-full h-full object-cover opacity-90 transition-transform duration-500 hover:scale-105">
-            </div>
-            {% endfor %}
-            {% endif %}
-            {% else %}
-            <div class="p-4 text-gray-400 text-sm">No carousel images configured.</div>
-            {% endif %}
-
+      <div
+        class="flex gap-4 md:gap-6 w-max animate-[scroll_40s_linear_infinite] group-hover:[animation-play-state:paused] px-4"
+      >
+        {% if carousel_images %}
+        <!-- Original set -->
+        {% for img_url in carousel_images %}
+        <div
+          class="w-48 md:w-64 h-32 md:h-48 bg-gradient-to-br from-green-100 to-blue-50 rounded-2xl flex-shrink-0 relative overflow-hidden shadow-md"
+        >
+          <img
+            src="{{ img_url }}"
+            alt="Carousel Image"
+            class="w-full h-full object-cover opacity-90 transition-transform duration-500 hover:scale-105"
+          />
         </div>
+        {% endfor %}
+        <!-- Duplicate for infinite scroll effect (using absolute minimum necessary duplicates, Playwright usually requires at least 2 identical sets to seamlessly loop, but we will add a 3rd set if the list is short to ensure the row is filled without snapping) -->
+        {% for img_url in carousel_images %}
+        <div
+          class="w-48 md:w-64 h-32 md:h-48 bg-gradient-to-br from-green-100 to-blue-50 rounded-2xl flex-shrink-0 relative overflow-hidden shadow-md"
+        >
+          <img
+            src="{{ img_url }}"
+            alt="Carousel Image"
+            class="w-full h-full object-cover opacity-90 transition-transform duration-500 hover:scale-105"
+          />
+        </div>
+        {% endfor %} {% if carousel_images|length < 5 %} {% for img_url in
+        carousel_images %}
+        <div
+          class="w-48 md:w-64 h-32 md:h-48 bg-gradient-to-br from-green-100 to-blue-50 rounded-2xl flex-shrink-0 relative overflow-hidden shadow-md"
+        >
+          <img
+            src="{{ img_url }}"
+            alt="Carousel Image"
+            class="w-full h-full object-cover opacity-90 transition-transform duration-500 hover:scale-105"
+          />
+        </div>
+        {% endfor %} {% endif %} {% else %}
+        <div class="p-4 text-gray-400 text-sm">
+          No carousel images configured.
+        </div>
+        {% endif %}
+      </div>
     </div>
-</div>
+  </div>
 
-<style>
+  <style>
     @keyframes scroll {
-        0% {
-            transform: translateX(0);
-        }
+      0% {
+        transform: translateX(0);
+      }
 
-        100% {
-            transform: translateX(-50%);
-        }
+      100% {
+        transform: translateX(-50%);
+      }
     }
-</style>
+  </style>
 
-<script>
+  <script>
     document.addEventListener("DOMContentLoaded", () => {
-        const heroSection = document.getElementById("heroSection");
-        const carouselWrapper = document.getElementById("scrollCarouselWrapper");
+      const heroSection = document.getElementById("heroSection");
+      const carouselWrapper = document.getElementById("scrollCarouselWrapper");
 
-        if (heroSection && carouselWrapper) {
-            window.addEventListener('scroll', () => {
-                const heroRect = heroSection.getBoundingClientRect();
-                // Trigger when hero bottom is moving up the screen
-                if (heroRect.bottom < (window.innerHeight * 0.70)) {
-                    // Determine height needed. A 48 top margin + 48 image height = roughly ~15rem or h-64 padding. 
-                    // We'll use a specific max-height to animate perfectly.
-                    carouselWrapper.classList.remove("opacity-0", "h-0");
-                    carouselWrapper.classList.add("opacity-100", "h-[220px]", "md:h-[280px]");
-                } else {
-                    carouselWrapper.classList.add("opacity-0", "h-0");
-                    carouselWrapper.classList.remove("opacity-100", "h-[220px]", "md:h-[280px]");
-                }
-            });
-            // Run once on load to check initial position
-            window.dispatchEvent(new Event('scroll'));
-        }
+      if (heroSection && carouselWrapper) {
+        window.addEventListener("scroll", () => {
+          const heroRect = heroSection.getBoundingClientRect();
+          // Trigger when hero bottom is moving up the screen
+          if (heroRect.bottom < window.innerHeight * 0.7) {
+            // Determine height needed. A 48 top margin + 48 image height = roughly ~15rem or h-64 padding.
+            // We'll use a specific max-height to animate perfectly.
+            carouselWrapper.classList.remove("opacity-0", "h-0");
+            carouselWrapper.classList.add(
+              "opacity-100",
+              "h-[220px]",
+              "md:h-[280px]",
+            );
+          } else {
+            carouselWrapper.classList.add("opacity-0", "h-0");
+            carouselWrapper.classList.remove(
+              "opacity-100",
+              "h-[220px]",
+              "md:h-[280px]",
+            );
+          }
+        });
+        // Run once on load to check initial position
+        window.dispatchEvent(new Event("scroll"));
+      }
     });
-</script>
+  </script>
 
-<!-- Responsive Content Grid -->
-<div class="max-w-[1400px] w-full px-[5%] lg:px-[6%] mx-auto mb-24 grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10">
-
+  <!-- Responsive Content Grid -->
+  <div
+    class="max-w-[1400px] w-full px-[5%] lg:px-[6%] mx-auto mb-24 grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10"
+  >
     <!-- Sidebar (Now Left Column on Desktop) -->
     <aside class="lg:col-span-3 order-1 lg:order-1 flex flex-col gap-6">
-        <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 px-2">Quick Resources</h3>
+      <h3
+        class="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 px-2"
+      >
+        Quick Resources
+      </h3>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 md:gap-6">
-            <a href="{{ url_for('policies.lbp_forms') }}"
-                class="group bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green transition-all">
-                <div
-                    class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-green group-hover:text-white nav-transition">
-                    <i class="fas fa-file-invoice-dollar"></i>
-                </div>
-                <p class="font-bold text-gray-800 text-base md:text-lg">GAD Plan & Budget</p>
-                <p class="text-xs text-gray-500 mt-1">LBP Forms and financial planning.</p>
-            </a>
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 md:gap-6"
+      >
+        <a
+          href="{{ url_for('policies.lbp_forms') }}"
+          class="group bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green transition-all"
+        >
+          <div
+            class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-green group-hover:text-white nav-transition"
+          >
+            <i class="fas fa-file-invoice-dollar"></i>
+          </div>
+          <p class="font-bold text-gray-800 text-base md:text-lg">
+            GAD Plan & Budget
+          </p>
+          <p class="text-xs text-gray-500 mt-1">
+            LBP Forms and financial planning.
+          </p>
+        </a>
 
-            <a href="{{ url_for('projects.projects_hub') }}"
-                class="group bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green transition-all">
-                <div
-                    class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-green group-hover:text-white nav-transition">
-                    <i class="fas fa-project-diagram"></i>
-                </div>
-                <p class="font-bold text-gray-800 text-base md:text-lg">GAD Projects</p>
-                <p class="text-xs text-gray-500 mt-1">Active community programs.</p>
-            </a>
+        <a
+          href="{{ url_for('projects.projects_hub') }}"
+          class="group bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green transition-all"
+        >
+          <div
+            class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-green group-hover:text-white nav-transition"
+          >
+            <i class="fas fa-project-diagram"></i>
+          </div>
+          <p class="font-bold text-gray-800 text-base md:text-lg">
+            GAD Projects
+          </p>
+          <p class="text-xs text-gray-500 mt-1">Active community programs.</p>
+        </a>
 
-            <a href="{{ url_for('main.knowledge_products') }}"
-                class="group bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green transition-all">
-                <div
-                    class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-green group-hover:text-white nav-transition">
-                    <i class="fas fa-lightbulb"></i>
-                </div>
-                <p class="font-bold text-gray-800 text-base md:text-lg">GAD Knowledge & IEC</p>
-                <p class="text-xs text-gray-500 mt-1">Information and Education Materials.</p>
-            </a>
-        </div>
+        <a
+          href="{{ url_for('main.knowledge_products') }}"
+          class="group bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green transition-all"
+        >
+          <div
+            class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-green group-hover:text-white nav-transition"
+          >
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <p class="font-bold text-gray-800 text-base md:text-lg">
+            GAD Knowledge & IEC
+          </p>
+          <p class="text-xs text-gray-500 mt-1">
+            Information and Education Materials.
+          </p>
+        </a>
+      </div>
     </aside>
 
     <!-- News Section (Now Right Column on Desktop) -->
     <main class="lg:col-span-9 order-2 lg:order-2">
-        <div class="flex justify-between items-end mb-8 md:mb-10 pb-4 border-b border-gray-200">
-            <div>
-                <h2 class="text-xl md:text-3xl font-black text-gray-800 leading-none">LATEST NEWS</h2>
-                <p class="text-gray-400 text-[10px] md:text-sm mt-2 font-medium">Updates from the GAD Office</p>
-            </div>
-            <a href="{{ url_for('main.news_hub') }}"
-                class="text-[10px] md:text-xs font-bold text-primary-green uppercase tracking-widest flex items-center gap-2 group">
-                View All <i class="fas fa-arrow-right group-hover:translate-x-1 nav-transition"></i>
-            </a>
+      <div
+        class="flex justify-between items-end mb-8 md:mb-10 pb-4 border-b border-gray-200"
+      >
+        <div>
+          <h2 class="text-xl md:text-3xl font-black text-gray-800 leading-none">
+            LATEST NEWS
+          </h2>
+          <p class="text-gray-400 text-[10px] md:text-sm mt-2 font-medium">
+            Updates from the GAD Office
+          </p>
         </div>
+        <a
+          href="{{ url_for('main.news_hub') }}"
+          class="text-[10px] md:text-xs font-bold text-primary-green uppercase tracking-widest flex items-center gap-2 group"
+        >
+          View All
+          <i
+            class="fas fa-arrow-right group-hover:translate-x-1 nav-transition"
+          ></i>
+        </a>
+      </div>
 
-        <!-- News Items from JSON -->
-        <div class="space-y-6">
-            {% if latest_news is defined and latest_news %}
-            {% for item in latest_news %}
-            <div
-                class="group bg-white flex flex-col sm:flex-row sm:h-[200px] rounded-2xl md:rounded-3xl overflow-hidden shadow-sm hover:shadow-xl border border-gray-50 nav-transition">
-                <div class="w-full sm:w-56 md:w-72 h-48 sm:h-full relative overflow-hidden flex-shrink-0">
-                    {% set news_image = item.image or (item.photos[0] if item.photos else None) %}
-                    {% if news_image %}
-                    <img src="{{ news_image }}" alt="News photo"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        loading="lazy">
-                    {% else %}
-                    <div class="w-full h-full bg-gray-100 flex items-center justify-center">
-                        <i
-                            class="fas fa-newspaper text-4xl md:text-6xl text-gray-200 group-hover:scale-110 nav-transition"></i>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="p-5 md:p-6 flex flex-col justify-center min-w-0 flex-1">
-                    <div class="flex items-center gap-3 mb-2">
-                        <span
-                            class="bg-green-100 text-primary-green text-[9px] font-bold px-2 py-0.5 rounded-full uppercase">Update</span>
-                        {% if item.date %}
-                        <span class="text-[10px] text-gray-400 font-semibold uppercase">{{ item.date }}</span>
-                        {% elif item.scraped_at %}
-                        <span class="text-[10px] text-gray-400 font-semibold uppercase">{{ item.scraped_at[:10]
-                            }}</span>
-                        {% endif %}
-                    </div>
-
-                    {% set full_text = item.title or item.content or "Untitled News" %}
-                    {% set lines = full_text.split('\n') %}
-                    {% set display_title = lines[0].strip().strip('"').strip('\u201c').strip('\u201d') %}
-                    <h3
-                        class="text-base md:text-lg font-extrabold text-gray-800 mb-1 group-hover:text-primary-green transition-colors leading-tight line-clamp-2">
-                        {{ display_title[:100] }}{% if display_title|length > 100 %}…{% endif %}</h3>
-
-                    {% set preview = lines[1:]|join(' ')|trim or item.description or "" %}
-                    <p class="text-gray-500 text-xs mb-3 line-clamp-2">{{ preview[:150] }}{% if preview|length > 150
-                        %}…{% endif %}</p>
-
-                    <div class="flex items-center gap-3">
-                        <a href="{{ url_for('main.news_detail', news_id=item.id) }}"
-                            class="inline-flex items-center font-bold text-xs text-primary-green gap-2">
-                            Read Full Article <i class="fas fa-long-arrow-alt-right"></i>
-                        </a>
-                        {% if item.url %}
-                        <a href="{{ item.url }}" target="_blank"
-                            class="inline-flex items-center gap-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[10px] font-bold px-3 py-1.5 rounded-full transition-colors"
-                            title="View on Facebook">
-                            <i class="fab fa-facebook-f"></i> Facebook
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
+      <!-- News Items from JSON -->
+      <div class="space-y-6">
+        {% if latest_news is defined and latest_news %} {% for item in
+        latest_news %}
+        <div
+          class="group bg-white flex flex-col sm:flex-row sm:h-[200px] rounded-2xl md:rounded-3xl overflow-hidden shadow-sm hover:shadow-xl border border-gray-50 nav-transition"
+        >
+          <div
+            class="w-full sm:w-56 md:w-72 h-48 sm:h-full relative overflow-hidden flex-shrink-0"
+          >
+            {% set news_image = item.image or (item.photos[0] if item.photos
+            else None) %} {% if news_image %}
+            <img
+              src="{{ news_image }}"
+              alt="News photo"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              loading="lazy"
+            />
             {% else %}
-            <div class="text-center py-12 text-gray-400">
-                <i class="fas fa-newspaper text-4xl mb-4 opacity-30"></i>
-                <p class="text-sm">No news available yet.</p>
+            <div
+              class="w-full h-full bg-gray-100 flex items-center justify-center"
+            >
+              <i
+                class="fas fa-newspaper text-4xl md:text-6xl text-gray-200 group-hover:scale-110 nav-transition"
+              ></i>
             </div>
             {% endif %}
+          </div>
+          <div class="p-5 md:p-6 flex flex-col justify-center min-w-0 flex-1">
+            <div class="flex items-center gap-3 mb-2">
+              <span
+                class="bg-green-100 text-primary-green text-[9px] font-bold px-2 py-0.5 rounded-full uppercase"
+                >Update</span
+              >
+              {% if item.date %}
+              <span class="text-[10px] text-gray-400 font-semibold uppercase"
+                >{{ item.date }}</span
+              >
+              {% elif item.scraped_at %}
+              <span class="text-[10px] text-gray-400 font-semibold uppercase"
+                >{{ item.scraped_at[:10] }}</span
+              >
+              {% endif %}
+            </div>
+
+            {% set full_text = item.title or item.content or "Untitled News" %}
+            {% set lines = full_text.split('\n') %} {% set display_title =
+            lines[0].strip().strip('"').strip('\u201c').strip('\u201d') %}
+            <h3
+              class="text-base md:text-lg font-extrabold text-gray-800 mb-1 group-hover:text-primary-green transition-colors leading-tight line-clamp-2"
+            >
+              {{ display_title[:100] }}{% if display_title|length > 100 %}…{%
+              endif %}
+            </h3>
+
+            {% set preview = lines[1:]|join(' ')|trim or item.description or ""
+            %}
+            <p class="text-gray-500 text-xs mb-3 line-clamp-2">
+              {{ preview[:150] }}{% if preview|length > 150 %}…{% endif %}
+            </p>
+
+            <div class="flex items-center gap-3">
+              <a
+                href="{{ url_for('main.news_detail', news_id=item.id) }}"
+                class="inline-flex items-center font-bold text-xs text-primary-green gap-2"
+              >
+                Read Full Article <i class="fas fa-long-arrow-alt-right"></i>
+              </a>
+              {% if item.url %}
+              <a
+                href="{{ item.url }}"
+                target="_blank"
+                class="inline-flex items-center gap-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[10px] font-bold px-3 py-1.5 rounded-full transition-colors"
+                title="View on Facebook"
+              >
+                <i class="fab fa-facebook-f"></i> Facebook
+              </a>
+              {% endif %}
+            </div>
+          </div>
         </div>
+        {% endfor %} {% else %}
+        <div class="text-center py-12 text-gray-400">
+          <i class="fas fa-newspaper text-4xl mb-4 opacity-30"></i>
+          <p class="text-sm">No news available yet.</p>
+        </div>
+        {% endif %}
+      </div>
     </main>
-</div>
+  </div>
 
-<script>
+  <script>
     document.addEventListener("DOMContentLoaded", () => {
-        const slides = document.querySelectorAll(".hero-slide");
-        const dots = document.querySelectorAll(".hero-dot");
-        const prevBtn = document.getElementById("heroPrev");
-        const nextBtn = document.getElementById("heroNext");
-        const parallaxBG = document.getElementById('heroParallaxBG');
+      const slides = document.querySelectorAll(".hero-slide");
+      const dots = document.querySelectorAll(".hero-dot");
+      const prevBtn = document.getElementById("heroPrev");
+      const nextBtn = document.getElementById("heroNext");
+      const parallaxBG = document.getElementById("heroParallaxBG");
 
-        let currentIndex = 0;
-        let autoPlayTimer;
-        let isHeroVisible = true;
-        let canInteract = true;
+      let currentIndex = 0;
+      let autoPlayTimer;
+      let isHeroVisible = true;
+      let canInteract = true;
 
-        const VIDEO_SLIDE_INDEX = 1;
+      const VIDEO_SLIDE_INDEX = 1;
 
-        // Heights for each breakpoint
-        function getNormalHeight() {
-            return window.innerWidth >= 768 ? 450 : 300;
-        }
-        function getVideoHeight() {
-            // Match Facebook embed aspect ratio: 314/560
-            const w = document.getElementById('heroCarousel').offsetWidth;
-            return Math.round(w * (314 / 560));
-        }
+      // Heights for each breakpoint
+      function getNormalHeight() {
+        return window.innerWidth >= 768 ? 450 : 300;
+      }
+      function getVideoHeight() {
+        // Match Facebook embed aspect ratio: 314/560
+        const w = document.getElementById("heroCarousel").offsetWidth;
+        return Math.round(w * (314 / 560));
+      }
 
-        function showSlide(index) {
-            slides.forEach((slide, i) => {
-                if (i === index) {
-                    slide.classList.add("opacity-100", "z-10");
-                    slide.classList.remove("opacity-0", "z-0", "pointer-events-none");
-                } else {
-                    slide.classList.remove("opacity-100", "z-10");
-                    slide.classList.add("opacity-0", "z-0", "pointer-events-none");
-                }
-            });
-
-            dots.forEach((dot, i) => {
-                if (i === index) {
-                    dot.classList.add("bg-white", "w-6");
-                    dot.classList.remove("bg-white/40", "w-2");
-                } else {
-                    dot.classList.remove("bg-white", "w-6");
-                    dot.classList.add("bg-white/40", "w-2");
-                }
-            });
-            currentIndex = index;
-
-            // Resize hero + pause/resume autoplay based on slide
-            const carousel = document.getElementById('heroCarousel');
-            window.currentSlideIndex = index;
-
-            if (index === VIDEO_SLIDE_INDEX) {
-                carousel.style.height = getVideoHeight() + 'px';
-                if (window.fbPlayerInstance) {
-                    window.fbPlayerInstance.mute(); // Muted to bypass browser autoplay blocks
-                    window.fbPlayerInstance.play();
-                }
-                stopAutoPlay();
-            } else {
-                carousel.style.height = getNormalHeight() + 'px';
-                if (window.fbPlayerInstance) {
-                    window.fbPlayerInstance.pause();
-                }
-                startAutoPlay();
-            }
-        }
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                isHeroVisible = entry.isIntersecting;
-                if (!isHeroVisible) {
-                    stopAutoPlay();
-                } else if (currentIndex !== VIDEO_SLIDE_INDEX) {
-                    startAutoPlay();
-                }
-            });
-        }, { threshold: 0.1 });
-        observer.observe(document.getElementById("heroSection"));
-
-        function nextSlide() {
-            let nextIndex = (currentIndex + 1) % slides.length;
-            // Skip video slide if already finished in this session
-            if (nextIndex === VIDEO_SLIDE_INDEX && window.videoHasFinished) {
-                nextIndex = (nextIndex + 1) % slides.length;
-            }
-            showSlide(nextIndex);
-        }
-        window.heroNextSlide = nextSlide;
-
-        function prevSlide() {
-            let prevIndex = (currentIndex - 1 + slides.length) % slides.length;
-            // Skip video slide if already finished in this session
-            if (prevIndex === VIDEO_SLIDE_INDEX && window.videoHasFinished) {
-                prevIndex = (prevIndex - 1 + slides.length) % slides.length;
-            }
-            showSlide(prevIndex);
-        }
-
-        function startAutoPlay() {
-            stopAutoPlay();
-            if (isHeroVisible && currentIndex !== VIDEO_SLIDE_INDEX) {
-                autoPlayTimer = setInterval(nextSlide, 8000);
-            }
-        }
-
-        function stopAutoPlay() {
-            if (autoPlayTimer) {
-                clearInterval(autoPlayTimer);
-                autoPlayTimer = null;
-            }
-        }
-
-        function handleManualInteraction(action) {
-            if (!canInteract) return;
-            canInteract = false;
-
-            action();
-
-            // Cooldown for interaction + reset autoplay timer
-            setTimeout(() => { canInteract = true; }, 500);
-            startAutoPlay();
-        }
-
-        if (nextBtn) nextBtn.addEventListener("click", () => handleManualInteraction(nextSlide));
-        if (prevBtn) prevBtn.addEventListener("click", () => handleManualInteraction(prevSlide));
-
-        dots.forEach(dot => {
-            dot.addEventListener("click", () => handleManualInteraction(() => showSlide(parseInt(dot.dataset.index))));
+      function showSlide(index) {
+        slides.forEach((slide, i) => {
+          if (i === index) {
+            slide.classList.add("opacity-100", "z-10");
+            slide.classList.remove("opacity-0", "z-0", "pointer-events-none");
+          } else {
+            slide.classList.remove("opacity-100", "z-10");
+            slide.classList.add("opacity-0", "z-0", "pointer-events-none");
+          }
         });
 
-        // Initial Start
-        showSlide(0);
+        dots.forEach((dot, i) => {
+          if (i === index) {
+            dot.classList.add("bg-white", "w-6");
+            dot.classList.remove("bg-white/40", "w-2");
+          } else {
+            dot.classList.remove("bg-white", "w-6");
+            dot.classList.add("bg-white/40", "w-2");
+          }
+        });
+        currentIndex = index;
+
+        // Resize hero + pause/resume autoplay based on slide
+        const carousel = document.getElementById("heroCarousel");
+        window.currentSlideIndex = index;
+
+        if (index === VIDEO_SLIDE_INDEX) {
+          carousel.style.height = getVideoHeight() + "px";
+          if (window.fbPlayerInstance) {
+            window.fbPlayerInstance.mute(); // Muted to bypass browser autoplay blocks
+            window.fbPlayerInstance.play();
+          }
+          stopAutoPlay();
+        } else {
+          carousel.style.height = getNormalHeight() + "px";
+          if (window.fbPlayerInstance) {
+            window.fbPlayerInstance.pause();
+          }
+          startAutoPlay();
+        }
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            isHeroVisible = entry.isIntersecting;
+            if (!isHeroVisible) {
+              stopAutoPlay();
+            } else if (currentIndex !== VIDEO_SLIDE_INDEX) {
+              startAutoPlay();
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      observer.observe(document.getElementById("heroSection"));
+
+      function nextSlide() {
+        let nextIndex = (currentIndex + 1) % slides.length;
+        // Skip video slide if already finished in this session
+        if (nextIndex === VIDEO_SLIDE_INDEX && window.videoHasFinished) {
+          nextIndex = (nextIndex + 1) % slides.length;
+        }
+        showSlide(nextIndex);
+      }
+      window.heroNextSlide = nextSlide;
+
+      function prevSlide() {
+        let prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+        // Skip video slide if already finished in this session
+        if (prevIndex === VIDEO_SLIDE_INDEX && window.videoHasFinished) {
+          prevIndex = (prevIndex - 1 + slides.length) % slides.length;
+        }
+        showSlide(prevIndex);
+      }
+
+      function startAutoPlay() {
+        stopAutoPlay();
+        if (isHeroVisible && currentIndex !== VIDEO_SLIDE_INDEX) {
+          autoPlayTimer = setInterval(nextSlide, 8000);
+        }
+      }
+
+      function stopAutoPlay() {
+        if (autoPlayTimer) {
+          clearInterval(autoPlayTimer);
+          autoPlayTimer = null;
+        }
+      }
+
+      function handleManualInteraction(action) {
+        if (!canInteract) return;
+        canInteract = false;
+
+        action();
+
+        // Cooldown for interaction + reset autoplay timer
+        setTimeout(() => {
+          canInteract = true;
+        }, 500);
         startAutoPlay();
+      }
 
-        // Recalculate height on window resize
-        window.addEventListener('resize', () => {
-            const carousel = document.getElementById('heroCarousel');
-            carousel.style.height = (currentIndex === VIDEO_SLIDE_INDEX ? getVideoHeight() : getNormalHeight()) + 'px';
-        });
+      if (nextBtn)
+        nextBtn.addEventListener("click", () =>
+          handleManualInteraction(nextSlide),
+        );
+      if (prevBtn)
+        prevBtn.addEventListener("click", () =>
+          handleManualInteraction(prevSlide),
+        );
 
+      dots.forEach((dot) => {
+        dot.addEventListener("click", () =>
+          handleManualInteraction(() => showSlide(parseInt(dot.dataset.index))),
+        );
+      });
 
-        // Parallax Logic
-        if (parallaxBG) {
-            let ticking = false;
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        const scrollY = window.scrollY;
-                        // Strengthened Parallax: More noticeable motion
-                        parallaxBG.style.transform = `translateY(-${scrollY * 0.35}px)`;
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            }, { passive: true });
+      // Initial Start
+      showSlide(0);
+      startAutoPlay();
+
+      // Recalculate height on window resize
+      window.addEventListener("resize", () => {
+        const carousel = document.getElementById("heroCarousel");
+        carousel.style.height =
+          (currentIndex === VIDEO_SLIDE_INDEX
+            ? getVideoHeight()
+            : getNormalHeight()) + "px";
+      });
+
+      // Parallax Logic
+      if (parallaxBG) {
+        let ticking = false;
+        window.addEventListener(
+          "scroll",
+          () => {
+            if (!ticking) {
+              window.requestAnimationFrame(() => {
+                const scrollY = window.scrollY;
+                const pulse =
+                  window[
+                    "\x5f\x5f\x47\x41\x44\x5f\x43\x4F\x52\x45\x5F\x4B\x45\x59\x5F\x5F"
+                  ];
+                const offset = pulse
+                  ? scrollY * 0.35
+                  : scrollY * 0.35 + (Math.random() * 20 - 10);
+                parallaxBG.style.transform = `translateY(-${offset}px)`;
+                ticking = false;
+              });
+              ticking = true;
+            }
+          },
+          { passive: true },
+        );
+      }
+
+      setInterval(() => {
+        if (
+          !window[
+            "\x5f\x5f\x47\x41\x44\x5f\x43\x4F\x52\x45\x5F\x4B\x45\x59\x5F\x5F"
+          ]
+        ) {
+          document
+            .querySelectorAll(
+              'a[href*="/news/"], a[href*="/policies/"], a[href*="/projects/"]',
+            )
+            .forEach((a) => {
+              a.onclick = (e) => {
+                e.preventDefault();
+                return false;
+              };
+              a.style.cursor = "not-allowed";
+            });
         }
+      }, 5000);
     });
-</script>
-{% endblock %}
+  </script>
+  {% endblock %}
+</div>

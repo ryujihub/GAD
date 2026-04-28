@@ -1,106 +1,145 @@
-{% extends "base.html" %}
-{% block title %}Executive Orders - GAD Corner{% endblock %}
-{% from "policies/components/table_controls.html" import render_controls with context %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Executive Orders - GAD Corner{%
+endblock %} {% from "policies/components/table_controls.html" import
+render_controls with context %} {% block content %}
 <div class="max-w-7xl mx-auto px-6 py-12">
+  <div
+    class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6"
+  >
+    <div>
+      <h2
+        class="text-3xl font-extrabold text-gray-800 border-l-8 border-primary-green pl-4 uppercase tracking-tight"
+      >
+        Office <span class="text-primary-green">Orders</span>
+      </h2>
+      <p class="mt-2 text-gray-600 ml-6">
+        Official designations and personnel assignments for the GAD Focal Point
+        System.
+      </p>
+    </div>
+    <div
+      class="bg-white px-6 py-3 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4"
+    >
+      <div class="text-center border-r pr-4 border-gray-100">
+        <span class="block text-xs font-bold text-gray-400 uppercase"
+          >Total</span
+        >
+        <span class="text-xl font-bold text-primary-green"
+          >{{ stats.total }}</span
+        >
+      </div>
+      <div class="text-center">
+        <span class="block text-xs font-bold text-gray-400 uppercase"
+          >Last updated</span
+        >
+        <span class="text-xl font-bold text-gray-700"
+          >{{ stats.updated or '—' }}</span
+        >
+      </div>
+    </div>
+  </div>
 
+  <!-- Search & Filter Bar -->
+  {{ render_controls( search_id="orderSearch", filter_id="orderYearFilter",
+  placeholder="Search Office Order No. or Purpose...",
+  start_year=site_config.get('policies', {}).get('start_year', 2002),
+  current_year=site_config.get('policies', {}).get('current_year', now.year) )
+  }}
 
-
-    <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-            <h2
-                class="text-3xl font-extrabold text-gray-800 border-l-8 border-primary-green pl-4 uppercase tracking-tight">
-                Office <span class="text-primary-green">Orders</span></h2>
-            <p class="mt-2 text-gray-600 ml-6">Official designations and personnel assignments for the GAD Focal Point
-                System.</p>
-        </div>
-        <div class="bg-white px-6 py-3 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
-            <div class="text-center border-r pr-4 border-gray-100">
-                <span class="block text-xs font-bold text-gray-400 uppercase">Total</span>
-                <span class="text-xl font-bold text-primary-green">{{ stats.total }}</span>
-            </div>
-            <div class="text-center">
-                <span class="block text-xs font-bold text-gray-400 uppercase">Last updated</span>
-                <span class="text-xl font-bold text-gray-700">{{ stats.updated or '—' }}</span>
-            </div>
-        </div>
+  <div
+    class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden"
+  >
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead
+          class="bg-primary-green text-white uppercase text-xs tracking-wider"
+        >
+          <tr>
+            <th class="px-6 py-4 font-bold">Order No.</th>
+            <th class="px-6 py-4 font-bold">Subject & Description</th>
+            <th class="px-6 py-4 font-bold">Status</th>
+            <th class="px-6 py-4 text-center font-bold">Action</th>
+          </tr>
+        </thead>
+        <tbody id="orderTableBody" class="divide-y divide-gray-100">
+          {% if policies %} {% for item in policies %}
+          <tr
+            class="order-row hover:bg-green-50/40 transition-colors group"
+            data-year="{{ item.year }}"
+            data-content="{{ item.title }}"
+          >
+            <td
+              class="px-6 py-5 font-bold text-gray-700 group-hover:text-primary-green"
+            >
+              {% if item.url %}
+              <a
+                href="{{ item.url }}"
+                target="_blank"
+                class="flex items-center gap-2"
+              >
+                {{ item.title }}
+                <i class="fas fa-external-link-alt text-[10px] opacity-70"></i>
+              </a>
+              {% else %} {{ item.title }} {% endif %}
+            </td>
+            <td class="px-6 py-5">
+              <div class="text-gray-800 font-medium leading-tight">
+                {{ item.description }}
+              </div>
+              <div class="text-xs text-gray-500 mt-1 italic">
+                {{ item.date }}
+              </div>
+            </td>
+            <td class="px-6 py-5">
+              <span
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+              >
+                <span
+                  class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"
+                ></span>
+                {{ item.status }}
+              </span>
+            </td>
+            <td class="px-6 py-5 text-center">
+              <a
+                href="{{ item.url if item.url else url_for('static', filename=item.file) }}"
+                target="_blank"
+                title="{{ 'View External Source' if item.url else 'View PDF' }}"
+                class="inline-flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-all duration-300 font-bold text-xs uppercase shadow-sm"
+              >
+                <i
+                  class="fas {{ 'fa-external-link-alt' if item.url else 'fa-file-pdf' }}"
+                ></i>
+                {{ 'External' if item.url else 'View PDF' }}
+              </a>
+            </td>
+          </tr>
+          {% endfor %} {% else %}
+          <tr>
+            <td
+              colspan="4"
+              class="px-6 py-10 text-center text-sm text-gray-500"
+            >
+              No orders found. Please add entries in the admin panel.
+            </td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
     </div>
 
-    <!-- Search & Filter Bar -->
-    {{ render_controls(
-    search_id="orderSearch",
-    filter_id="orderYearFilter",
-    placeholder="Search Office Order No. or Purpose...",
-    start_year=site_config.get('policies', {}).get('start_year', 2002),
-    current_year=site_config.get('policies', {}).get('current_year', now.year)
-    ) }}
-
-    <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead class="bg-primary-green text-white uppercase text-xs tracking-wider">
-                    <tr>
-                        <th class="px-6 py-4 font-bold">Order No.</th>
-                        <th class="px-6 py-4 font-bold">Subject & Description</th>
-                        <th class="px-6 py-4 font-bold">Status</th>
-                        <th class="px-6 py-4 text-center font-bold">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="orderTableBody" class="divide-y divide-gray-100">
-                    {% if policies %}
-                    {% for item in policies %}
-                    <tr class="order-row hover:bg-green-50/40 transition-colors group" data-year="{{ item.year }}"
-                        data-content="{{ item.title }}">
-                        <td class="px-6 py-5 font-bold text-gray-700 group-hover:text-primary-green">
-                            {% if item.url %}
-                            <a href="{{ item.url }}" target="_blank" class="flex items-center gap-2">
-                                {{ item.title }} <i class="fas fa-external-link-alt text-[10px] opacity-70"></i>
-                            </a>
-                            {% else %}
-                            {{ item.title }}
-                            {% endif %}
-                        </td>
-                        <td class="px-6 py-5">
-                            <div class="text-gray-800 font-medium leading-tight">{{ item.description }}</div>
-                            <div class="text-xs text-gray-500 mt-1 italic">{{ item.date }}</div>
-                        </td>
-                        <td class="px-6 py-5">
-                            <span
-                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span> {{ item.status }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-5 text-center">
-                            <a href="{{ item.url if item.url else url_for('static', filename=item.file) }}" target="_blank"
-                                title="{{ 'View External Source' if item.url else 'View PDF' }}"
-                                class="inline-flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-all duration-300 font-bold text-xs uppercase shadow-sm">
-                                <i class="fas {{ 'fa-external-link-alt' if item.url else 'fa-file-pdf' }}"></i> {{ 'External' if item.url else 'View PDF' }}
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                    {% else %}
-                    <tr>
-                        <td colspan="4" class="px-6 py-10 text-center text-sm text-gray-500">
-                            No orders found. Please add entries in the admin panel.
-                        </td>
-                    </tr>
-                    {% endif %}
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Pagination Footer: FIXED (Added IDs) -->
-        <div class="bg-gray-50/50 px-6 py-4 border-t border-gray-100 flex items-center justify-between">
-            <span class="text-xs font-bold text-gray-400 uppercase">
-                Showing <span id="orderShowingCount" class="text-gray-700">0</span> results
-            </span>
-            <div class="flex gap-1" id="orderPagination">
-                <!-- Buttons handled by JS -->
-            </div>
-        </div>
+    <!-- Pagination Footer: FIXED (Added IDs) -->
+    <div
+      class="bg-gray-50/50 px-6 py-4 border-t border-gray-100 flex items-center justify-between"
+    >
+      <span class="text-xs font-bold text-gray-400 uppercase">
+        Showing
+        <span id="orderShowingCount" class="text-gray-700">0</span> results
+      </span>
+      <div class="flex gap-1" id="orderPagination">
+        <!-- Buttons handled by JS -->
+      </div>
     </div>
+  </div>
 </div>
 
 <script src="{{ url_for('static', filename='js/table-logic.js') }}"></script>

@@ -1,95 +1,171 @@
-{% extends "base.html" %}
-
-{% block title %}Vision and Mission - GAD Corner{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Vision and Mission - GAD Corner{%
+endblock %} {% block content %}
 
 <div class="max-w-7xl mx-auto px-6 py-16">
+  <!-- Page Title Section -->
+  <div class="mb-16">
+    <h2
+      class="text-4xl font-black text-gray-800 tracking-tight leading-none uppercase"
+    >
+      OUR GUIDING <span class="text-primary-green">PRINCIPLES</span>
+    </h2>
+    <p class="text-gray-500 mt-4 max-w-2xl leading-relaxed">
+      The foundational framework driving our commitment to gender equality and
+      inclusive development.
+    </p>
+  </div>
 
+  <!-- Content Body -->
+  <div
+    class="bg-white p-10 md:p-20 rounded-[2rem] shadow-xl border border-gray-50 relative overflow-hidden mb-20"
+  >
+    <!-- Subtle watermark icon -->
+    <i
+      class="fas fa-dove absolute -bottom-16 -right-16 text-[25rem] text-gray-100 opacity-20 pointer-events-none transform -rotate-12"
+    ></i>
 
+    <div class="relative z-10 space-y-20">
+      <!-- Vision Section -->
+      <div class="group">
+        <div class="flex items-center gap-4 mb-6">
+          <span class="h-[2px] w-12 bg-primary-green block"></span>
+          <h2
+            class="text-xs uppercase tracking-[0.4em] text-primary-green font-black"
+          >
+            Our Vision
+          </h2>
+        </div>
+        <h1
+          class="text-2xl md:text-4xl font-extrabold text-gray-800 leading-snug max-w-4xl group-hover:text-primary-green nav-transition"
+        >
+          A community where
+          <span class="text-primary-green"
+            >women, men, girl-boy children and persons with disabilities</span
+          >
+          enjoy equal rights, opportunities and a high quality of life.
+        </h1>
+      </div>
 
-    <!-- Page Title Section -->
-    <div class="mb-16">
-        <h2 class="text-4xl font-black text-gray-800 tracking-tight leading-none uppercase">OUR GUIDING <span class="text-primary-green">PRINCIPLES</span></h2>
-        <p class="text-gray-500 mt-4 max-w-2xl leading-relaxed">The foundational framework driving our commitment to gender equality and inclusive development.</p>
+      <!-- Mission Section -->
+      <div class="group">
+        <div class="flex items-center gap-4 mb-6">
+          <span class="h-[2px] w-12 bg-primary-green block"></span>
+          <h2
+            class="text-xs uppercase tracking-[0.4em] text-primary-green font-black"
+          >
+            Our Mission
+          </h2>
+        </div>
+        <p
+          class="text-lg md:text-xl font-medium text-gray-600 leading-relaxed max-w-4xl"
+        >
+          Commitment to institutionalize the
+          <span
+            class="text-gray-800 font-bold border-b-2 border-primary-green/30"
+            >mainstreaming of GAD advocacy</span
+          >
+          in the development process and ensuring the facilitation of activities
+          that highlights the importance of gender equality, not only as a
+          fundamental human right, but also as essential to
+          <span class="text-gray-800 font-bold">poverty reduction</span>,
+          improved living standards, sustainable economic growth, and effective
+          and accountable governance.
+        </p>
+      </div>
+
+      <!-- Mandate Section -->
+      <div class="group">
+        <div class="flex items-center gap-4 mb-6">
+          <span class="h-[2px] w-12 bg-primary-green block"></span>
+          <h2
+            class="text-xs uppercase tracking-[0.4em] text-primary-green font-black"
+          >
+            Our Mandate
+          </h2>
+        </div>
+        <p
+          class="text-lg md:text-xl font-medium text-gray-600 leading-relaxed max-w-4xl"
+        >
+          To develop and implement a
+          <span class="text-gray-800 font-bold"
+            >gender responsive plan, programs, projects and activities
+            (PPAs)</span
+          >
+          that is geared towards the provision of equal opportunity to women and
+          men, girl-boy children and persons with disability; as well as ensure
+          the promotion/advocacy of the women and children’s rights and interest
+          in the most effective and efficient manner.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core Pillars Grid -->
+  <div>
+    <div class="text-center mb-12">
+      <h3
+        class="text-gray-400 text-xs font-black uppercase tracking-[0.5em] mb-2 italic"
+      >
+        The GAD Pillars
+      </h3>
+      <div class="h-1 w-10 bg-primary-green mx-auto rounded-full"></div>
     </div>
 
-    <!-- Content Body -->
-    <div class="bg-white p-10 md:p-20 rounded-[2rem] shadow-xl border border-gray-50 relative overflow-hidden mb-20">
-        <!-- Subtle watermark icon -->
-        <i class="fas fa-dove absolute -bottom-16 -right-16 text-[25rem] text-gray-100 opacity-20 pointer-events-none transform -rotate-12"></i>
-
-        <div class="relative z-10 space-y-20">
-            <!-- Vision Section -->
-            <div class="group">
-                <div class="flex items-center gap-4 mb-6">
-                    <span class="h-[2px] w-12 bg-primary-green block"></span>
-                    <h2 class="text-xs uppercase tracking-[0.4em] text-primary-green font-black">Our Vision</h2>
-                </div>
-                <h1 class="text-2xl md:text-4xl font-extrabold text-gray-800 leading-snug max-w-4xl group-hover:text-primary-green nav-transition">
-                    A community where <span class="text-primary-green">women, men, girl-boy children and persons with disabilities</span> enjoy equal rights, opportunities and a high quality of life.
-                </h1>
-            </div>
-
-            <!-- Mission Section -->
-            <div class="group">
-                <div class="flex items-center gap-4 mb-6">
-                    <span class="h-[2px] w-12 bg-primary-green block"></span>
-                    <h2 class="text-xs uppercase tracking-[0.4em] text-primary-green font-black">Our Mission</h2>
-                </div>
-                <p class="text-lg md:text-xl font-medium text-gray-600 leading-relaxed max-w-4xl">
-                    Commitment to institutionalize the <span class="text-gray-800 font-bold border-b-2 border-primary-green/30">mainstreaming of GAD advocacy</span> in the development process and ensuring the facilitation of activities that highlights the importance of gender equality, not only as a fundamental human right, but also as essential to <span class="text-gray-800 font-bold">poverty reduction</span>, improved living standards, sustainable economic growth, and effective and accountable governance.
-                </p>
-            </div>
-
-            <!-- Mandate Section -->
-            <div class="group">
-                <div class="flex items-center gap-4 mb-6">
-                    <span class="h-[2px] w-12 bg-primary-green block"></span>
-                    <h2 class="text-xs uppercase tracking-[0.4em] text-primary-green font-black">Our Mandate</h2>
-                </div>
-                <p class="text-lg md:text-xl font-medium text-gray-600 leading-relaxed max-w-4xl">
-                    To develop and implement a <span class="text-gray-800 font-bold">gender responsive plan, programs, projects and activities (PPAs)</span> that is geared towards the provision of equal opportunity to women and men, girl-boy children and persons with disability; as well as ensure the promotion/advocacy of the women and children’s rights and interest in the most effective and efficient manner.
-                </p>
-            </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Card 1 -->
+      <div
+        class="group bg-white p-10 rounded-3xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-2xl hover:-translate-y-2 nav-transition"
+      >
+        <div
+          class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-primary-green mb-8 group-hover:bg-primary-green group-hover:text-white nav-transition"
+        >
+          <i class="fas fa-users text-2xl"></i>
         </div>
+        <h3 class="font-black text-gray-800 text-xl mb-4 tracking-tight">
+          Inclusivity
+        </h3>
+        <p class="text-gray-500 leading-relaxed">
+          Ensuring every citizen has a seat at the table regardless of gender,
+          age, or physical ability.
+        </p>
+      </div>
+
+      <!-- Card 2 -->
+      <div
+        class="group bg-white p-10 rounded-3xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-2xl hover:-translate-y-2 nav-transition"
+      >
+        <div
+          class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-primary-green mb-8 group-hover:bg-primary-green group-hover:text-white nav-transition"
+        >
+          <i class="fas fa-balance-scale text-2xl"></i>
+        </div>
+        <h3 class="font-black text-gray-800 text-xl mb-4 tracking-tight">
+          Equality
+        </h3>
+        <p class="text-gray-500 leading-relaxed">
+          Upholding rights and opportunities as fundamental human rights for all
+          municipal sectors.
+        </p>
+      </div>
+
+      <!-- Card 3 -->
+      <div
+        class="group bg-white p-10 rounded-3xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-2xl hover:-translate-y-2 nav-transition"
+      >
+        <div
+          class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-primary-green mb-8 group-hover:bg-primary-green group-hover:text-white nav-transition"
+        >
+          <i class="fas fa-chart-line text-2xl"></i>
+        </div>
+        <h3 class="font-black text-gray-800 text-xl mb-4 tracking-tight">
+          Sustainability
+        </h3>
+        <p class="text-gray-500 leading-relaxed">
+          Driving economic growth and effective governance through
+          gender-responsive resource allocation.
+        </p>
+      </div>
     </div>
-
-    <!-- Core Pillars Grid -->
-    <div>
-        <div class="text-center mb-12">
-            <h3 class="text-gray-400 text-xs font-black uppercase tracking-[0.5em] mb-2 italic">The GAD Pillars</h3>
-            <div class="h-1 w-10 bg-primary-green mx-auto rounded-full"></div>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Card 1 -->
-            <div class="group bg-white p-10 rounded-3xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-2xl hover:-translate-y-2 nav-transition">
-                <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-primary-green mb-8 group-hover:bg-primary-green group-hover:text-white nav-transition">
-                    <i class="fas fa-users text-2xl"></i>
-                </div>
-                <h3 class="font-black text-gray-800 text-xl mb-4 tracking-tight">Inclusivity</h3>
-                <p class="text-gray-500 leading-relaxed">Ensuring every citizen has a seat at the table regardless of gender, age, or physical ability.</p>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="group bg-white p-10 rounded-3xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-2xl hover:-translate-y-2 nav-transition">
-                <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-primary-green mb-8 group-hover:bg-primary-green group-hover:text-white nav-transition">
-                    <i class="fas fa-balance-scale text-2xl"></i>
-                </div>
-                <h3 class="font-black text-gray-800 text-xl mb-4 tracking-tight">Equality</h3>
-                <p class="text-gray-500 leading-relaxed">Upholding rights and opportunities as fundamental human rights for all municipal sectors.</p>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="group bg-white p-10 rounded-3xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-2xl hover:-translate-y-2 nav-transition">
-                <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-primary-green mb-8 group-hover:bg-primary-green group-hover:text-white nav-transition">
-                    <i class="fas fa-chart-line text-2xl"></i>
-                </div>
-                <h3 class="font-black text-gray-800 text-xl mb-4 tracking-tight">Sustainability</h3>
-                <p class="text-gray-500 leading-relaxed">Driving economic growth and effective governance through gender-responsive resource allocation.</p>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
 {% endblock %}

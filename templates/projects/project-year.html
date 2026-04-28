@@ -1,133 +1,182 @@
-{% extends "base.html" %}
-
-{% block title %}GAD Projects {{ year }} - GAD Corner{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}GAD Projects {{ year }} - GAD
+Corner{% endblock %} {% block content %}
 <div class="max-w-7xl mx-auto px-6 py-12">
-
-    <!-- Page Header -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-        <div>
-            <h2 class="text-2xl font-bold text-gray-800 border-l-8 border-primary-green pl-4 uppercase tracking-tight">
-                GAD Projects: <span class="text-primary-green">{{ year }}</span>
-            </h2>
-            <p class="text-gray-500 mt-2 ml-6 text-sm italic">Gender-responsive programs and initiatives implemented in
-                the year {{ year }}.</p>
-        </div>
-        <a href="{{ url_for('projects.projects_archive') }}"
-            class="inline-flex items-center px-5 py-2 text-primary-green border border-primary-green rounded-lg text-sm font-bold hover:bg-primary-green hover:text-white transition-all nav-transition">
-            View All Archives <i class="fas fa-archive ml-2 text-xs"></i>
-        </a>
+  <!-- Page Header -->
+  <div
+    class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4"
+  >
+    <div>
+      <h2
+        class="text-2xl font-bold text-gray-800 border-l-8 border-primary-green pl-4 uppercase tracking-tight"
+      >
+        GAD Projects: <span class="text-primary-green">{{ year }}</span>
+      </h2>
+      <p class="text-gray-500 mt-2 ml-6 text-sm italic">
+        Gender-responsive programs and initiatives implemented in the year {{
+        year }}.
+      </p>
     </div>
+    <a
+      href="{{ url_for('projects.projects_archive') }}"
+      class="inline-flex items-center px-5 py-2 text-primary-green border border-primary-green rounded-lg text-sm font-bold hover:bg-primary-green hover:text-white transition-all nav-transition"
+    >
+      View All Archives <i class="fas fa-archive ml-2 text-xs"></i>
+    </a>
+  </div>
 
-    <!-- Projects Grid -->
-    {% if projects %}
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {% for p in projects %}
-        <div
-            class="group bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300">
-            <!-- Image -->
-            {% if p.image %}
-            <div class="h-56 overflow-hidden">
-                <img src="{{ url_for('static', filename=p.image) }}" alt="{{ p.title }}"
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-            </div>
-            {% else %}
-            <div
-                class="h-56 bg-gray-100 flex flex-col items-center justify-center text-gray-400 font-bold relative overflow-hidden">
-                <i class="fas fa-image text-4xl mb-2 opacity-20"></i>
-                <span class="text-xs uppercase tracking-widest opacity-30">No Image</span>
-                <div
-                    class="absolute top-4 right-4 bg-primary-green text-white text-[10px] font-bold px-3 py-1 rounded-full">
-                    {{ p.year }}
-                </div>
-            </div>
-            {% endif %}
-
-            <div class="p-8">
-                <div class="flex items-center gap-2 mb-3">
-                    {% if p.category %}
-                    <span class="bg-green-50 text-primary-green text-[10px] font-bold px-2 py-1 rounded uppercase">{{
-                        p.category }}</span>
-                    {% endif %}
-                </div>
-                <h3 class="text-xl font-bold text-gray-800 group-hover:text-primary-green transition-colors mb-3">{{
-                    p.title }}</h3>
-                <div class="project-description relative">
-                    <p id="desc-{{ p.id }}" class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-4 transition-all duration-300">
-                        {{ p.description }}
-                    </p>
-                    {% if p.description|length > 200 %}
-                    <button type="button" onclick="toggleDescription('{{ p.id }}')" id="btn-{{ p.id }}"
-                        class="text-primary-green font-bold text-[10px] uppercase tracking-widest hover:underline mb-6 flex items-center gap-1.5">
-                        <span id="text-{{ p.id }}">See More</span>
-                        <i id="icon-{{ p.id }}" class="fas fa-chevron-down text-[8px] transition-transform duration-300"></i>
-                    </button>
-                    {% endif %}
-                </div>
-                <div class="flex items-center justify-between pt-6 border-t border-gray-50">
-                    <a href="{{ url_for('projects.project_detail', project_id=p.id) }}"
-                        class="text-primary-green font-bold text-sm flex items-center gap-2 hover:gap-3 transition-all">
-                        Read More <i class="fas fa-arrow-right text-xs"></i>
-                    </a>
-                    {% if p.status == 'Completed' %}
-                    <span class="text-[10px] text-gray-400 uppercase font-medium">Completed</span>
-                    {% elif p.status == 'Ongoing' %}
-                    <span class="text-[10px] text-blue-500 uppercase font-medium">Ongoing</span>
-                    {% else %}
-                    <span class="text-[10px] text-amber-500 uppercase font-medium">{{ p.status }}</span>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <!-- Empty State -->
+  <!-- Projects Grid -->
+  {% if projects %}
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    {% for p in projects %}
     <div
-        class="bg-white rounded-2xl border border-dashed border-gray-200 py-24 flex flex-col items-center justify-center text-center px-8">
-        <div class="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center mb-5">
-            <i class="fas fa-folder-open text-3xl text-gray-200"></i>
+      class="group bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300"
+    >
+      <!-- Image -->
+      {% if p.image %}
+      <div class="h-56 overflow-hidden">
+        <img
+          src="{{ url_for('static', filename=p.image) }}"
+          alt="{{ p.title }}"
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+      </div>
+      {% else %}
+      <div
+        class="h-56 bg-gray-100 flex flex-col items-center justify-center text-gray-400 font-bold relative overflow-hidden"
+      >
+        <i class="fas fa-image text-4xl mb-2 opacity-20"></i>
+        <span class="text-xs uppercase tracking-widest opacity-30"
+          >No Image</span
+        >
+        <div
+          class="absolute top-4 right-4 bg-primary-green text-white text-[10px] font-bold px-3 py-1 rounded-full"
+        >
+          {{ p.year }}
         </div>
-        <p class="text-gray-700 font-extrabold text-lg mb-2">No Projects Yet</p>
-        <p class="text-gray-400 text-sm max-w-sm">No projects have been added for <strong>{{ year }}</strong> yet. Check
-            back later or explore other years.</p>
-        <a href="{{ url_for('projects.projects_archive') }}"
-            class="mt-6 text-primary-green font-bold text-sm hover:underline">
-            View Other Years →
-        </a>
-    </div>
-    {% endif %}
+      </div>
+      {% endif %}
 
-    <!-- Archive Link -->
-    <div class="mt-16 flex justify-center">
-        <div class="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden min-w-[250px]">
-            <a href="{{ url_for('projects.projects_archive') }}"
-                class="block px-6 py-4 text-center text-gray-700 text-sm font-semibold hover:bg-gray-50 hover:text-primary-green nav-transition group">
-                Looking for older projects? <span class="text-primary-green group-hover:underline">View More
-                    Archive...</span>
-            </a>
+      <div class="p-8">
+        <div class="flex items-center gap-2 mb-3">
+          {% if p.category %}
+          <span
+            class="bg-green-50 text-primary-green text-[10px] font-bold px-2 py-1 rounded uppercase"
+            >{{ p.category }}</span
+          >
+          {% endif %}
         </div>
+        <h3
+          class="text-xl font-bold text-gray-800 group-hover:text-primary-green transition-colors mb-3"
+        >
+          {{ p.title }}
+        </h3>
+        <div class="project-description relative">
+          <p
+            id="desc-{{ p.id }}"
+            class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-4 transition-all duration-300"
+          >
+            {{ p.description }}
+          </p>
+          {% if p.description|length > 200 %}
+          <button
+            type="button"
+            onclick="toggleDescription('{{ p.id }}')"
+            id="btn-{{ p.id }}"
+            class="text-primary-green font-bold text-[10px] uppercase tracking-widest hover:underline mb-6 flex items-center gap-1.5"
+          >
+            <span id="text-{{ p.id }}">See More</span>
+            <i
+              id="icon-{{ p.id }}"
+              class="fas fa-chevron-down text-[8px] transition-transform duration-300"
+            ></i>
+          </button>
+          {% endif %}
+        </div>
+        <div
+          class="flex items-center justify-between pt-6 border-t border-gray-50"
+        >
+          <a
+            href="{{ url_for('projects.project_detail', project_id=p.id) }}"
+            class="text-primary-green font-bold text-sm flex items-center gap-2 hover:gap-3 transition-all"
+          >
+            Read More <i class="fas fa-arrow-right text-xs"></i>
+          </a>
+          {% if p.status == 'Completed' %}
+          <span class="text-[10px] text-gray-400 uppercase font-medium"
+            >Completed</span
+          >
+          {% elif p.status == 'Ongoing' %}
+          <span class="text-[10px] text-blue-500 uppercase font-medium"
+            >Ongoing</span
+          >
+          {% else %}
+          <span class="text-[10px] text-amber-500 uppercase font-medium"
+            >{{ p.status }}</span
+          >
+          {% endif %}
+        </div>
+      </div>
     </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <!-- Empty State -->
+  <div
+    class="bg-white rounded-2xl border border-dashed border-gray-200 py-24 flex flex-col items-center justify-center text-center px-8"
+  >
+    <div
+      class="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center mb-5"
+    >
+      <i class="fas fa-folder-open text-3xl text-gray-200"></i>
+    </div>
+    <p class="text-gray-700 font-extrabold text-lg mb-2">No Projects Yet</p>
+    <p class="text-gray-400 text-sm max-w-sm">
+      No projects have been added for <strong>{{ year }}</strong> yet. Check
+      back later or explore other years.
+    </p>
+    <a
+      href="{{ url_for('projects.projects_archive') }}"
+      class="mt-6 text-primary-green font-bold text-sm hover:underline"
+    >
+      View Other Years →
+    </a>
+  </div>
+  {% endif %}
+
+  <!-- Archive Link -->
+  <div class="mt-16 flex justify-center">
+    <div
+      class="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden min-w-[250px]"
+    >
+      <a
+        href="{{ url_for('projects.projects_archive') }}"
+        class="block px-6 py-4 text-center text-gray-700 text-sm font-semibold hover:bg-gray-50 hover:text-primary-green nav-transition group"
+      >
+        Looking for older projects?
+        <span class="text-primary-green group-hover:underline"
+          >View More Archive...</span
+        >
+      </a>
+    </div>
+  </div>
 </div>
 
 {% block extra_js %}
 <script>
-    function toggleDescription(projectId) {
-        const desc = document.getElementById('desc-' + projectId);
-        const text = document.getElementById('text-' + projectId);
-        const icon = document.getElementById('icon-' + projectId);
-        
-        if (desc.classList.contains('line-clamp-4')) {
-            desc.classList.remove('line-clamp-4');
-            if (text) text.innerText = 'See Less';
-            if (icon) icon.style.transform = 'rotate(180deg)';
-        } else {
-            desc.classList.add('line-clamp-4');
-            if (text) text.innerText = 'See More';
-            if (icon) icon.style.transform = 'rotate(0deg)';
-        }
+  function toggleDescription(projectId) {
+    const desc = document.getElementById("desc-" + projectId);
+    const text = document.getElementById("text-" + projectId);
+    const icon = document.getElementById("icon-" + projectId);
+
+    if (desc.classList.contains("line-clamp-4")) {
+      desc.classList.remove("line-clamp-4");
+      if (text) text.innerText = "See Less";
+      if (icon) icon.style.transform = "rotate(180deg)";
+    } else {
+      desc.classList.add("line-clamp-4");
+      if (text) text.innerText = "See More";
+      if (icon) icon.style.transform = "rotate(0deg)";
     }
+  }
 </script>
-{% endblock %}
-{% endblock %}
+{% endblock %} {% endblock %}

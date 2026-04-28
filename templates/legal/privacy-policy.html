@@ -1,45 +1,73 @@
-{% extends 'base.html' %}
-{% block title %}Privacy Policy - GAD Montalban{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% block title %}Privacy Policy - GAD Montalban{%
+endblock %} {% block content %}
 <div class="min-h-screen py-16 bg-white">
-    <div class="max-w-4xl mx-auto px-6">
-        <nav class="mb-8">
-            <!-- FIXED: Added 'main.' prefix -->
-            <a href="{{ url_for('main.index') }}" class="text-primary-green text-sm hover:underline"><i class="fas fa-arrow-left mr-2"></i>Back to Home</a>
-        </nav>
-        
-        <header class="border-b pb-8 mb-12">
-            <h1 class="text-4xl font-extrabold text-gray-900 mb-4">Privacy Policy</h1>
-            <p class="text-gray-500">Effective Date: October 2024</p>
-        </header>
+  <div class="max-w-4xl mx-auto px-6">
+    <nav class="mb-8">
+      <!-- FIXED: Added 'main.' prefix -->
+      <a
+        href="{{ url_for('main.index') }}"
+        class="text-primary-green text-sm hover:underline"
+        ><i class="fas fa-arrow-left mr-2"></i>Back to Home</a
+      >
+    </nav>
 
-        <article class="prose prose-slate max-w-none text-gray-700 space-y-8">
-            <section>
-                <h2 class="text-2xl font-bold text-gray-900 mb-4">1. Information Collection</h2>
-                <p>We collect information you provide directly to us through this portal, including inquiries via contact forms and registration for GAD-related events. This may include your name, email address, and contact details.</p>
-            </section>
+    <header class="border-b pb-8 mb-12">
+      <h1 class="text-4xl font-extrabold text-gray-900 mb-4">Privacy Policy</h1>
+      <p class="text-gray-500">Effective Date: October 2024</p>
+    </header>
 
-            <section>
-                <h2 class="text-2xl font-bold text-gray-900 mb-4">2. Use of Information</h2>
-                <p>The information we collect is used to:</p>
-                <ul class="list-disc pl-6 space-y-2">
-                    <li>Provide updates on GAD projects and programs.</li>
-                    <li>Respond to your requests for information or assistance.</li>
-                    <li>Improve the functionality and content of this website.</li>
-                </ul>
-            </section>
+    <article class="prose prose-slate max-w-none text-gray-700 space-y-8">
+      <section>
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">
+          1. Information Collection
+        </h2>
+        <p>
+          We collect information you provide directly to us through this portal,
+          including inquiries via contact forms and registration for GAD-related
+          events. This may include your name, email address, and contact
+          details.
+        </p>
+      </section>
 
-            <section>
-                <h2 class="text-2xl font-bold text-gray-900 mb-4">3. Data Protection</h2>
-                <p>In accordance with the <strong>Data Privacy Act of 2012 (RA 10173)</strong>, the Municipality of Montalban implements strict security measures to protect your personal information from unauthorized access, alteration, or disclosure.</p>
-            </section>
+      <section>
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">
+          2. Use of Information
+        </h2>
+        <p>The information we collect is used to:</p>
+        <ul class="list-disc pl-6 space-y-2">
+          <li>Provide updates on GAD projects and programs.</li>
+          <li>Respond to your requests for information or assistance.</li>
+          <li>Improve the functionality and content of this website.</li>
+        </ul>
+      </section>
 
-            <section class="bg-bgLight p-6 rounded-xl border-l-4 border-primary-green">
-                <h2 class="text-xl font-bold text-gray-900 mb-2">Contact Our Data Officer</h2>
-                <p class="text-sm">If you have questions regarding your data, please contact us at <span class="text-primary-green font-bold">privacy@montalban.gov.ph</span></p>
-            </section>
-        </article>
-    </div>
+      <section>
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">
+          3. Data Protection
+        </h2>
+        <p>
+          In accordance with the
+          <strong>Data Privacy Act of 2012 (RA 10173)</strong>, the Municipality
+          of Montalban implements strict security measures to protect your
+          personal information from unauthorized access, alteration, or
+          disclosure.
+        </p>
+      </section>
+
+      <section
+        class="bg-bgLight p-6 rounded-xl border-l-4 border-primary-green"
+      >
+        <h2 class="text-xl font-bold text-gray-900 mb-2">
+          Contact Our Data Officer
+        </h2>
+        <p class="text-sm">
+          If you have questions regarding your data, please contact us at
+          <span class="text-primary-green font-bold"
+            >privacy@montalban.gov.ph</span
+          >
+        </p>
+      </section>
+    </article>
+  </div>
 </div>
 {% endblock %}

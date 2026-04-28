@@ -1,116 +1,155 @@
-{% extends "base.html" %}
-{% block title %}Memoranda - GAD Corner{% endblock %}
-{% from "policies/components/table_controls.html" import render_controls with context %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Memoranda - GAD Corner{% endblock %}
+{% from "policies/components/table_controls.html" import render_controls with
+context %} {% block content %}
 <div class="max-w-7xl mx-auto px-6 py-12">
-
-
-
-    <!-- Page Header -->
-    <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-            <h2
-                class="text-3xl font-extrabold text-gray-800 border-l-8 border-primary-green pl-4 uppercase tracking-tight">
-                Memorandum <span class="text-primary-green">Circulars</span>
-            </h2>
-            <p class="mt-2 text-gray-600 ml-6 max-w-2xl">
-                Internal directives, PCW Circulars, training calls, and announcements regarding GAD mainstreaming and
-                institutional activities.
-            </p>
-        </div>
-
-        <div class="hidden lg:flex gap-4">
-            <div class="bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100">
-                <span class="block text-[10px] font-bold text-gray-400 uppercase">Recent (30d)</span>
-                <span class="text-lg font-bold text-primary-green">04</span>
-            </div>
-        </div>
+  <!-- Page Header -->
+  <div
+    class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6"
+  >
+    <div>
+      <h2
+        class="text-3xl font-extrabold text-gray-800 border-l-8 border-primary-green pl-4 uppercase tracking-tight"
+      >
+        Memorandum <span class="text-primary-green">Circulars</span>
+      </h2>
+      <p class="mt-2 text-gray-600 ml-6 max-w-2xl">
+        Internal directives, PCW Circulars, training calls, and announcements
+        regarding GAD mainstreaming and institutional activities.
+      </p>
     </div>
 
-    <!-- Search and Filter Bar -->
-    {{ render_controls(
-    search_id="memoSearch",
-    filter_id="memoYearFilter",
-    placeholder="Search by subject or Ref No...",
-    start_year=site_config.get('policies', {}).get('start_year', 2002),
-    current_year=site_config.get('policies', {}).get('current_year', now.year)
-    ) }}
-
-    <!-- Table Container -->
-    <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead class="bg-primary-green text-white">
-                    <tr>
-                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest">Date Published</th>
-                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest">Subject / Title</th>
-                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest">Ref No.</th>
-                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-center">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="memoTableBody" class="divide-y divide-gray-100">
-                    {% if policies %}
-                    {% for item in policies %}
-                    <tr class="memo-row hover:bg-green-50/40 transition-colors group" data-year="{{ item.year }}"
-                        data-content="{{ item.title }}">
-                        <td class="px-6 py-5 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <div
-                                    class="w-2 h-2 rounded-full {{ 'bg-primary-green' if item.status == 'Urgent' else 'bg-gray-200' }} mr-3">
-                                </div>
-                                <span class="text-sm font-bold text-gray-700 uppercase">{{ item.date }}</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-5">
-                            {% if item.url %}
-                            <a href="{{ item.url }}" target="_blank"
-                                class="text-gray-800 font-bold group-hover:text-primary-green transition-colors">{{
-                                item.title }} <i class="fas fa-external-link-alt text-[10px] ml-1 opacity-50"></i></a>
-                            {% else %}
-                            <div class="text-gray-800 font-bold group-hover:text-primary-green transition-colors">{{
-                                item.title }}</div>
-                            {% endif %}
-                            <div class="flex gap-2 mt-1">
-                                <span
-                                    class="text-[10px] bg-red-50 text-red-600 px-1.5 py-0.5 rounded font-bold uppercase">{{
-                                    item.status }}</span>
-                                <span
-                                    class="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded font-bold uppercase tracking-tight">{{
-                                    item.description }}</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-5 text-sm text-gray-500 font-mono">{{ item.id }}</td>
-                        <td class="px-6 py-5 text-center">
-                            <a href="{{ item.url if item.url else url_for('static', filename=item.file) }}"
-                                target="_blank" title="{{ 'View External Source' if item.url else 'View Document' }}"
-                                class="inline-flex items-center gap-2 px-5 py-2 bg-primary-green/10 text-primary-green font-black text-xs rounded-lg hover:bg-primary-green hover:text-white transition-all shadow-sm">
-                                <i class="{{ 'fas fa-external-link-alt' if item.url else 'far fa-eye' }}"></i> VIEW
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                    {% else %}
-                    <tr>
-                        <td colspan="4" class="px-6 py-10 text-center text-sm text-gray-500">
-                            No memoranda found. Please add entries in the admin panel.
-                        </td>
-                    </tr>
-                    {% endif %}
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Pagination / Footer: Added IDs -->
-        <div class="bg-gray-50/50 px-6 py-4 border-t border-gray-100 flex items-center justify-between">
-            <span class="text-xs font-bold text-gray-400 uppercase">
-                Showing <span id="memoCount" class="text-gray-700">0</span> Memos
-            </span>
-            <div class="flex gap-1" id="memoPagination">
-                <!-- Buttons generated by JS -->
-            </div>
-        </div>
+    <div class="hidden lg:flex gap-4">
+      <div
+        class="bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100"
+      >
+        <span class="block text-[10px] font-bold text-gray-400 uppercase"
+          >Recent (30d)</span
+        >
+        <span class="text-lg font-bold text-primary-green">04</span>
+      </div>
     </div>
+  </div>
+
+  <!-- Search and Filter Bar -->
+  {{ render_controls( search_id="memoSearch", filter_id="memoYearFilter",
+  placeholder="Search by subject or Ref No...",
+  start_year=site_config.get('policies', {}).get('start_year', 2002),
+  current_year=site_config.get('policies', {}).get('current_year', now.year) )
+  }}
+
+  <!-- Table Container -->
+  <div
+    class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden"
+  >
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead class="bg-primary-green text-white">
+          <tr>
+            <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest">
+              Date Published
+            </th>
+            <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest">
+              Subject / Title
+            </th>
+            <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest">
+              Ref No.
+            </th>
+            <th
+              class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-center"
+            >
+              Action
+            </th>
+          </tr>
+        </thead>
+        <tbody id="memoTableBody" class="divide-y divide-gray-100">
+          {% if policies %} {% for item in policies %}
+          <tr
+            class="memo-row hover:bg-green-50/40 transition-colors group"
+            data-year="{{ item.year }}"
+            data-content="{{ item.title }}"
+          >
+            <td class="px-6 py-5 whitespace-nowrap">
+              <div class="flex items-center">
+                <div
+                  class="w-2 h-2 rounded-full {{ 'bg-primary-green' if item.status == 'Urgent' else 'bg-gray-200' }} mr-3"
+                ></div>
+                <span class="text-sm font-bold text-gray-700 uppercase"
+                  >{{ item.date }}</span
+                >
+              </div>
+            </td>
+            <td class="px-6 py-5">
+              {% if item.url %}
+              <a
+                href="{{ item.url }}"
+                target="_blank"
+                class="text-gray-800 font-bold group-hover:text-primary-green transition-colors"
+                >{{ item.title }}
+                <i
+                  class="fas fa-external-link-alt text-[10px] ml-1 opacity-50"
+                ></i
+              ></a>
+              {% else %}
+              <div
+                class="text-gray-800 font-bold group-hover:text-primary-green transition-colors"
+              >
+                {{ item.title }}
+              </div>
+              {% endif %}
+              <div class="flex gap-2 mt-1">
+                <span
+                  class="text-[10px] bg-red-50 text-red-600 px-1.5 py-0.5 rounded font-bold uppercase"
+                  >{{ item.status }}</span
+                >
+                <span
+                  class="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded font-bold uppercase tracking-tight"
+                  >{{ item.description }}</span
+                >
+              </div>
+            </td>
+            <td class="px-6 py-5 text-sm text-gray-500 font-mono">
+              {{ item.id }}
+            </td>
+            <td class="px-6 py-5 text-center">
+              <a
+                href="{{ item.url if item.url else url_for('static', filename=item.file) }}"
+                target="_blank"
+                title="{{ 'View External Source' if item.url else 'View Document' }}"
+                class="inline-flex items-center gap-2 px-5 py-2 bg-primary-green/10 text-primary-green font-black text-xs rounded-lg hover:bg-primary-green hover:text-white transition-all shadow-sm"
+              >
+                <i
+                  class="{{ 'fas fa-external-link-alt' if item.url else 'far fa-eye' }}"
+                ></i>
+                VIEW
+              </a>
+            </td>
+          </tr>
+          {% endfor %} {% else %}
+          <tr>
+            <td
+              colspan="4"
+              class="px-6 py-10 text-center text-sm text-gray-500"
+            >
+              No memoranda found. Please add entries in the admin panel.
+            </td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination / Footer: Added IDs -->
+    <div
+      class="bg-gray-50/50 px-6 py-4 border-t border-gray-100 flex items-center justify-between"
+    >
+      <span class="text-xs font-bold text-gray-400 uppercase">
+        Showing <span id="memoCount" class="text-gray-700">0</span> Memos
+      </span>
+      <div class="flex gap-1" id="memoPagination">
+        <!-- Buttons generated by JS -->
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Load Script -->

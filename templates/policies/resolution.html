@@ -1,120 +1,163 @@
-{% extends "base.html" %}
-{% block title %}Resolutions - GAD Corner{% endblock %}
-{% from "policies/components/table_controls.html" import render_controls with context %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Resolutions - GAD Corner{% endblock
+%} {% from "policies/components/table_controls.html" import render_controls with
+context %} {% block content %}
 <div class="max-w-7xl mx-auto px-6 py-12">
-    
+  <div class="mb-10">
+    <h2
+      class="text-3xl font-extrabold text-gray-800 border-l-8 border-primary-green pl-4 uppercase tracking-tight"
+    >
+      Legislative <span class="text-primary-green">Resolutions</span>
+    </h2>
+    <p class="mt-2 text-gray-600 ml-6 max-w-3xl">
+      Formal expressions of the opinion or will of the GAD Council, including
+      adoption of plans, budgets, and localized policies.
+    </p>
+  </div>
 
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div
+      class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md transition-shadow"
+    >
+      <div
+        class="w-12 h-12 bg-green-100 text-primary-green rounded-full flex items-center justify-center text-xl"
+      >
+        <i class="fas fa-balance-scale"></i>
+      </div>
+      <div>
+        <p class="text-xs font-bold text-gray-400 uppercase">
+          Total Resolutions
+        </p>
+        <p class="text-2xl font-black text-gray-800">{{ stats.total }}</p>
+      </div>
+    </div>
+    <div
+      class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md transition-shadow"
+    >
+      <div
+        class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl"
+      >
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div>
+        <p class="text-xs font-bold text-gray-400 uppercase">Current Year</p>
+        <p class="text-2xl font-black text-gray-800">
+          {{ site_config.get('policies', {}).get('current_year', now.year) }}
+        </p>
+      </div>
+    </div>
+    <div
+      class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md transition-shadow"
+    >
+      <div
+        class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xl"
+      >
+        <i class="fas fa-file-signature"></i>
+      </div>
+      <div>
+        <p class="text-xs font-bold text-gray-400 uppercase">Last Updated</p>
+        <p class="text-lg font-bold text-gray-800">
+          {{ stats.updated or '—' }}
+        </p>
+      </div>
+    </div>
+  </div>
 
-    <div class="mb-10">
-        <h2 class="text-3xl font-extrabold text-gray-800 border-l-8 border-primary-green pl-4 uppercase tracking-tight">Legislative <span class="text-primary-green">Resolutions</span></h2>
-        <p class="mt-2 text-gray-600 ml-6 max-w-3xl">Formal expressions of the opinion or will of the GAD Council, including adoption of plans, budgets, and localized policies.</p>
+  {{ render_controls( search_id="resolutionSearch",
+  filter_id="resolutionYearFilter", placeholder="Search Resolution No. or
+  Purpose...", start_year=site_config.get('policies', {}).get('start_year',
+  2002), current_year=site_config.get('policies', {}).get('current_year',
+  now.year) ) }}
+
+  <!-- Table Container -->
+  <div
+    class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden"
+  >
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead
+          class="bg-primary-green text-white text-xs uppercase font-bold tracking-widest"
+        >
+          <tr>
+            <th class="px-6 py-4">Resolution No.</th>
+            <th class="px-6 py-4">Approved Date</th>
+            <th class="px-6 py-4">Subject & Purpose</th>
+            <th class="px-6 py-4 text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody id="resolutionTableBody" class="divide-y divide-gray-100">
+          {% if policies %} {% for item in policies %}
+          <tr
+            class="resolution-row hover:bg-gray-50/80 transition-all group"
+            data-year="{{ item.year }}"
+            data-content="{{ item.title }}"
+          >
+            <td class="px-6 py-6 font-black text-gray-700">
+              {% if item.url %}
+              <a
+                href="{{ item.url }}"
+                target="_blank"
+                class="hover:text-primary-green transition-colors flex items-center gap-2"
+              >
+                {{ item.title }}
+                <i class="fas fa-external-link-alt text-[10px] opacity-70"></i>
+              </a>
+              {% else %} {{ item.title }} {% endif %}
+            </td>
+            <td class="px-6 py-6 text-sm text-gray-500 whitespace-nowrap">
+              <i class="far fa-calendar-alt mr-2 text-primary-green"></i> {{
+              item.date }}
+            </td>
+            <td class="px-6 py-6">
+              <div class="text-gray-800 font-bold mb-1">
+                {{ item.description }}
+              </div>
+              <span
+                class="inline-block px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-bold rounded uppercase"
+                >{{ item.status }}</span
+              >
+            </td>
+            <td class="px-6 py-6 text-center">
+              <a
+                href="{{ item.url if item.url else url_for('static', filename=item.file) }}"
+                target="_blank"
+                title="{{ 'View External Source' if item.url else 'View PDF' }}"
+                aria-label="{{ 'View External Source' if item.url else 'View PDF' }}"
+                class="inline-flex items-center justify-center w-10 h-10 bg-white border border-gray-200 text-primary-green rounded-full hover:bg-primary-green hover:text-white hover:shadow-lg transition-all duration-300"
+              >
+                <i
+                  class="fas {{ 'fa-external-link-alt' if item.url else 'fa-file-pdf' }} text-lg"
+                ></i>
+              </a>
+            </td>
+          </tr>
+          {% endfor %} {% else %}
+          <tr>
+            <td
+              colspan="4"
+              class="px-6 py-10 text-center text-sm text-gray-500"
+            >
+              No resolutions found. Please add entries in the admin panel.
+            </td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
     </div>
 
-<!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md transition-shadow">
-                <div class="w-12 h-12 bg-green-100 text-primary-green rounded-full flex items-center justify-center text-xl">
-                    <i class="fas fa-balance-scale"></i>
-                </div>
-                <div>
-                    <p class="text-xs font-bold text-gray-400 uppercase">Total Resolutions</p>
-                    <p class="text-2xl font-black text-gray-800">{{ stats.total }}</p>
-                </div>
-            </div>
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md transition-shadow">
-                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-                <div>
-                    <p class="text-xs font-bold text-gray-400 uppercase">Current Year</p>
-                    <p class="text-2xl font-black text-gray-800">{{ site_config.get('policies', {}).get('current_year', now.year) }}</p>
-                </div>
-            </div>
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md transition-shadow">
-                <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xl">
-                    <i class="fas fa-file-signature"></i>
-                </div>
-                <div>
-                    <p class="text-xs font-bold text-gray-400 uppercase">Last Updated</p>
-                    <p class="text-lg font-bold text-gray-800">{{ stats.updated or '—' }}</p>
-                </div>
-            </div>
-        </div>
-
-    {{ render_controls(
-        search_id="resolutionSearch", 
-        filter_id="resolutionYearFilter", 
-        placeholder="Search Resolution No. or Purpose...",
-        start_year=site_config.get('policies', {}).get('start_year', 2002),
-        current_year=site_config.get('policies', {}).get('current_year', now.year)
-    ) }}
-
-    <!-- Table Container -->
-    <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead class="bg-primary-green text-white text-xs uppercase font-bold tracking-widest">
-                    <tr>
-                        <th class="px-6 py-4">Resolution No.</th>
-                        <th class="px-6 py-4">Approved Date</th>
-                        <th class="px-6 py-4">Subject & Purpose</th>
-                        <th class="px-6 py-4 text-center">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="resolutionTableBody" class="divide-y divide-gray-100">
-                    {% if policies %}
-                        {% for item in policies %}
-                        <tr class="resolution-row hover:bg-gray-50/80 transition-all group" data-year="{{ item.year }}" data-content="{{ item.title }}">
-                            <td class="px-6 py-6 font-black text-gray-700">
-                                {% if item.url %}
-                                <a href="{{ item.url }}" target="_blank" class="hover:text-primary-green transition-colors flex items-center gap-2">
-                                    {{ item.title }} <i class="fas fa-external-link-alt text-[10px] opacity-70"></i>
-                                </a>
-                                {% else %}
-                                {{ item.title }}
-                                {% endif %}
-                            </td>
-                            <td class="px-6 py-6 text-sm text-gray-500 whitespace-nowrap">
-                                <i class="far fa-calendar-alt mr-2 text-primary-green"></i> {{ item.date }}
-                            </td>
-                            <td class="px-6 py-6">
-                                <div class="text-gray-800 font-bold mb-1">{{ item.description }}</div>
-                                <span class="inline-block px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-bold rounded uppercase">{{ item.status }}</span>
-                            </td>
-                            <td class="px-6 py-6 text-center">
-                                <a href="{{ item.url if item.url else url_for('static', filename=item.file) }}" 
-                                    target="_blank" 
-                                    title="{{ 'View External Source' if item.url else 'View PDF' }}"
-                                    aria-label="{{ 'View External Source' if item.url else 'View PDF' }}"
-                                    class="inline-flex items-center justify-center w-10 h-10 bg-white border border-gray-200 text-primary-green rounded-full hover:bg-primary-green hover:text-white hover:shadow-lg transition-all duration-300">
-                                    <i class="fas {{ 'fa-external-link-alt' if item.url else 'fa-file-pdf' }} text-lg"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td colspan="4" class="px-6 py-10 text-center text-sm text-gray-500">
-                                No resolutions found. Please add entries in the admin panel.
-                            </td>
-                        </tr>
-                    {% endif %}
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- Pagination Footer: NEWLY ADDED -->
-        <div class="bg-gray-50/50 px-6 py-4 border-t border-gray-100 flex items-center justify-between">
-            <span class="text-xs font-bold text-gray-400 uppercase">
-                Showing <span id="resolutionShowingCount" class="text-gray-700">0</span> results
-            </span>
-            <div class="flex gap-1" id="resolutionPagination">
-                <!-- Buttons handled by JS -->
-            </div>
-        </div>
+    <!-- Pagination Footer: NEWLY ADDED -->
+    <div
+      class="bg-gray-50/50 px-6 py-4 border-t border-gray-100 flex items-center justify-between"
+    >
+      <span class="text-xs font-bold text-gray-400 uppercase">
+        Showing
+        <span id="resolutionShowingCount" class="text-gray-700">0</span> results
+      </span>
+      <div class="flex gap-1" id="resolutionPagination">
+        <!-- Buttons handled by JS -->
+      </div>
     </div>
+  </div>
 </div>
 
 <script src="{{ url_for('static', filename='js/table-logic.js') }}"></script>

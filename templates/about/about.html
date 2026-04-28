@@ -1,64 +1,108 @@
-{% extends "base.html" %}
-
-{% block title %}About Us - GAD Corner{% endblock %}
-
+{% extends "base.html" %} {% block title %}About Us - GAD Corner{% endblock %}
 {% block content %}
 <div class="max-w-7xl mx-auto px-6 py-12">
+  <!-- Page Header -->
+  <div class="mb-10">
+    <h2
+      class="text-3xl font-bold text-gray-800 border-l-8 border-primary-green pl-4 uppercase"
+    >
+      About <span class="text-primary-green">GAD Montalban</span>
+    </h2>
+    <p class="text-gray-500 mt-2 ml-6">
+      Learn more about our mandate, our people, and how we are working towards
+      gender equality in our municipality.
+    </p>
+  </div>
 
+  <!-- Hub Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Vision and Mission Card -->
+    <!-- FIXED: main.vision_mission -->
+    <a
+      href="{{ url_for('main.vision_mission') }}"
+      class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all"
+    >
+      <div
+        class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all"
+      >
+        <i class="fas fa-bullseye text-2xl"></i>
+      </div>
+      <h3
+        class="text-xl font-bold text-gray-800 group-hover:text-primary-green"
+      >
+        Vision and Mission
+      </h3>
+      <p class="text-gray-500 text-sm mt-2">
+        Our commitment and roadmap towards a gender-responsive and inclusive
+        Montalban.
+      </p>
+    </a>
 
-    <!-- Page Header -->
-    <div class="mb-10">
-        <h2 class="text-3xl font-bold text-gray-800 border-l-8 border-primary-green pl-4 uppercase">
-            About <span class="text-primary-green">GAD Montalban</span>
-        </h2>
-        <p class="text-gray-500 mt-2 ml-6">
-            Learn more about our mandate, our people, and how we are working towards gender equality in our municipality.
-        </p>
-    </div>
+    <!-- Org Structure Card -->
+    <!-- FIXED: main.org_structure -->
+    <a
+      href="{{ url_for('main.org_structure') }}"
+      class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all"
+    >
+      <div
+        class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all"
+      >
+        <i class="fas fa-sitemap text-2xl"></i>
+      </div>
+      <h3
+        class="text-xl font-bold text-gray-800 group-hover:text-primary-green"
+      >
+        Organizational Structure
+      </h3>
+      <p class="text-gray-500 text-sm mt-2">
+        The framework of the GAD Focal Point System (GFPS) within the local
+        government.
+      </p>
+    </a>
 
-    <!-- Hub Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-        <!-- Vision and Mission Card -->
-        <!-- FIXED: main.vision_mission -->
-        <a href="{{ url_for('main.vision_mission') }}" class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all">
-            <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all">
-                <i class="fas fa-bullseye text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-bold text-gray-800 group-hover:text-primary-green">Vision and Mission</h3>
-            <p class="text-gray-500 text-sm mt-2">Our commitment and roadmap towards a gender-responsive and inclusive Montalban.</p>
-        </a>
+    <!-- GAD Committee Card -->
+    <!-- FIXED: main.gad_committee -->
+    <a
+      href="{{ url_for('main.gad_committee') }}"
+      class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all"
+    >
+      <div
+        class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all"
+      >
+        <i class="fas fa-users-cog text-2xl"></i>
+      </div>
+      <h3
+        class="text-xl font-bold text-gray-800 group-hover:text-primary-green"
+      >
+        GAD Committee
+      </h3>
+      <p class="text-gray-500 text-sm mt-2">
+        Meet the dedicated officials and employees driving our gender
+        mainstreaming efforts.
+      </p>
+    </a>
 
-        <!-- Org Structure Card -->
-        <!-- FIXED: main.org_structure -->
-        <a href="{{ url_for('main.org_structure') }}" class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all">
-            <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all">
-                <i class="fas fa-sitemap text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-bold text-gray-800 group-hover:text-primary-green">Organizational Structure</h3>
-            <p class="text-gray-500 text-sm mt-2">The framework of the GAD Focal Point System (GFPS) within the local government.</p>
-        </a>
-
-        <!-- GAD Committee Card -->
-        <!-- FIXED: main.gad_committee -->
-        <a href="{{ url_for('main.gad_committee') }}" class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all">
-            <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all">
-                <i class="fas fa-users-cog text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-bold text-gray-800 group-hover:text-primary-green">GAD Committee</h3>
-            <p class="text-gray-500 text-sm mt-2">Meet the dedicated officials and employees driving our gender mainstreaming efforts.</p>
-        </a>
-
-        <!-- Contact Card -->
-        <!-- FIXED: main.contact -->
-        <a href="{{ url_for('main.contact') }}" class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all">
-            <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all">
-                <i class="fas fa-headset text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-bold text-gray-800 group-hover:text-primary-green">Contact Us</h3>
-            <p class="text-gray-500 text-sm mt-2">Get in touch with the GAD Office for inquiries, assistance, and partnerships.</p>
-        </a>
-
-    </div>
+    <!-- Contact Card -->
+    <!-- FIXED: main.contact -->
+    <a
+      href="{{ url_for('main.contact') }}"
+      class="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-primary-green hover:shadow-md transition-all"
+    >
+      <div
+        class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-primary-green mb-6 group-hover:bg-primary-green group-hover:text-white transition-all"
+      >
+        <i class="fas fa-headset text-2xl"></i>
+      </div>
+      <h3
+        class="text-xl font-bold text-gray-800 group-hover:text-primary-green"
+      >
+        Contact Us
+      </h3>
+      <p class="text-gray-500 text-sm mt-2">
+        Get in touch with the GAD Office for inquiries, assistance, and
+        partnerships.
+      </p>
+    </a>
+  </div>
 </div>
 {% endblock %}

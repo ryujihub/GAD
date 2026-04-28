@@ -18,17 +18,20 @@
 ## 🛠️ Technical Stack
 
 ### **Backend**
+
 - **Python 3.x / Flask:** Core logic using a modular Blueprint pattern.
 - **Flask-Talisman:** Production-grade security headers and HTTPS enforcement.
 - **Flask-Limiter:** Rate-limiting logic for anti-scraping and brute-force protection.
 - **Jinja2:** Component-based templating system with inheritance.
 
 ### **Frontend**
+
 - **Tailwind CSS 3.4+:** Utility-first CSS framework for custom UI/UX.
 - **JavaScript (ES6+):** Async Fetch API for live search and mobile-responsive logic.
 - **FontAwesome 6:** Comprehensive iconography for visual hierarchy.
 
 ### **Build & Environment**
+
 - **Node.js / npm:** Tailwind CSS compilation and minification pipeline.
 - **python-dotenv:** Secure environment variable management.
 - **Waitress:** Production-grade WSGI HTTP server.
@@ -38,7 +41,7 @@
 ## 📂 Project Structure
 
 ```text
-GAD                               
+GAD
 ├─ routes                         # Flask Blueprints (Modular Logic)
 │  ├─ main.py                     # Home, About, News, Search API
 │  ├─ policies.py                 # Document Hub, Reports
@@ -68,13 +71,16 @@ GAD
 ## ⚙️ Local Development Setup
 
 ### 1. Environment Configuration
+
 Create a `.env` file in the root directory:
+
 ```text
 SECRET_KEY=your_random_secret_string
 DEBUG=True
 ```
 
 ### 2. Backend Setup
+
 ```bash
 # Install refined dependencies
 pip install -r requirements.txt
@@ -84,6 +90,7 @@ python app.py
 ```
 
 ### 3. Frontend (Tailwind) Setup
+
 ```bash
 # Install Node dependencies
 npm install
@@ -126,7 +133,8 @@ This software and all associated files are **proprietary**. Unauthorized use, co
 ## 📧 Contact & Support
 
 For technical inquiries or system-related concerns:
+
 - **Email:** gad@montalban.gov.ph
 - **Location:** GAD Office, 2nd Floor Municipal Hall, Rodriguez, Rizal.
 
-*Developed for the service of the people of Montalban.*
+_Developed for the service of the people of Montalban._
