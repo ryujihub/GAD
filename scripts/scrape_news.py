@@ -33,7 +33,10 @@ except ImportError:
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
-FACEBOOK_PAGE_URL = "https://www.facebook.com/MontalbanGenderAndDevelopment"
+FACEBOOK_PAGE_URLS = [
+    "https://www.facebook.com/MontalbanGenderAndDevelopment",
+    "https://www.facebook.com/profile.php?id=61567326855133"
+]
 IMGBB_API_KEY = "768e4e92399d79e0b981a3368fe9a046"
 TARGET_POSTS = 7
 MAX_SCROLLS = 30
@@ -643,13 +646,19 @@ if __name__ == "__main__":
     if existing:
         print(f"[INFO] Loaded {len(existing)} existing posts from cache.")
 
-    results = scrape_facebook_page(
-        FACEBOOK_PAGE_URL,
-        imgbb_api_key=IMGBB_API_KEY,
-        target_post_count=TARGET_POSTS,
-        max_scrolls=MAX_SCROLLS,
-        existing_posts=existing,
-    )
+    all_results = []
+    for url in FACEBOOK_PAGE_URLS:
+        print(f"\n[START] Scraping Page: {url}")
+        page_results = scrape_facebook_page(
+            url,
+            imgbb_api_key=IMGBB_API_KEY,
+            target_post_count=TARGET_POSTS,
+            max_scrolls=MAX_SCROLLS,
+            existing_posts=existing,
+        )
+        all_results.extend(page_results)
+    
+    results = all_results
 
     print("\n" + "=" * 50)
     print(f"EXTRACTION COMPLETE IN {time.time() - start_time:.2f} SECONDS")
